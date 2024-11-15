@@ -16,7 +16,7 @@ class SignupPageState extends State<SignupPage> {
   TextEditingController bank = TextEditingController();
   TextEditingController phone = TextEditingController();
   
-  // State for password visibility toggle
+  // State for password visibility toggle                                                           
   bool showPassword = true;
   
   // Form key for validation
