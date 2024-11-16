@@ -1,6 +1,24 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class HomePage extends StatelessWidget {
+
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final List<String> imageUrls = [
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ6n03pPCJReT0dT5dIhOXsmOXHs9uSVunFw&s',
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9QPI9-QXDHXqjyOLugSd_L4y50rCsiNoI-xmnqXTZ1UHLztWAmc_if56d7RZXYlDLWq0&usqp=CAU',
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwbCe9AB5aSFvjnFP4H4g4nl7WgqwZyUxfyA&s',
+  ];
+
+  int _currentIndex = 0;
+  final CarouselSliderController _carouselController =
+      CarouselSliderController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +54,7 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-      
+
       appBar: AppBar(
         centerTitle: true, // Center the title
         title: Image.asset(
@@ -53,20 +71,20 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      
-      body: SingleChildScrollView( // Wrap the body with a scroll view
+
+      body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             // Banner Image Section
-            Container( 
+            Container(
               width: double.infinity, // Make it full width
               child: Image.asset(
                 'asset/ai-generated-7483596_960_720.jpg', // Path to your banner image
-                fit: BoxFit.cover,    // Ensures the image covers the area
-                height: 200,          // Adjust height as needed
+                fit: BoxFit.cover, // Ensures the image covers the area
+                height: 200, // Adjust height as needed
               ),
             ),
-            
+
             // Main content section
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -81,6 +99,68 @@ class HomePage extends StatelessWidget {
                   Text(
                     'This is the home page where you can introduce your app.',
                     style: TextStyle(fontSize: 16),
+                  ),
+                  Column(
+                    children: [
+                      CarouselSlider.builder(
+                        itemCount: imageUrls.length,
+                        carouselController: _carouselController,
+                        options: CarouselOptions(
+                          height: 250.0,
+                          enlargeCenterPage: true,
+                          autoPlay: true,
+                          aspectRatio: 16 / 9,
+                          autoPlayCurve: Curves.fastOutSlowIn,
+                          enableInfiniteScroll: true,
+                          autoPlayAnimationDuration:
+                              Duration(milliseconds: 800),
+                          viewportFraction: 0.8,
+                          onPageChanged: (index, reason) {
+                            setState(() {
+                              _currentIndex = index;
+                            });
+                          },
+                        ),
+                        itemBuilder: (context, index, realIndex) {
+                          return Column(
+                            children: [
+                              Image.network(
+                                imageUrls[index],
+                                fit: BoxFit.cover,
+                                height: 150,
+                                width: double.infinity,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  'Image ',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+
+                                
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                      SizedBox(height: 16),
+                      // Smooth Page Indicator
+                      AnimatedSmoothIndicator(
+                        activeIndex: _currentIndex,
+                        count: imageUrls.length,
+                        effect: ScrollingDotsEffect(
+                          dotHeight: 8,
+                          dotWidth: 8,
+                          activeDotColor: Colors.blue,
+                          dotColor: Colors.grey,
+                        ),
+                        onDotClicked: (index) {
+                          _carouselController.animateToPage(index);
+                        },
+                      ),
+                    ],
                   ),
                 ],
               ),
