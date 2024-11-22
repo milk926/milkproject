@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:milkproject/farmer/page/farmer_root_screen.dart';
 import 'package:milkproject/user/page/choose_screen.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -98,8 +99,24 @@ class LoginScreen extends StatelessWidget {
                         // Proceed with login
                         String email = emailController.text;
                         String password = passwordController.text;
-                        print(
-                            'Logging in... Email: $email, Password: $password');
+
+
+                        if(email == 'f@gmail.com'){
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => FarmerBottomNavScreen(),));
+                        }
+
+                        if(email == 'a@gmail.com'){
+
+                          //admin
+
+                        }
+
+                        if(email == 'user@gmail.com'){
+                          //user
+                        }
+
+
+                        
                       } else {
                         // If the form is not valid, show a message
                         ScaffoldMessenger.of(context).showSnackBar(
