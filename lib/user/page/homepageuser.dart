@@ -1,7 +1,7 @@
+import 'dart:async'; // Import for Timer
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
 
 class HomePage extends StatefulWidget {
   @override
@@ -15,89 +15,125 @@ class _HomePageState extends State<HomePage> {
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwbCe9AB5aSFvjnFP4H4g4nl7WgqwZyUxfyA&s',
   ];
 
+  final List<String> demoTexts = [
+    'This is the first product. It is known for its durability and high quality.',
+    'This is the second product. It features excellent performance and value.',
+    'The third product is popular for its unique design and functionality.',
+  ];
+
+  final List<String> productNames = [
+    'Fresh Milk',
+    'Organic Butter',
+    'Premium Cheese',
+  ];
+
+  final List<String> cardTitles = [
+    'Consumer Level',
+    'Dealer\'s Level',
+    'Society Level',
+    'Farmer\'s Level',
+  ];
+
   int _currentIndex = 0;
   final CarouselSliderController _carouselController =
       CarouselSliderController();
 
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _startAutoScroll();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _startAutoScroll() {
+    Timer.periodic(Duration(seconds: 2), (timer) {
+      if (_scrollController.hasClients) {
+        final maxScroll = _scrollController.position.maxScrollExtent;
+        final currentScroll = _scrollController.offset;
+
+        if (currentScroll < maxScroll) {
+          _scrollController.animateTo(
+            currentScroll + 150,
+            duration: Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+          );
+        } else {
+          _scrollController.jumpTo(0);
+        }
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Right drawer
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
+              decoration: BoxDecoration(color: Colors.blue),
               child: Text(
                 'Drawer Header',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
+                style: TextStyle(color: Colors.white, fontSize: 24),
               ),
             ),
             ListTile(
               title: Text('Item 1'),
-              onTap: () {
-                // Handle item tap
-              },
+              onTap: () {},
             ),
             ListTile(
               title: Text('Item 2'),
-              onTap: () {
-                // Handle item tap
-              },
+              onTap: () {},
             ),
           ],
         ),
       ),
-
       appBar: AppBar(
-        centerTitle: true, // Center the title
+        centerTitle: true,
         title: Image.asset(
-          'asset/29319f53b462e0e20000f77710213461.png', // Your logo
+          'asset/29319f53b462e0e20000f77710213461.png',
           height: 40,
         ),
         actions: [
           IconButton(
             icon: Icon(Icons.menu),
             onPressed: () {
-              // Open the drawer
               Scaffold.of(context).openEndDrawer();
             },
           ),
         ],
       ),
-
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            // Banner Image Section
             Container(
-              width: double.infinity, // Make it full width
+              width: double.infinity,
               child: Image.asset(
-                'asset/ai-generated-7483596_960_720.jpg', // Path to your banner image
-                fit: BoxFit.cover, // Ensures the image covers the area
-                height: 200, // Adjust height as needed
+                'asset/ai-generated-7483596_960_720.jpg',
+                fit: BoxFit.cover,
+                height: 200,
               ),
             ),
-
-            // Main content section
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Welcome to the Home Screen!',
+                    'Products',
                     style: TextStyle(fontSize: 24),
                   ),
                   SizedBox(height: 20),
                   Text(
-                    'This is the home page where you can introduce your app.',
+                    'This is the home page where you can introduce our products.',
                     style: TextStyle(fontSize: 16),
                   ),
                   Column(
@@ -106,15 +142,15 @@ class _HomePageState extends State<HomePage> {
                         itemCount: imageUrls.length,
                         carouselController: _carouselController,
                         options: CarouselOptions(
-                          height: 250.0,
+                          height: MediaQuery.of(context).size.height / 2.5,
                           enlargeCenterPage: true,
                           autoPlay: true,
                           aspectRatio: 16 / 9,
+                          viewportFraction: 1,
                           autoPlayCurve: Curves.fastOutSlowIn,
                           enableInfiniteScroll: true,
                           autoPlayAnimationDuration:
                               Duration(milliseconds: 800),
-                          viewportFraction: 0.8,
                           onPageChanged: (index, reason) {
                             setState(() {
                               _currentIndex = index;
@@ -123,30 +159,41 @@ class _HomePageState extends State<HomePage> {
                         ),
                         itemBuilder: (context, index, realIndex) {
                           return Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Image.network(
-                                imageUrls[index],
-                                fit: BoxFit.cover,
-                                height: 150,
+                              Container(
                                 width: double.infinity,
+                                height: 150,
+                                child: Image.network(
+                                  imageUrls[index],
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  'Image ',
+                                  productNames[index],
                                   style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-
-                                
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0),
+                                child: Text(
+                                  demoTexts[index],
+                                  style: TextStyle(fontSize: 14),
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
                             ],
                           );
                         },
                       ),
                       SizedBox(height: 16),
-                      // Smooth Page Indicator
                       AnimatedSmoothIndicator(
                         activeIndex: _currentIndex,
                         count: imageUrls.length,
@@ -162,10 +209,63 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
+                  SizedBox(height: 20),
+                  Text(
+                    'WHAT WE DO',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'We are dedicated to empowering dairy farmers and enhancing the dairy industry by implementing sustainable practices and providing valuable services. Our focus is on improving livelihoods, ensuring market stability, and promoting economic development within the farming community.',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  SizedBox(height: 20),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    controller: _scrollController,
+                    child: Row(
+                      children:
+                          cardTitles.map((title) => _buildCard(title)).toList(),
+                    ),
+                  ),
                 ],
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCard(String title) {
+    return Container(
+      margin: EdgeInsets.only(right: 16),
+      width: 150,
+      height: 100,
+      decoration: BoxDecoration(
+        color: Colors.blueAccent,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Center(
+        child: Text(
+          title,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
         ),
       ),
     );
