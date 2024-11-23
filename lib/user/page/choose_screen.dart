@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:milkproject/farmer/page/farmer_registration_page.dart';
 import 'package:milkproject/user/page/signup_page.dart';
 import 'package:milkproject/society/page/society_registration.dart';
+import 'package:milkproject/dealer/page/dealer_registration_page.dart';
+
 
 class ChooseScreen extends StatelessWidget {
   @override
@@ -175,7 +177,7 @@ class ChooseScreen extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => SocietyRegistrationScreen(),
+                      builder: (context) => DealerRegistrationScreen(),
                     ));
               },
               child: Card(
