@@ -39,11 +39,12 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                // Email Text Field
+                // Email Text Field with Icon
                 TextFormField(
                   controller: emailController,
                   decoration: InputDecoration(
                     labelText: 'Email',
+                    prefixIcon: Icon(Icons.email), // Add email icon
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -62,12 +63,13 @@ class LoginScreen extends StatelessWidget {
                   },
                 ),
                 const SizedBox(height: 20),
-                // Password Text Field
+                // Password Text Field with Icon
                 TextFormField(
                   controller: passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
                     labelText: 'Password',
+                    prefixIcon: Icon(Icons.lock), // Add lock icon
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -100,23 +102,17 @@ class LoginScreen extends StatelessWidget {
                         String email = emailController.text;
                         String password = passwordController.text;
 
-
                         if(email == 'f@gmail.com'){
                           Navigator.push(context, MaterialPageRoute(builder: (context) => FarmerBottomNavScreen(),));
                         }
 
                         if(email == 'a@gmail.com'){
-
                           //admin
-
                         }
 
                         if(email == 'user@gmail.com'){
                           //user
                         }
-
-
-                        
                       } else {
                         // If the form is not valid, show a message
                         ScaffoldMessenger.of(context).showSnackBar(

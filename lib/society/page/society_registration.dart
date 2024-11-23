@@ -56,145 +56,201 @@ class _SocietyRegistrationScreenState extends State<SocietyRegistrationScreen> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Building Address Field
-                  TextFormField(
-                    controller: buildingAddressController,
-                    decoration: InputDecoration(
-                      labelText: 'Building Address',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                  // Building Address Field with Icon
+                  Row(
+                    children: [
+                      Icon(Icons.home, size: 30, color: Colors.green),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextFormField(
+                          controller: buildingAddressController,
+                          decoration: InputDecoration(
+                            labelText: 'Building Address',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter the building address';
+                            }
+                            return null;
+                          },
+                        ),
                       ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter the building address';
-                      }
-                      return null;
-                    },
+                    ],
                   ),
                   const SizedBox(height: 20),
 
-                  // Location Field
-                  TextFormField(
-                    controller: locationController,
-                    decoration: InputDecoration(
-                      labelText: 'Location',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                  // Location Field with Icon
+                  Row(
+                    children: [
+                      Icon(Icons.location_on, size: 30, color: Colors.green),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextFormField(
+                          controller: locationController,
+                          decoration: InputDecoration(
+                            labelText: 'Location',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter the location';
+                            }
+                            return null;
+                          },
+                        ),
                       ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter the location';
-                      }
-                      return null;
-                    },
+                    ],
                   ),
                   const SizedBox(height: 20),
 
-                  // Pincode Field
-                  TextFormField(
-                    controller: pincodeController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: 'Pincode',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                  // Pincode Field with Icon
+                  Row(
+                    children: [
+                      Icon(Icons.pin, size: 30, color: Colors.green),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextFormField(
+                          controller: pincodeController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: 'Pincode',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter the pincode';
+                            }
+                            if (!RegExp(r'^\d{6}$').hasMatch(value)) {
+                              return 'Please enter a valid 6-digit pincode';
+                            }
+                            return null;
+                          },
+                        ),
                       ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter the pincode';
-                      }
-                      if (!RegExp(r'^\d{6}$').hasMatch(value)) {
-                        return 'Please enter a valid 6-digit pincode';
-                      }
-                      return null;
-                    },
+                    ],
                   ),
                   const SizedBox(height: 20),
 
-                  // Contact Number Field
-                  TextFormField(
-                    controller: contactNumberController,
-                    keyboardType: TextInputType.phone,
-                    decoration: InputDecoration(
-                      labelText: 'Contact Number',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                  // Contact Number Field with Icon
+                  Row(
+                    children: [
+                      Icon(Icons.phone, size: 30, color: Colors.green),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextFormField(
+                          controller: contactNumberController,
+                          keyboardType: TextInputType.phone,
+                          decoration: InputDecoration(
+                            labelText: 'Contact Number',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter the contact number';
+                            }
+                            if (!RegExp(r'^\+?[0-9]{10,13}$').hasMatch(value)) {
+                              return 'Please enter a valid contact number';
+                            }
+                            return null;
+                          },
+                        ),
                       ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter the contact number';
-                      }
-                      if (!RegExp(r'^\+?[0-9]{10,13}$').hasMatch(value)) {
-                        return 'Please enter a valid contact number';
-                      }
-                      return null;
-                    },
+                    ],
                   ),
                   const SizedBox(height: 20),
 
-                  // License Number Field
-                  TextFormField(
-                    controller: licenseNumberController,
-                    decoration: InputDecoration(
-                      labelText: 'License Number',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                  // License Number Field with Icon
+                  Row(
+                    children: [
+                      Icon(Icons.card_membership, size: 30, color: Colors.green),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextFormField(
+                          controller: licenseNumberController,
+                          decoration: InputDecoration(
+                            labelText: 'License Number',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter the license number';
+                            }
+                            return null;
+                          },
+                        ),
                       ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter the license number';
-                      }
-                      return null;
-                    },
+                    ],
                   ),
                   const SizedBox(height: 20),
 
-                  // Manager Name Field
-                  TextFormField(
-                    controller: managerNameController,
-                    decoration: InputDecoration(
-                      labelText: 'Manager Name',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                  // Manager Name Field with Icon
+                  Row(
+                    children: [
+                      Icon(Icons.account_circle, size: 30, color: Colors.green),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextFormField(
+                          controller: managerNameController,
+                          decoration: InputDecoration(
+                            labelText: 'Manager Name',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter the manager\'s name';
+                            }
+                            return null;
+                          },
+                        ),
                       ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter the manager\'s name';
-                      }
-                      return null;
-                    },
+                    ],
                   ),
                   const SizedBox(height: 20),
 
-                  // Manager Contact Number Field
-                  TextFormField(
-                    controller: managerContactController,
-                    keyboardType: TextInputType.phone,
-                    decoration: InputDecoration(
-                      labelText: 'Manager Contact Number',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                  // Manager Contact Number Field with Icon
+                  Row(
+                    children: [
+                      Icon(Icons.phone, size: 30, color: Colors.green),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextFormField(
+                          controller: managerContactController,
+                          keyboardType: TextInputType.phone,
+                          decoration: InputDecoration(
+                            labelText: 'Manager Contact Number',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter the manager\'s contact number';
+                            }
+                            if (!RegExp(r'^\+?[0-9]{10,13}$').hasMatch(value)) {
+                              return 'Please enter a valid contact number';
+                            }
+                            return null;
+                          },
+                        ),
                       ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter the manager\'s contact number';
-                      }
-                      if (!RegExp(r'^\+?[0-9]{10,13}$').hasMatch(value)) {
-                        return 'Please enter a valid contact number';
-                      }
-                      return null;
-                    },
+                    ],
                   ),
                   const SizedBox(height: 20),
 
-                  // Upload Document Button
+                  // Upload Document Button with Icon
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF3EA120),
@@ -205,13 +261,20 @@ class _SocietyRegistrationScreenState extends State<SocietyRegistrationScreen> {
                       ),
                     ),
                     onPressed: _pickDocument,
-                    child: const Text(
-                      'Upload Document',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: const [
+                        Icon(Icons.upload_file, color: Colors.white),
+                        SizedBox(width: 8),
+                        Text(
+                          'Upload Document',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -228,7 +291,7 @@ class _SocietyRegistrationScreenState extends State<SocietyRegistrationScreen> {
 
                   const SizedBox(height: 20),
 
-                  // Full-Width Register Button
+                  // Full-Width Register Button with Icon
                   SizedBox(
                     width: double.infinity, // This ensures the button is full width
                     child: ElevatedButton(
@@ -266,13 +329,20 @@ class _SocietyRegistrationScreenState extends State<SocietyRegistrationScreen> {
                           );
                         }
                       },
-                      child: const Text(
-                        'Register',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: const [
+                          Icon(Icons.check_circle, color: Colors.white),
+                          SizedBox(width: 8),
+                          Text(
+                            'Register',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
