@@ -48,16 +48,16 @@ class UserSignupPageState extends State<UserSignupPage> {
     return null;
   }
   
-    String? validateRationCard(String? value) {
-  if (value == null || value.isEmpty) {
-    return 'Ration Card number cannot be empty';
-  } else if (value.length < 10 || value.length > 15) {
-    return 'Ration Card number must be between 10 and 15 characters';
-  } else if (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)) {
-    return 'Ration Card number should only contain alphanumeric characters';
+  String? validateRationCard(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Ration Card number cannot be empty';
+    } else if (value.length < 10 || value.length > 15) {
+      return 'Ration Card number must be between 10 and 15 characters';
+    } else if (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)) {
+      return 'Ration Card number should only contain alphanumeric characters';
+    }
+    return null;
   }
-  return null;
-}
 
   String? validatePhone(String? value) {
     if (value == null || value.isEmpty) {
@@ -73,7 +73,6 @@ class UserSignupPageState extends State<UserSignupPage> {
       return 'Bank account number cannot be empty';
     }
     return null;
-    
   }
 
   @override
@@ -89,7 +88,7 @@ class UserSignupPageState extends State<UserSignupPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Image.asset(
-                  'asset/29319f53b462e0e20000f77710213461.png',
+                  'asset/logo.png',
                   width: 270,
                   height: 250,
                 ),
@@ -99,7 +98,7 @@ class UserSignupPageState extends State<UserSignupPage> {
                   decoration: const InputDecoration(
                     labelText: 'Username',
                     border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.person),
+                    prefixIcon: Icon(Icons.person), // Username icon
                   ),
                   validator: validateUsername,
                 ),
@@ -111,6 +110,7 @@ class UserSignupPageState extends State<UserSignupPage> {
                   decoration: InputDecoration(
                     labelText: 'Password',
                     border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.lock), // Password icon
                     suffixIcon: IconButton(
                       icon: Icon(showPassword ? Icons.visibility : Icons.visibility_off),
                       onPressed: () {
@@ -129,6 +129,7 @@ class UserSignupPageState extends State<UserSignupPage> {
                   decoration: const InputDecoration(
                     labelText: 'Aadhar Number',
                     border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.card_membership), // Aadhar icon
                   ),
                   keyboardType: TextInputType.number,
                   validator: validateAadhar,
@@ -141,6 +142,7 @@ class UserSignupPageState extends State<UserSignupPage> {
                   decoration: const InputDecoration(
                     labelText: 'Ration Number',
                     border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.card_travel), // Ration card icon
                   ),
                 ),
                 const SizedBox(height: 16.0),
@@ -150,6 +152,7 @@ class UserSignupPageState extends State<UserSignupPage> {
                   decoration: const InputDecoration(
                     labelText: 'Bank Account Number',
                     border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.account_balance_wallet), // Bank account icon
                   ),
                   keyboardType: TextInputType.number,
                   validator: validateBankAccount,
@@ -161,11 +164,11 @@ class UserSignupPageState extends State<UserSignupPage> {
                   decoration: const InputDecoration(
                     labelText: 'Mobile Number',
                     border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.phone), // Phone number icon
                   ),
                   keyboardType: TextInputType.phone,
                   validator: validatePhone,
                 ),
-                
                 const SizedBox(height: 20.0),
                 // Signup button
                 OutlinedButton(

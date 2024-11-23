@@ -51,110 +51,150 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Name Text Field
-                  TextFormField(
-                    controller: nameController,
-                    decoration: InputDecoration(
-                      labelText: 'Name',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                  // Name Text Field with Icon
+                  Row(
+                    children: [
+                      Icon(Icons.person, size: 30, color: Colors.green),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextFormField(
+                          controller: nameController,
+                          decoration: InputDecoration(
+                            labelText: 'Name',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your name';
+                            }
+                            return null;
+                          },
+                        ),
                       ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your name';
-                      }
-                      return null;
-                    },
+                    ],
                   ),
                   const SizedBox(height: 20),
 
-                  // Phone Text Field
-                  TextFormField(
-                    controller: phoneController,
-                    decoration: InputDecoration(
-                      labelText: 'Phone Number',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                  // Phone Text Field with Icon
+                  Row(
+                    children: [
+                      Icon(Icons.phone, size: 30, color: Colors.green),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextFormField(
+                          controller: phoneController,
+                          decoration: InputDecoration(
+                            labelText: 'Phone Number',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your phone number';
+                            }
+                            if (!RegExp(r'^\+?[0-9]{10,13}$').hasMatch(value)) {
+                              return 'Please enter a valid phone number';
+                            }
+                            return null;
+                          },
+                        ),
                       ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your phone number';
-                      }
-                      if (!RegExp(r'^\+?[0-9]{10,13}$').hasMatch(value)) {
-                        return 'Please enter a valid phone number';
-                      }
-                      return null;
-                    },
+                    ],
                   ),
                   const SizedBox(height: 20),
 
-                  // Password Text Field
-                  TextFormField(
-                    controller: passwordController,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                  // Password Text Field with Icon
+                  Row(
+                    children: [
+                      Icon(Icons.lock, size: 30, color: Colors.green),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextFormField(
+                          controller: passwordController,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            labelText: 'Password',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a password';
+                            }
+                            return null;
+                          },
+                        ),
                       ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a password';
-                      }
-                      return null;
-                    },
+                    ],
                   ),
                   const SizedBox(height: 20),
 
-                  // Confirm Password Text Field
-                  TextFormField(
-                    controller: confirmPasswordController,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      labelText: 'Confirm Password',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                  // Confirm Password Text Field with Icon
+                  Row(
+                    children: [
+                      Icon(Icons.lock_outline, size: 30, color: Colors.green),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextFormField(
+                          controller: confirmPasswordController,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            labelText: 'Confirm Password',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please confirm your password';
+                            }
+                            if (value != passwordController.text) {
+                              return 'Passwords do not match';
+                            }
+                            return null;
+                          },
+                        ),
                       ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please confirm your password';
-                      }
-                      if (value != passwordController.text) {
-                        return 'Passwords do not match';
-                      }
-                      return null;
-                    },
+                    ],
                   ),
                   const SizedBox(height: 20),
 
-                  // How Many Cows Field
-                  TextFormField(
-                    controller: cowsController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: 'How many cows?',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                  // How Many Cows Field with Icon
+                  Row(
+                    children: [
+                      Icon(Icons.agriculture, size: 30, color: Colors.green),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextFormField(
+                          controller: cowsController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: 'How many cows?',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter the number of cows';
+                            }
+                            if (int.tryParse(value) == null ||
+                                int.parse(value) <= 0) {
+                              return 'Please enter a valid number of cows';
+                            }
+                            return null;
+                          },
+                        ),
                       ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter the number of cows';
-                      }
-                      if (int.tryParse(value) == null ||
-                          int.parse(value) <= 0) {
-                        return 'Please enter a valid number of cows';
-                      }
-                      return null;
-                    },
+                    ],
                   ),
                   const SizedBox(height: 20),
 
-                  // Upload Document Button
+                  // Upload Document Button with Icon
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF3EA120),
@@ -165,13 +205,20 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                       ),
                     ),
                     onPressed: _pickDocument,
-                    child: const Text(
-                      'Upload Document',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: const [
+                        Icon(Icons.upload_file, color: Colors.white),
+                        SizedBox(width: 8),
+                        Text(
+                          'Upload Document',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -188,7 +235,7 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
 
                   const SizedBox(height: 20),
 
-                  // Full-Width Register Button
+                  // Full-Width Register Button with Icon
                   SizedBox(
                     width: double.infinity, // This ensures the button is full width
                     child: ElevatedButton(
@@ -210,7 +257,7 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                           String confirmPassword =
                               confirmPasswordController.text;
                           String cows = cowsController.text;
-                    
+
                           // Example: print the data (you could send this to a server)
                           print(
                               'Farmer Registered: Name: $name, Phone: $phone, Cows: $cows');
@@ -223,13 +270,20 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                           );
                         }
                       },
-                      child: const Text(
-                        'Register',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.check_circle, color: Colors.white),
+                          SizedBox(width: 8),
+                          Text(
+                            'Register',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -242,3 +296,4 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
     );
   }
 }
+

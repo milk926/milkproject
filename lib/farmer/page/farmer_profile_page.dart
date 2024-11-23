@@ -4,7 +4,6 @@ class FarmerProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
@@ -21,14 +20,20 @@ class FarmerProfileScreen extends StatelessWidget {
               ),
               SizedBox(height: 20),
 
-              // Farmer's Name
-              Text(
-                'Name:',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
+              // Farmer's Name with Icon
+              Row(
+                children: [
+                  Icon(Icons.person, size: 30, color: Colors.green),
+                  SizedBox(width: 10),
+                  Text(
+                    'Name:',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ],
               ),
               SizedBox(height: 8),
               Text(
@@ -40,14 +45,20 @@ class FarmerProfileScreen extends StatelessWidget {
               ),
               SizedBox(height: 20),
 
-              // Phone Number
-              Text(
-                'Phone Number:',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
+              // Phone Number with Icon
+              Row(
+                children: [
+                  Icon(Icons.phone, size: 30, color: Colors.green),
+                  SizedBox(width: 10),
+                  Text(
+                    'Phone Number:',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ],
               ),
               SizedBox(height: 8),
               Text(
@@ -59,14 +70,20 @@ class FarmerProfileScreen extends StatelessWidget {
               ),
               SizedBox(height: 20),
 
-              // Number of Cows
-              Text(
-                'Number of Cows:',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
+              // Number of Cows with Icon
+              Row(
+                children: [
+                  Icon(Icons.agriculture, size: 30, color: Colors.green),
+                  SizedBox(width: 10),
+                  Text(
+                    'Number of Cows:',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ],
               ),
               SizedBox(height: 8),
               Text(
@@ -78,14 +95,20 @@ class FarmerProfileScreen extends StatelessWidget {
               ),
               SizedBox(height: 20),
 
-              // Show Documents Section
-              Text(
-                'Show Documents:',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
+              // Show Documents Section with Icon
+              Row(
+                children: [
+                  Icon(Icons.document_scanner, size: 30, color: Colors.green),
+                  SizedBox(width: 10),
+                  Text(
+                    'Show Documents:',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ],
               ),
               SizedBox(height: 8),
               ElevatedButton(
@@ -109,7 +132,24 @@ class FarmerProfileScreen extends StatelessWidget {
                     },
                   );
                 },
-                child: Text('View Documents'),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Icon(
+                      Icons.visibility,
+                      color: Colors.white,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      'View Documents',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green, // Green color for the button
                   padding: EdgeInsets.symmetric(horizontal: 30, vertical: 12),
