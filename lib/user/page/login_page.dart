@@ -105,7 +105,7 @@ class LoginScreen extends StatelessWidget {
                         String password = passwordController.text;
 
                         if(email == 'f@gmail.com'){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => FarmerBottomNavScreen(),));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const FarmerBottomNavScreen(),));
                         }
 
                         if(email == 'a@gmail.com'){
@@ -141,7 +141,7 @@ class LoginScreen extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ChooseScreen(),
+                          builder: (context) => const ChooseScreen(),
                         ));
                   },
                   child: const Text(

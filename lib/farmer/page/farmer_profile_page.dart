@@ -139,9 +139,9 @@ class FarmerProfileScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
                   textStyle: const TextStyle(fontSize: 18),
                 ),
-                child: Row(
+                child: const Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: const [
+                  children: [
                     Icon(
                       Icons.visibility,
                       color: Colors.white,

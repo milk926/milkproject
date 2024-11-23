@@ -13,7 +13,7 @@ class _FarmerBottomNavScreenState extends State<FarmerBottomNavScreen> {
 
   // List of screens for each section
   final List<Widget> _screens = [
-    FarmerProfileScreen(),
+    const FarmerProfileScreen(),
     const Scaffold(),
     const Scaffold(),
     const Scaffold(),

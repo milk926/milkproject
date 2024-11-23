@@ -35,7 +35,7 @@ class ChooseScreen extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => FarmerRegistrationScreen(),
+                      builder: (context) => const FarmerRegistrationScreen(),
                     ));
               },
               child: Card(
@@ -131,7 +131,7 @@ class ChooseScreen extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => SocietyRegistrationScreen(),
+                      builder: (context) => const SocietyRegistrationScreen(),
                     ));
               },
               child: Card(
@@ -179,7 +179,7 @@ class ChooseScreen extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => DealerRegistrationScreen(),
+                      builder: (context) => const DealerRegistrationScreen(),
                     ));
               },
               child: Card(
