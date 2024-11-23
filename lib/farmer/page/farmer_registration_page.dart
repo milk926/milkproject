@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart'; // For picking document images
 
 class FarmerRegistrationScreen extends StatefulWidget {
-  @override
+  @overrideA
   _FarmerRegistrationScreenState createState() =>
       _FarmerRegistrationScreenState();
 }
