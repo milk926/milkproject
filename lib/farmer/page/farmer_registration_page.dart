@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart'; // For picking document images
 
 class FarmerRegistrationScreen extends StatefulWidget {
-  @overrideA
+  const FarmerRegistrationScreen({super.key});
+
+  @override
+  @override
   _FarmerRegistrationScreenState createState() =>
       _FarmerRegistrationScreenState();
 }
@@ -54,7 +57,7 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                   // Name Text Field with Icon
                   Row(
                     children: [
-                      Icon(Icons.person, size: 30, color: Colors.green),
+                      const Icon(Icons.person, size: 30, color: Colors.green),
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
@@ -80,7 +83,7 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                   // Phone Text Field with Icon
                   Row(
                     children: [
-                      Icon(Icons.phone, size: 30, color: Colors.green),
+                      const Icon(Icons.phone, size: 30, color: Colors.green),
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
@@ -109,7 +112,7 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                   // Password Text Field with Icon
                   Row(
                     children: [
-                      Icon(Icons.lock, size: 30, color: Colors.green),
+                      const Icon(Icons.lock, size: 30, color: Colors.green),
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
@@ -136,7 +139,7 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                   // Confirm Password Text Field with Icon
                   Row(
                     children: [
-                      Icon(Icons.lock_outline, size: 30, color: Colors.green),
+                      const Icon(Icons.lock_outline, size: 30, color: Colors.green),
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
@@ -166,7 +169,7 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                   // How Many Cows Field with Icon
                   Row(
                     children: [
-                      Icon(Icons.agriculture, size: 30, color: Colors.green),
+                      const Icon(Icons.agriculture, size: 30, color: Colors.green),
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
@@ -205,9 +208,9 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                       ),
                     ),
                     onPressed: _pickDocument,
-                    child: Row(
+                    child: const Row(
                       mainAxisSize: MainAxisSize.min,
-                      children: const [
+                      children: [
                         Icon(Icons.upload_file, color: Colors.white),
                         SizedBox(width: 8),
                         Text(
@@ -227,7 +230,7 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                   if (_document != null)
                     Text(
                       'Document Selected: ${_document!.name}',
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Colors.black),

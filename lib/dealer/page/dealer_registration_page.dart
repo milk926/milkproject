@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class DealerRegistrationScreen extends StatefulWidget {
+  const DealerRegistrationScreen({super.key});
+
   @override
   _DealerRegistrationScreenState createState() =>
       _DealerRegistrationScreenState();
@@ -161,7 +163,7 @@ class _DealerRegistrationScreenState extends State<DealerRegistrationScreen> {
                   if (_document != null)
                     Text(
                       'Document Selected: ${_document!.path.split('/').last}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,

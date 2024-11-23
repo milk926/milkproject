@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -53,7 +55,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _startAutoScroll() {
-    Timer.periodic(Duration(seconds: 2), (timer) {
+    Timer.periodic(const Duration(seconds: 2), (timer) {
       if (_scrollController.hasClients) {
         final maxScroll = _scrollController.position.maxScrollExtent;
         final currentScroll = _scrollController.offset;
@@ -61,7 +63,7 @@ class _HomePageState extends State<HomePage> {
         if (currentScroll < maxScroll) {
           _scrollController.animateTo(
             currentScroll + 150,
-            duration: Duration(milliseconds: 500),
+            duration: const Duration(milliseconds: 500),
             curve: Curves.easeInOut,
           );
         } else {
@@ -78,7 +80,7 @@ class _HomePageState extends State<HomePage> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            DrawerHeader(
+            const DrawerHeader(
               decoration: BoxDecoration(color: Colors.blue),
               child: Text(
                 'Drawer Header',
@@ -86,11 +88,11 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             ListTile(
-              title: Text('Item 1'),
+              title: const Text('Item 1'),
               onTap: () {},
             ),
             ListTile(
-              title: Text('Item 2'),
+              title: const Text('Item 2'),
               onTap: () {},
             ),
           ],
@@ -104,7 +106,7 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.menu),
+            icon: const Icon(Icons.menu),
             onPressed: () {
               Scaffold.of(context).openEndDrawer();
             },
@@ -114,7 +116,7 @@ class _HomePageState extends State<HomePage> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Container(
+            SizedBox(
               width: double.infinity,
               child: Image.asset(
                 'asset/ai-generated-7483596_960_720.jpg',
@@ -127,12 +129,12 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Products',
                     style: TextStyle(fontSize: 24),
                   ),
-                  SizedBox(height: 20),
-                  Text(
+                  const SizedBox(height: 20),
+                  const Text(
                     'This is the home page where you can introduce our products.',
                     style: TextStyle(fontSize: 16),
                   ),
@@ -150,7 +152,7 @@ class _HomePageState extends State<HomePage> {
                           autoPlayCurve: Curves.fastOutSlowIn,
                           enableInfiniteScroll: true,
                           autoPlayAnimationDuration:
-                              Duration(milliseconds: 800),
+                              const Duration(milliseconds: 800),
                           onPageChanged: (index, reason) {
                             setState(() {
                               _currentIndex = index;
@@ -161,7 +163,7 @@ class _HomePageState extends State<HomePage> {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Container(
+                              SizedBox(
                                 width: double.infinity,
                                 height: 150,
                                 child: Image.network(
@@ -174,7 +176,7 @@ class _HomePageState extends State<HomePage> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
                                   productNames[index],
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -185,7 +187,7 @@ class _HomePageState extends State<HomePage> {
                                     horizontal: 16.0),
                                 child: Text(
                                   demoTexts[index],
-                                  style: TextStyle(fontSize: 14),
+                                  style: const TextStyle(fontSize: 14),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -193,11 +195,11 @@ class _HomePageState extends State<HomePage> {
                           );
                         },
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       AnimatedSmoothIndicator(
                         activeIndex: _currentIndex,
                         count: imageUrls.length,
-                        effect: ScrollingDotsEffect(
+                        effect: const ScrollingDotsEffect(
                           dotHeight: 8,
                           dotWidth: 8,
                           activeDotColor: Colors.blue,
@@ -209,20 +211,20 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 20),
-                  Text(
+                  const SizedBox(height: 20),
+                  const Text(
                     'WHAT WE DO',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 10),
-                  Text(
+                  const SizedBox(height: 10),
+                  const Text(
                     'We are dedicated to empowering dairy farmers and enhancing the dairy industry by implementing sustainable practices and providing valuable services. Our focus is on improving livelihoods, ensuring market stability, and promoting economic development within the farming community.',
                     style: TextStyle(fontSize: 16),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     controller: _scrollController,
@@ -242,7 +244,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildCard(String title) {
     return Container(
-      margin: EdgeInsets.only(right: 16),
+      margin: const EdgeInsets.only(right: 16),
       width: 150,
       height: 100,
       decoration: BoxDecoration(
@@ -253,14 +255,14 @@ class _HomePageState extends State<HomePage> {
             color: Colors.grey.withOpacity(0.5),
             spreadRadius: 2,
             blurRadius: 5,
-            offset: Offset(0, 3),
+            offset: const Offset(0, 3),
           ),
         ],
       ),
       child: Center(
         child: Text(
           title,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 16,
             fontWeight: FontWeight.bold,

@@ -6,6 +6,8 @@ import 'package:milkproject/dealer/page/dealer_registration_page.dart';
 
 
 class ChooseScreen extends StatelessWidget {
+  const ChooseScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +42,7 @@ class ChooseScreen extends StatelessWidget {
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
-                  side: BorderSide(
+                  side: const BorderSide(
                     color: Color(0xFF3EA120), // Outline color
                     width: 2, // Border width
                   ),
@@ -50,7 +52,7 @@ class ChooseScreen extends StatelessWidget {
                   width: 300,
                   height: 150,
                   padding: const EdgeInsets.all(20),
-                  child: Column(
+                  child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
@@ -58,8 +60,8 @@ class ChooseScreen extends StatelessWidget {
                         size: 40,
                         color: Color(0xFF3EA120), // Icon color to match border
                       ),
-                      const SizedBox(height: 10),
-                      const Text(
+                      SizedBox(height: 10),
+                      Text(
                         'Farmer',
                         style: TextStyle(
                           fontSize: 20,
@@ -81,14 +83,14 @@ class ChooseScreen extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => UserSignupPage(),
+                      builder: (context) => const UserSignupPage(),
                     ));
               },
               child: Card(
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
-                  side: BorderSide(
+                  side: const BorderSide(
                     color: Color(0xFF3EA120), // Outline color
                     width: 2, // Border width
                   ),
@@ -98,7 +100,7 @@ class ChooseScreen extends StatelessWidget {
                   width: 300,
                   height: 150,
                   padding: const EdgeInsets.all(20),
-                  child: Column(
+                  child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
@@ -106,8 +108,8 @@ class ChooseScreen extends StatelessWidget {
                         size: 40,
                         color: Color(0xFF3EA120), // Icon color to match border
                       ),
-                      const SizedBox(height: 10),
-                      const Text(
+                      SizedBox(height: 10),
+                      Text(
                         'User',
                         style: TextStyle(
                           fontSize: 20,
@@ -136,7 +138,7 @@ class ChooseScreen extends StatelessWidget {
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
-                  side: BorderSide(
+                  side: const BorderSide(
                     color: Color(0xFF3EA120), // Outline color
                     width: 2, // Border width
                   ),
@@ -147,7 +149,7 @@ class ChooseScreen extends StatelessWidget {
                   width: 300,
                   height: 150,
                   padding: const EdgeInsets.all(20),
-                  child: Column(
+                  child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
@@ -155,8 +157,8 @@ class ChooseScreen extends StatelessWidget {
                         size: 40,
                         color: Color(0xFF3EA120), // Icon color to match border
                       ),
-                      const SizedBox(height: 10),
-                      const Text(
+                      SizedBox(height: 10),
+                      Text(
                         'Society',
                         style: TextStyle(
                           fontSize: 20,
@@ -184,7 +186,7 @@ class ChooseScreen extends StatelessWidget {
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
-                  side: BorderSide(
+                  side: const BorderSide(
                     color: Color(0xFF3EA120), // Outline color
                     width: 2, // Border width
                   ),
@@ -195,7 +197,7 @@ class ChooseScreen extends StatelessWidget {
                   width: 300,
                   height: 150,
                   padding: const EdgeInsets.all(20),
-                  child: Column(
+                  child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
@@ -203,8 +205,8 @@ class ChooseScreen extends StatelessWidget {
                         size: 40,
                         color: Color(0xFF3EA120), // Icon color to match border
                       ),
-                      const SizedBox(height: 10),
-                      const Text(
+                      SizedBox(height: 10),
+                      Text(
                         'Dealer',
                         style: TextStyle(
                           fontSize: 20,

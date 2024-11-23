@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:milkproject/farmer/page/farmer_profile_page.dart';
 
 class FarmerBottomNavScreen extends StatefulWidget {
+  const FarmerBottomNavScreen({super.key});
+
   @override
   _FarmerBottomNavScreenState createState() => _FarmerBottomNavScreenState();
 }
@@ -12,9 +14,9 @@ class _FarmerBottomNavScreenState extends State<FarmerBottomNavScreen> {
   // List of screens for each section
   final List<Widget> _screens = [
     FarmerProfileScreen(),
-    Scaffold(),
-    Scaffold(),
-    Scaffold(),
+    const Scaffold(),
+    const Scaffold(),
+    const Scaffold(),
   ];
 
   // Handle tab selection
@@ -28,7 +30,7 @@ class _FarmerBottomNavScreenState extends State<FarmerBottomNavScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Milk Production App'),
+        title: const Text('Milk Production App'),
       ),
       body: _screens[_selectedIndex], // Display content based on selected tab
       bottomNavigationBar: BottomNavigationBar(

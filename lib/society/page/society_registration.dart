@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart'; // For picking document images
 
 class SocietyRegistrationScreen extends StatefulWidget {
+  const SocietyRegistrationScreen({super.key});
+
   @override
   _SocietyRegistrationScreenState createState() =>
       _SocietyRegistrationScreenState();
@@ -59,7 +61,7 @@ class _SocietyRegistrationScreenState extends State<SocietyRegistrationScreen> {
                   // Building Address Field with Icon
                   Row(
                     children: [
-                      Icon(Icons.home, size: 30, color: Colors.green),
+                      const Icon(Icons.home, size: 30, color: Colors.green),
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
@@ -85,7 +87,7 @@ class _SocietyRegistrationScreenState extends State<SocietyRegistrationScreen> {
                   // Location Field with Icon
                   Row(
                     children: [
-                      Icon(Icons.location_on, size: 30, color: Colors.green),
+                      const Icon(Icons.location_on, size: 30, color: Colors.green),
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
@@ -111,7 +113,7 @@ class _SocietyRegistrationScreenState extends State<SocietyRegistrationScreen> {
                   // Pincode Field with Icon
                   Row(
                     children: [
-                      Icon(Icons.pin, size: 30, color: Colors.green),
+                      const Icon(Icons.pin, size: 30, color: Colors.green),
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
@@ -141,7 +143,7 @@ class _SocietyRegistrationScreenState extends State<SocietyRegistrationScreen> {
                   // Contact Number Field with Icon
                   Row(
                     children: [
-                      Icon(Icons.phone, size: 30, color: Colors.green),
+                      const Icon(Icons.phone, size: 30, color: Colors.green),
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
@@ -171,7 +173,7 @@ class _SocietyRegistrationScreenState extends State<SocietyRegistrationScreen> {
                   // License Number Field with Icon
                   Row(
                     children: [
-                      Icon(Icons.card_membership, size: 30, color: Colors.green),
+                      const Icon(Icons.card_membership, size: 30, color: Colors.green),
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
@@ -197,7 +199,7 @@ class _SocietyRegistrationScreenState extends State<SocietyRegistrationScreen> {
                   // Manager Name Field with Icon
                   Row(
                     children: [
-                      Icon(Icons.account_circle, size: 30, color: Colors.green),
+                      const Icon(Icons.account_circle, size: 30, color: Colors.green),
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
@@ -223,7 +225,7 @@ class _SocietyRegistrationScreenState extends State<SocietyRegistrationScreen> {
                   // Manager Contact Number Field with Icon
                   Row(
                     children: [
-                      Icon(Icons.phone, size: 30, color: Colors.green),
+                      const Icon(Icons.phone, size: 30, color: Colors.green),
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
@@ -261,9 +263,9 @@ class _SocietyRegistrationScreenState extends State<SocietyRegistrationScreen> {
                       ),
                     ),
                     onPressed: _pickDocument,
-                    child: Row(
+                    child: const Row(
                       mainAxisSize: MainAxisSize.min,
-                      children: const [
+                      children: [
                         Icon(Icons.upload_file, color: Colors.white),
                         SizedBox(width: 8),
                         Text(
@@ -283,7 +285,7 @@ class _SocietyRegistrationScreenState extends State<SocietyRegistrationScreen> {
                   if (_document != null)
                     Text(
                       'Document Selected: ${_document!.name}',
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Colors.black),
@@ -329,9 +331,9 @@ class _SocietyRegistrationScreenState extends State<SocietyRegistrationScreen> {
                           );
                         }
                       },
-                      child: Row(
+                      child: const Row(
                         mainAxisSize: MainAxisSize.min,
-                        children: const [
+                        children: [
                           Icon(Icons.check_circle, color: Colors.white),
                           SizedBox(width: 8),
                           Text(

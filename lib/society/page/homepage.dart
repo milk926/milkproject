@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class MilkProjectHomePage extends StatelessWidget {
+  const MilkProjectHomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,11 +61,11 @@ class MilkProjectHomePage extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          DrawerHeader(
+          const DrawerHeader(
             decoration: BoxDecoration(color: Color(0xFF3EA120)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 CircleAvatar(
                   radius: 30,
                   backgroundImage: AssetImage('assets/images/profile.png'),
@@ -81,14 +83,14 @@ class MilkProjectHomePage extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: Icon(Icons.home),
+            leading: const Icon(Icons.home),
             title: const Text('Home'),
             onTap: () {
               Navigator.pop(context);
             },
           ),
           ListTile(
-            leading: Icon(Icons.bar_chart),
+            leading: const Icon(Icons.bar_chart),
             title: const Text('Sales Report'),
             onTap: () {
               Navigator.push(context,
@@ -96,7 +98,7 @@ class MilkProjectHomePage extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.people),
+            leading: const Icon(Icons.people),
             title: const Text('User Accounts'),
             onTap: () {
               Navigator.push(context,
@@ -104,7 +106,7 @@ class MilkProjectHomePage extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.shopping_cart),
+            leading: const Icon(Icons.shopping_cart),
             title: const Text('Order Management'),
             onTap: () {
               Navigator.push(context,
@@ -112,7 +114,7 @@ class MilkProjectHomePage extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.inventory),
+            leading: const Icon(Icons.inventory),
             title: const Text('Product Catalog'),
             onTap: () {
               Navigator.push(context,
@@ -120,7 +122,7 @@ class MilkProjectHomePage extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.feedback),
+            leading: const Icon(Icons.feedback),
             title: const Text('Feedback'),
             onTap: () {
               Navigator.push(
@@ -128,7 +130,7 @@ class MilkProjectHomePage extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.notifications),
+            leading: const Icon(Icons.notifications),
             title: const Text('Notifications'),
             onTap: () {
               Navigator.push(context,
@@ -136,7 +138,7 @@ class MilkProjectHomePage extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.check_circle),
+            leading: const Icon(Icons.check_circle),
             title: const Text('Order Status'),
             onTap: () {
               Navigator.push(context,
@@ -162,11 +164,11 @@ class MilkProjectHomePage extends StatelessWidget {
         autoPlay: true,
         enlargeCenterPage: true,
         aspectRatio: 16 / 9,
-        autoPlayInterval: Duration(seconds: 5),
+        autoPlayInterval: const Duration(seconds: 5),
       ),
       items: imgList
           .map((item) => Container(
-                margin: EdgeInsets.all(5.0),
+                margin: const EdgeInsets.all(5.0),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.0),
                   image: DecorationImage(
@@ -207,7 +209,7 @@ class MilkProjectHomePage extends StatelessWidget {
               const SizedBox(height: 10),
               Text(
                 value,
-                style: TextStyle(
+                style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: Colors.black87),
@@ -215,7 +217,7 @@ class MilkProjectHomePage extends StatelessWidget {
               const SizedBox(height: 5),
               Text(
                 title,
-                style: TextStyle(fontSize: 14, color: Colors.black54),
+                style: const TextStyle(fontSize: 14, color: Colors.black54),
               ),
             ],
           ),
@@ -239,7 +241,7 @@ class MilkProjectHomePage extends StatelessWidget {
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
           shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           children: [
             _buildFeatureCard(context, 'Sales Report', Icons.bar_chart,
                 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3VAs9YEVMBkwCJt_DcEbuwL_rdBy0zRIOxA&s', () {
@@ -326,7 +328,7 @@ class MilkProjectHomePage extends StatelessWidget {
         ),
       ],
       currentIndex: 0,
-      selectedItemColor: Color(0xFF3EA120),
+      selectedItemColor: const Color(0xFF3EA120),
       onTap: (index) {
         // Handle navigation based on index
         switch (index) {
@@ -374,6 +376,8 @@ class SalesReportPage extends StatelessWidget {
       'image': 'assets/images/cheese.png',
     },
   ];
+
+  const SalesReportPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -505,6 +509,8 @@ class UserAccountPage extends StatelessWidget {
     },
   ];
 
+  const UserAccountPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -612,6 +618,8 @@ class OrderManagementPage extends StatelessWidget {
     },
   ];
 
+  const OrderManagementPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -663,7 +671,7 @@ class OrderManagementPage extends StatelessWidget {
           children: [
             Text('Customer: $customerName'),
             Text('Order Date: $orderDate'),
-            Text('Total Amount: \₹${totalAmount.toStringAsFixed(2)}'),
+            Text('Total Amount: ₹${totalAmount.toStringAsFixed(2)}'),
             const SizedBox(height: 8),
             Row(
               children: [
@@ -758,6 +766,8 @@ class ProductCatalogPage extends StatelessWidget {
     },
   ];
 
+  const ProductCatalogPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -828,7 +838,7 @@ class ProductCatalogPage extends StatelessWidget {
 
           // Product Price
           Text(
-            '\₹${price.toStringAsFixed(2)}',
+            '₹${price.toStringAsFixed(2)}',
             style: const TextStyle(
               fontSize: 14,
               color: Colors.grey,
@@ -868,6 +878,8 @@ class ProductCatalogPage extends StatelessWidget {
 //import 'package:flutter/material.dart';
 
 class FeedbackPage extends StatefulWidget {
+  const FeedbackPage({super.key});
+
   @override
   _FeedbackPageState createState() => _FeedbackPageState();
 }
@@ -1029,6 +1041,8 @@ class OrderStatusPage extends StatelessWidget {
     },
   ];
 
+  const OrderStatusPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1133,6 +1147,8 @@ void main() {
 //import 'package:flutter/material.dart';
 
 class ProfilePage extends StatelessWidget {
+  const ProfilePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1151,7 +1167,7 @@ class ProfilePage extends StatelessWidget {
               Center(
                 child: Stack(
                   children: [
-                    CircleAvatar(
+                    const CircleAvatar(
                       radius: 50,
                       backgroundImage: NetworkImage(
                         'https://via.placeholder.com/150', // Placeholder Image URL
@@ -1343,6 +1359,8 @@ class NotificationPage extends StatelessWidget {
       'time': '1 day ago',
     },
   ];
+
+  const NotificationPage({super.key});
 
   @override
   Widget build(BuildContext context) {

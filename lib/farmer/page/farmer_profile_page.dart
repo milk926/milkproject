@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class FarmerProfileScreen extends StatelessWidget {
+  const FarmerProfileScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -11,17 +13,17 @@ class FarmerProfileScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Profile Picture
-              Center(
+              const Center(
                 child: CircleAvatar(
                   radius: 60,
                   backgroundColor: Colors.green,
                   backgroundImage: AssetImage('assets/farmer_image.jpg'), // Add a placeholder image
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Farmer's Name with Icon
-              Row(
+              const Row(
                 children: [
                   Icon(Icons.person, size: 30, color: Colors.green),
                   SizedBox(width: 10),
@@ -35,18 +37,18 @@ class FarmerProfileScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 8),
-              Text(
+              const SizedBox(height: 8),
+              const Text(
                 'John Doe', // Replace with dynamic data
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.black,
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Phone Number with Icon
-              Row(
+              const Row(
                 children: [
                   Icon(Icons.phone, size: 30, color: Colors.green),
                   SizedBox(width: 10),
@@ -60,18 +62,18 @@ class FarmerProfileScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 8),
-              Text(
+              const SizedBox(height: 8),
+              const Text(
                 '+123 456 7890', // Replace with dynamic data
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.black,
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Number of Cows with Icon
-              Row(
+              const Row(
                 children: [
                   Icon(Icons.agriculture, size: 30, color: Colors.green),
                   SizedBox(width: 10),
@@ -85,18 +87,18 @@ class FarmerProfileScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 8),
-              Text(
+              const SizedBox(height: 8),
+              const Text(
                 '25', // Replace with dynamic data
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.black,
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Show Documents Section with Icon
-              Row(
+              const Row(
                 children: [
                   Icon(Icons.document_scanner, size: 30, color: Colors.green),
                   SizedBox(width: 10),
@@ -110,7 +112,7 @@ class FarmerProfileScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               ElevatedButton(
                 onPressed: () {
                   // Add logic to view or upload documents
@@ -118,20 +120,25 @@ class FarmerProfileScreen extends StatelessWidget {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text("Document Viewer"),
-                        content: Text("Display or Upload Documents here."),
+                        title: const Text("Document Viewer"),
+                        content: const Text("Display or Upload Documents here."),
                         actions: <Widget>[
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: Text('Close'),
+                            child: const Text('Close'),
                           ),
                         ],
                       );
                     },
                   );
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green, // Green color for the button
+                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+                  textStyle: const TextStyle(fontSize: 18),
+                ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: const [
@@ -149,11 +156,6 @@ class FarmerProfileScreen extends StatelessWidget {
                       ),
                     ),
                   ],
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green, // Green color for the button
-                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 12),
-                  textStyle: TextStyle(fontSize: 18),
                 ),
               ),
             ],
