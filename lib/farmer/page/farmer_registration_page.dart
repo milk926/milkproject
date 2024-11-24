@@ -166,7 +166,7 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                   // How Many Cows Field with Icon
                   Row(
                     children: [
-                      Icon(Icons.agriculture, size: 30, color: Colors.green),
+                      Image.asset('asset/cow (1).png',width: 30,height: 30,color: Colors.green,),
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
