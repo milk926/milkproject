@@ -15,10 +15,10 @@ class UserSignupPageState extends State<UserSignupPage> {
   TextEditingController ration = TextEditingController();
   TextEditingController bank = TextEditingController();
   TextEditingController phone = TextEditingController();
-  
-  // State for password visibility toggle                                                           
+
+  // State for password visibility toggle
   bool showPassword = true;
-  
+
   // Form key for validation
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -47,7 +47,7 @@ class UserSignupPageState extends State<UserSignupPage> {
     }
     return null;
   }
-  
+
   String? validateRationCard(String? value) {
     if (value == null || value.isEmpty) {
       return 'Ration Card number cannot be empty';
@@ -98,7 +98,7 @@ class UserSignupPageState extends State<UserSignupPage> {
                   decoration: const InputDecoration(
                     labelText: 'Username',
                     border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.person), // Username icon
+                    prefixIcon: Icon(Icons.person, color: Colors.green), // Icon color changed to green
                   ),
                   validator: validateUsername,
                 ),
@@ -110,9 +110,12 @@ class UserSignupPageState extends State<UserSignupPage> {
                   decoration: InputDecoration(
                     labelText: 'Password',
                     border: const OutlineInputBorder(),
-                    prefixIcon: const Icon(Icons.lock), // Password icon
+                    prefixIcon: const Icon(Icons.lock, color: Colors.green), // Icon color changed to green
                     suffixIcon: IconButton(
-                      icon: Icon(showPassword ? Icons.visibility : Icons.visibility_off),
+                      icon: Icon(
+                        showPassword ? Icons.visibility : Icons.visibility_off,
+                        color: Colors.green, // Icon color changed to green
+                      ),
                       onPressed: () {
                         setState(() {
                           showPassword = !showPassword;
@@ -129,7 +132,7 @@ class UserSignupPageState extends State<UserSignupPage> {
                   decoration: const InputDecoration(
                     labelText: 'Aadhar Number',
                     border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.card_membership), // Aadhar icon
+                    prefixIcon: Icon(Icons.card_membership, color: Colors.green), // Icon color changed to green
                   ),
                   keyboardType: TextInputType.number,
                   validator: validateAadhar,
@@ -142,7 +145,7 @@ class UserSignupPageState extends State<UserSignupPage> {
                   decoration: const InputDecoration(
                     labelText: 'Ration Number',
                     border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.card_travel), // Ration card icon
+                    prefixIcon: Icon(Icons.card_travel, color: Colors.green), // Icon color changed to green
                   ),
                 ),
                 const SizedBox(height: 16.0),
@@ -152,7 +155,7 @@ class UserSignupPageState extends State<UserSignupPage> {
                   decoration: const InputDecoration(
                     labelText: 'Bank Account Number',
                     border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.account_balance_wallet), // Bank account icon
+                    prefixIcon: Icon(Icons.account_balance_wallet, color: Colors.green), // Icon color changed to green
                   ),
                   keyboardType: TextInputType.number,
                   validator: validateBankAccount,
@@ -164,7 +167,7 @@ class UserSignupPageState extends State<UserSignupPage> {
                   decoration: const InputDecoration(
                     labelText: 'Mobile Number',
                     border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.phone), // Phone number icon
+                    prefixIcon: Icon(Icons.phone, color: Colors.green), // Icon color changed to green
                   ),
                   keyboardType: TextInputType.phone,
                   validator: validatePhone,
