@@ -2,12 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart'; // For picking document images
 
 class FarmerRegistrationScreen extends StatefulWidget {
-<<<<<<< HEAD
   const FarmerRegistrationScreen({super.key});
 
-  @override
-=======
->>>>>>> 77c374536c385de845495bd3bbb49583dc8e8c77
   @override
   _FarmerRegistrationScreenState createState() =>
       _FarmerRegistrationScreenState();
@@ -172,11 +168,7 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                   // How Many Cows Field with Icon
                   Row(
                     children: [
-<<<<<<< HEAD
                       const Icon(Icons.agriculture, size: 30, color: Colors.green),
-=======
-                      Image.asset('asset/cow (1).png',width: 30,height: 30,color: Colors.green,),
->>>>>>> 77c374536c385de845495bd3bbb49583dc8e8c77
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
@@ -260,12 +252,19 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                       onPressed: () {
                         // Validate the form before proceeding
                         if (_formKey.currentState?.validate() ?? false) {
+                          // Check if document is uploaded
+                          if (_document == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content:
+                                      Text('Please upload a document')),
+                            );
+                            return;
+                          }
+
                           // Handle successful registration logic
                           String name = nameController.text;
                           String phone = phoneController.text;
-                          String password = passwordController.text;
-                          String confirmPassword =
-                              confirmPasswordController.text;
                           String cows = cowsController.text;
 
                           // Example: print the data (you could send this to a server)
@@ -306,4 +305,3 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
     );
   }
 }
-
