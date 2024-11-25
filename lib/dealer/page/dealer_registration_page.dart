@@ -1,5 +1,8 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:milkproject/dealer/page/dealer_homepage.dart';
 
 class DealerRegistrationScreen extends StatefulWidget {
   const DealerRegistrationScreen({super.key});
@@ -190,13 +193,21 @@ class _DealerRegistrationScreenState extends State<DealerRegistrationScreen> {
                           String contactNumber = contactNumberController.text;
                           String aadharNumber = aadharNumberController.text;
 
+                          // Print dealer details for debugging purposes
                           print(
                               'Dealer Registered: Name: $name, Email: $email, Contact: $contactNumber, Aadhaar: $aadharNumber');
+
+                          // Navigate to Dealer Homepage after successful registration
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DealersHomepage(dealer: Dealer(name),),
+                            ),
+                          );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                                content:
-                                    Text('Please fill all fields correctly')),
+                                content: Text('Please fill all fields correctly')),
                           );
                         }
                       },
