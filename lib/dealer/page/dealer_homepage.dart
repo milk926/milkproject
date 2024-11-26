@@ -12,7 +12,7 @@ class Dealer {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
 }
 
 class DealerLoginPage extends StatelessWidget {
-  const DealerLoginPage({Key? key}) : super(key: key);
+  const DealerLoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +58,7 @@ class DealerLoginPage extends StatelessWidget {
 class DealersHomepage extends StatelessWidget {
   final Dealer dealer;
 
-  const DealersHomepage({Key? key, required this.dealer}) : super(key: key);
+  const DealersHomepage({super.key, required this.dealer});
 
   @override
   Widget build(BuildContext context) {
@@ -280,7 +280,7 @@ class SectionHeader extends StatelessWidget {
   final String title;
   final IconData? icon;
 
-  const SectionHeader({required this.title, this.icon});
+  const SectionHeader({super.key, required this.title, this.icon});
 
   @override
   Widget build(BuildContext context) {

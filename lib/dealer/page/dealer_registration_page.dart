@@ -201,13 +201,16 @@ class _DealerRegistrationScreenState extends State<DealerRegistrationScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DealersHomepage(dealer: Dealer(name),),
+                              builder: (context) => DealersHomepage(
+                                dealer: Dealer(name),
+                              ),
                             ),
                           );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                                content: Text('Please fill all fields correctly')),
+                                content:
+                                    Text('Please fill all fields correctly')),
                           );
                         }
                       },
