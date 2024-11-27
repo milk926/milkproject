@@ -98,21 +98,31 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                     onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const ChooseScreen()));
                       // Validate the form
                       if (_formKey.currentState?.validate() ?? false) {
                         // Proceed with login
                         String email = emailController.text;
+                        // ignore: unused_local_variable
                         String password = passwordController.text;
 
-                        if(email == 'f@gmail.com'){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const FarmerBottomNavScreen(),));
+                        if (email == 'f@gmail.com') {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const FarmerBottomNavScreen(),
+                              ));
                         }
 
-                        if(email == 'a@gmail.com'){
+                        if (email == 'a@gmail.com') {
                           //admin
                         }
 
-                        if(email == 'user@gmail.com'){
+                        if (email == 'user@gmail.com') {
                           //user
                         }
                       } else {

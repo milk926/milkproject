@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:milkproject/farmer/page/farmer_profile_page.dart';
-
-class FarmerBottomNavScreen extends StatefulWidget {
+FarmerBottomNavScreen
+class  extends StatefulWidget {
   const FarmerBottomNavScreen({super.key});
 
   @override
