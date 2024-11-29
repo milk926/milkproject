@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
+      debugShowCheckedModeBanner: false, // Removes the "DEBUG" banner
       home: const DealerLoginPage(),
     );
   }
@@ -32,12 +33,12 @@ class DealerLoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Simulating a dealer login
-    // Here you could replace with actual login logic and get dealer's name from input
-    Dealer dealer = Dealer('John Doe');  // Example dealer name
+    Dealer dealer = Dealer('John Doe'); // Example dealer name
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Dealer Login'),
+        backgroundColor: const Color(0xFF3EA120),
       ),
       body: Center(
         child: ElevatedButton(
@@ -45,9 +46,16 @@ class DealerLoginPage extends StatelessWidget {
             // Navigate to DealersHomepage and pass dealer object
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => DealersHomepage(dealer: dealer)),
+              MaterialPageRoute(
+                builder: (context) => DealersHomepage(dealer: dealer),
+              ),
             );
           },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF3EA120), // Green background
+            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+            textStyle: const TextStyle(fontSize: 18),
+          ),
           child: const Text('Go to Homepage'),
         ),
       ),
@@ -55,10 +63,41 @@ class DealerLoginPage extends StatelessWidget {
   }
 }
 
-class DealersHomepage extends StatelessWidget {
+class DealersHomepage extends StatefulWidget {
   final Dealer dealer;
 
   const DealersHomepage({super.key, required this.dealer});
+
+  @override
+  _DealersHomepageState createState() => _DealersHomepageState();
+}
+
+class _DealersHomepageState extends State<DealersHomepage> {
+  int _notificationCount = 3; // Start with 3 notifications for demo purposes
+
+  void _incrementNotification(String message) {
+    setState(() {
+      _notificationCount++;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
+
+  void _showDemoNotification(String orderStatus) {
+    // Show a demo notification related to the order status
+    String message;
+    if (orderStatus == 'Pending') {
+      message = 'Someone has placed a new order!';
+    } else if (orderStatus == 'Delivered') {
+      message = 'Order has been delivered!';
+    } else {
+      message = 'Order status updated!';
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,11 +106,40 @@ class DealersHomepage extends StatelessWidget {
         title: const Text('Dealer Homepage'),
         backgroundColor: const Color(0xFF3EA120), // Green AppBar
         actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: () {
-              // Navigate to Notifications page
-            },
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.notifications),
+                onPressed: () {
+                  // Show demo notification when notifications are clicked
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text('You have a new notification!')),
+                  );
+                },
+              ),
+              if (_notificationCount > 0) // Badge for notifications
+                Positioned(
+                  right: 10,
+                  top: 10,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Text(
+                      '$_notificationCount',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
           ),
         ],
       ),
@@ -83,13 +151,17 @@ class DealersHomepage extends StatelessWidget {
             children: [
               // Welcome Header
               Text(
-                'Welcome, ${dealer.name}', // Use the dealer's name here
+                'Welcome, ${widget.dealer.name}',
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black, // Heading color is now black
+                  color: Colors.black,
                 ),
               ),
+              const SizedBox(height: 20),
+
+              // Notification Section
+              _buildNotificationSection(),
               const SizedBox(height: 20),
 
               // Order View Section
@@ -99,135 +171,42 @@ class DealersHomepage extends StatelessWidget {
               const SizedBox(height: 20),
 
               // Location Update Section
-              const SectionHeader(title: 'Update Location', icon: Icons.location_on),
-              Card(
-                color: const Color(0xFFEAF7E4),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      TextField(
-                        decoration: InputDecoration(
-                          labelText: 'New Location',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF3EA120),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        onPressed: () {
-                          // Update location action
-                        },
-                        child: const Text('Update'),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              const SectionHeader(
+                  title: 'Update Location', icon: Icons.location_on),
+              _buildLocationUpdateSection(),
+
               const SizedBox(height: 20),
 
               // Profile Edit Section
               const SectionHeader(title: 'Edit Profile', icon: Icons.edit),
-              Card(
-                color: const Color(0xFFEAF7E4),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      TextField(
-                        decoration: InputDecoration(
-                          labelText: 'Name',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      TextField(
-                        decoration: InputDecoration(
-                          labelText: 'Email',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      TextField(
-                        decoration: InputDecoration(
-                          labelText: 'New Password',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        obscureText: true,
-                      ),
-                      const SizedBox(height: 10),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF3EA120),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        onPressed: () {
-                          // Save profile changes
-                        },
-                        child: const Text('Save Changes'),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              // Customer/Farmer Details Section
-              const SectionHeader(title: 'Customer/Farmer Details', icon: Icons.people),
-              Card(
-                color: const Color(0xFFEAF7E4),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: DataTable(
-                  columns: const [
-                    DataColumn(label: Text('Name')),
-                    DataColumn(label: Text('Contact')),
-                    DataColumn(label: Text('Activity')),
-                  ],
-                  rows: const [
-                    DataRow(cells: [
-                      DataCell(Text('Farmer A')),
-                      DataCell(Text('123-456-7890')),
-                      DataCell(Text('Order #123')),
-                    ]),
-                    DataRow(cells: [
-                      DataCell(Text('Farmer B')),
-                      DataCell(Text('987-654-3210')),
-                      DataCell(Text('Order #124')),
-                    ]),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              // Notifications Section
-              const SectionHeader(title: 'Notifications', icon: Icons.notifications_active),
-              _buildNotificationCard('New Order from Farmer B', 'Order #125'),
-              _buildNotificationCard('Order #123 delivered successfully', 'Thank you for your service.'),
+              _buildProfileEditSection(),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  // Notification Section
+  Widget _buildNotificationSection() {
+    return Card(
+      color: const Color(0xFFEAF7E4),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: ListTile(
+        leading:
+            const Icon(Icons.notifications_active, color: Color(0xFF3EA120)),
+        title: const Text(
+          'Notifications',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text('You have $_notificationCount unread notifications.'),
+        trailing: IconButton(
+          icon: const Icon(Icons.add_alert, color: Color(0xFF3EA120)),
+          onPressed: () {
+            _incrementNotification('New notification added.');
+          },
         ),
       ),
     );
@@ -246,7 +225,8 @@ class DealersHomepage extends StatelessWidget {
         subtitle: Text('Status: $status'),
         trailing: ElevatedButton(
           onPressed: () {
-            // Navigate to Order Details
+            _showDemoNotification(
+                status); // Show notification based on order status
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF3EA120),
@@ -260,22 +240,113 @@ class DealersHomepage extends StatelessWidget {
     );
   }
 
-  // Helper function to build Notification Card
-  Widget _buildNotificationCard(String title, String subtitle) {
+  // Location Update Section
+  Widget _buildLocationUpdateSection() {
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
       color: const Color(0xFFEAF7E4),
-      child: ListTile(
-        leading: const Icon(Icons.notifications_active, color: Color(0xFF3EA120)),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text(subtitle),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'New Location',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF3EA120),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              onPressed: () {
+                _incrementNotification('Location updated successfully.');
+              },
+              child: const Text('Update'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Profile Edit Section
+  Widget _buildProfileEditSection() {
+    return Card(
+      color: const Color(0xFFEAF7E4),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Name',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Email',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Current Password',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              obscureText: true,
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'New Password',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              obscureText: true,
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF3EA120),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              onPressed: () {
+                _incrementNotification('Profile updated successfully.');
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
+// Section Header Widget
 class SectionHeader extends StatelessWidget {
   final String title;
   final IconData? icon;
@@ -284,24 +355,17 @@ class SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        children: [
-          if (icon != null) ...[
-            Icon(icon, color: const Color(0xFF3EA120)),
-            const SizedBox(width: 8),
-          ],
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.black, // Heading color is now black
-            ),
-          ),
+    return Row(
+      children: [
+        if (icon != null) ...[
+          Icon(icon, color: const Color(0xFF3EA120)),
+          const SizedBox(width: 10),
         ],
-      ),
+        Text(
+          title,
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+      ],
     );
   }
 }
