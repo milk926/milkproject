@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart'; // For picking document images
 
 class FarmerRegistrationScreen extends StatefulWidget {
+  const FarmerRegistrationScreen({super.key});
+
   @override
   _FarmerRegistrationScreenState createState() =>
       _FarmerRegistrationScreenState();
@@ -16,6 +18,7 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
       TextEditingController();
   final TextEditingController cowsController = TextEditingController();
   XFile? _document; // To hold the selected document image
+  bool _isPasswordVisible = false; // Control password visibility
 
   // Function to pick the document image (e.g., farmer's ID or farm document)
   Future<void> _pickDocument() async {
@@ -51,10 +54,10 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Name Text Field with Icon
+                  // Name Text Field
                   Row(
                     children: [
-                      Icon(Icons.person, size: 30, color: Colors.green),
+                      const Icon(Icons.person, size: 30, color: Colors.green),
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
@@ -77,10 +80,10 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Phone Text Field with Icon
+                  // Phone Text Field
                   Row(
                     children: [
-                      Icon(Icons.phone, size: 30, color: Colors.green),
+                      const Icon(Icons.phone, size: 30, color: Colors.green),
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
@@ -106,19 +109,31 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Password Text Field with Icon
+                  // Password Text Field with Eye Icon
                   Row(
                     children: [
-                      Icon(Icons.lock, size: 30, color: Colors.green),
+                      const Icon(Icons.lock, size: 30, color: Colors.green),
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
                           controller: passwordController,
-                          obscureText: true,
+                          obscureText: !_isPasswordVisible,
                           decoration: InputDecoration(
                             labelText: 'Password',
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _isPasswordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _isPasswordVisible = !_isPasswordVisible;
+                                });
+                              },
                             ),
                           ),
                           validator: (value) {
@@ -133,19 +148,32 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Confirm Password Text Field with Icon
+                  // Confirm Password Text Field with Eye Icon
                   Row(
                     children: [
-                      Icon(Icons.lock_outline, size: 30, color: Colors.green),
+                      const Icon(Icons.lock_outline,
+                          size: 30, color: Colors.green),
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
                           controller: confirmPasswordController,
-                          obscureText: true,
+                          obscureText: !_isPasswordVisible,
                           decoration: InputDecoration(
                             labelText: 'Confirm Password',
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _isPasswordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _isPasswordVisible = !_isPasswordVisible;
+                                });
+                              },
                             ),
                           ),
                           validator: (value) {
@@ -163,10 +191,11 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                   ),
                   const SizedBox(height: 20),
 
-                  // How Many Cows Field with Icon
+                  // How Many Cows Field
                   Row(
                     children: [
-                      Image.asset('asset/cow (1).png',width: 30,height: 30,color: Colors.green,),
+                      const Icon(Icons.agriculture,
+                          size: 30, color: Colors.green),
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
@@ -194,7 +223,7 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Upload Document Button with Icon
+                  // Upload Document Button
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF3EA120),
@@ -205,13 +234,13 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                       ),
                     ),
                     onPressed: _pickDocument,
-                    child: Row(
+                    child: const Row(
                       mainAxisSize: MainAxisSize.min,
-                      children: const [
+                      children: [
                         Icon(Icons.upload_file, color: Colors.white),
                         SizedBox(width: 8),
                         Text(
-                          'Upload Document',
+                          'Upload Document (Optional)',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -227,7 +256,7 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                   if (_document != null)
                     Text(
                       'Document Selected: ${_document!.name}',
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Colors.black),
@@ -235,9 +264,10 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
 
                   const SizedBox(height: 20),
 
-                  // Full-Width Register Button with Icon
+                  // Full-Width Register Button
                   SizedBox(
-                    width: double.infinity, // This ensures the button is full width
+                    width: double
+                        .infinity, // This ensures the button is full width
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF3EA120),
@@ -253,9 +283,6 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                           // Handle successful registration logic
                           String name = nameController.text;
                           String phone = phoneController.text;
-                          String password = passwordController.text;
-                          String confirmPassword =
-                              confirmPasswordController.text;
                           String cows = cowsController.text;
 
                           // Example: print the data (you could send this to a server)
@@ -296,4 +323,3 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
     );
   }
 }
-
