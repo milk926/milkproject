@@ -3,11 +3,12 @@
 //import 'package:milkproject/user/page/login_page.dart';
 
 import 'package:flutter/material.dart';
+import 'package:milkproject/farmer/page/farmer_root_screen.dart';
 import 'package:milkproject/society/page/homepage.dart';
 import 'package:milkproject/user/page/login_page.dart';
 
 void main() {
   runApp(
-    MaterialApp(debugShowCheckedModeBanner: false, home: LoginScreen()),
+    MaterialApp(debugShowCheckedModeBanner: false, home: FarmerBottomNavScreen()),
   );
 }
