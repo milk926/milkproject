@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "509519047545",
+    "project_id": "milk-project-9fa51",
+    "storage_bucket": "milk-project-9fa51.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:509519047545:android:9f08178509fcd43f6e5da8",
+        "android_client_info": {
+          "package_name": "com.example.milkproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAseYGO7uBWDePH9SJn68wXGL2F0BjNFt4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
