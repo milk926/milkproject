@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:milkproject/user/page/services/user_auth.dart';
 
 class UserSignupPage extends StatefulWidget {
   const UserSignupPage({super.key});
@@ -15,6 +17,7 @@ class UserSignupPageState extends State<UserSignupPage> {
   TextEditingController ration = TextEditingController();
   TextEditingController bank = TextEditingController();
   TextEditingController phone = TextEditingController();
+  TextEditingController email = TextEditingController();
 
   // State for password visibility toggle
   bool showPassword = true;
@@ -75,6 +78,17 @@ class UserSignupPageState extends State<UserSignupPage> {
     return null;
   }
 
+  String? validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Email cannot be empty';
+    } else if (!RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(value)) {
+      return 'Please enter a valid email address';
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,9 +112,20 @@ class UserSignupPageState extends State<UserSignupPage> {
                   decoration: const InputDecoration(
                     labelText: 'Username',
                     border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.person, color: Colors.green), // Icon color changed to green
+                    prefixIcon: Icon(Icons.person, color: Colors.green),
                   ),
                   validator: validateUsername,
+                ),
+                const SizedBox(height: 16.0),
+                // Email field
+                TextFormField(
+                  controller: email,
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.email, color: Colors.green),
+                  ),
+                  validator: validateEmail,
                 ),
                 const SizedBox(height: 16.0),
                 // Password field
@@ -110,11 +135,11 @@ class UserSignupPageState extends State<UserSignupPage> {
                   decoration: InputDecoration(
                     labelText: 'Password',
                     border: const OutlineInputBorder(),
-                    prefixIcon: const Icon(Icons.lock, color: Colors.green), // Icon color changed to green
+                    prefixIcon: const Icon(Icons.lock, color: Colors.green),
                     suffixIcon: IconButton(
                       icon: Icon(
                         showPassword ? Icons.visibility : Icons.visibility_off,
-                        color: Colors.green, // Icon color changed to green
+                        color: Colors.green,
                       ),
                       onPressed: () {
                         setState(() {
@@ -132,7 +157,7 @@ class UserSignupPageState extends State<UserSignupPage> {
                   decoration: const InputDecoration(
                     labelText: 'Aadhar Number',
                     border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.card_membership, color: Colors.green), // Icon color changed to green
+                    prefixIcon: Icon(Icons.card_membership, color: Colors.green),
                   ),
                   keyboardType: TextInputType.number,
                   validator: validateAadhar,
@@ -145,7 +170,7 @@ class UserSignupPageState extends State<UserSignupPage> {
                   decoration: const InputDecoration(
                     labelText: 'Ration Number',
                     border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.card_travel, color: Colors.green), // Icon color changed to green
+                    prefixIcon: Icon(Icons.card_travel, color: Colors.green),
                   ),
                 ),
                 const SizedBox(height: 16.0),
@@ -155,7 +180,7 @@ class UserSignupPageState extends State<UserSignupPage> {
                   decoration: const InputDecoration(
                     labelText: 'Bank Account Number',
                     border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.account_balance_wallet, color: Colors.green), // Icon color changed to green
+                    prefixIcon: Icon(Icons.account_balance_wallet, color: Colors.green),
                   ),
                   keyboardType: TextInputType.number,
                   validator: validateBankAccount,
@@ -167,7 +192,7 @@ class UserSignupPageState extends State<UserSignupPage> {
                   decoration: const InputDecoration(
                     labelText: 'Mobile Number',
                     border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.phone, color: Colors.green), // Icon color changed to green
+                    prefixIcon: Icon(Icons.phone, color: Colors.green),
                   ),
                   keyboardType: TextInputType.phone,
                   validator: validatePhone,
@@ -177,14 +202,18 @@ class UserSignupPageState extends State<UserSignupPage> {
                 OutlinedButton(
                   onPressed: () {
                     if (_formKey.currentState?.validate() ?? false) {
-                      // If form is valid, proceed with signup
+                      UserAuthService().UserRegister(
+                        context: context,
+                        name: name.text,
+                        password: password.text,
+                        aadhar: aadhar.text,
+                        ration: ration.text,
+                        bank: bank.text,
+                        phone: phone.text,
+                        email: email.text,
+                      );
                       print('Signup Successful');
-                      print('Username: ${name.text}');
-                      print('Password: ${password.text}');
-                      print('Aadhar: ${aadhar.text}');
-                      print('Phone: ${phone.text}');
                     } else {
-                      // If form is invalid, show error
                       print('Validation failed');
                     }
                   },

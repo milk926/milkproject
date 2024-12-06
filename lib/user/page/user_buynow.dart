@@ -140,3 +140,6 @@ class MilkProductPage extends StatelessWidget {
     );
   }
 }
+
+class BuyNowPage {
+}

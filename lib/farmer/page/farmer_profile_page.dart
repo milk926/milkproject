@@ -73,11 +73,11 @@ class FarmerProfileScreen extends StatelessWidget {
               const SizedBox(height: 20),
 
               // Number of Cows with Icon
-              const Row(
+              Row(
                 children: [
                   Image.asset('asset/cow (1).png', width: 30, height: 30,color: Colors.green,),
-                  SizedBox(width: 10),
-                  Text(
+                  const SizedBox(width: 10),
+                  const Text(
                     'Number of Cows:',
                     style: TextStyle(
                       fontSize: 20,
