@@ -193,7 +193,8 @@ class _BuyNowPageState extends State<BuyNowPage> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.green.withOpacity(0.5), width: 2), // Green border
+          border: Border.all(
+              color: Colors.green.withOpacity(0.5), width: 2), // Green border
           borderRadius: BorderRadius.circular(12),
         ),
         child: Padding(
