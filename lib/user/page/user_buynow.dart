@@ -47,7 +47,6 @@ class MilkProductPage extends StatelessWidget {
             icon: const Icon(Icons.account_circle),
             onPressed: () {
               // Navigate to the profile page or handle your action here
-              
             },
           ),
         ],
@@ -114,10 +113,12 @@ class MilkProductPage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
-                        onPressed: () { Navigator.push(context, MaterialPageRoute(
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(
                             builder: (context) {
-
-                              return AddToCartPage(cartProducts: [],);
+                              return AddToCartPage(
+                                cartProducts: [],
+                              );
                             },
                           ));
                           // Add to Cart functionality
@@ -144,9 +145,7 @@ class MilkProductPage extends StatelessWidget {
                               return BuyNowPage();
                             },
                           ));
-                      
                         },
-                    
                         child: const Text('Buy Now'),
                       ),
                     ],
