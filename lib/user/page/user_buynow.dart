@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:milkproject/society/page/homepage.dart';
 import 'package:milkproject/user/page/buy_now.dart';
+import 'package:milkproject/user/page/services/addtocart.dart';
 import 'package:milkproject/user/page/userprofile.dart';
 
 class MilkProductPage extends StatelessWidget {
@@ -31,7 +32,7 @@ class MilkProductPage extends StatelessWidget {
     },
   ];
 
-  MilkProductPage({super.key});
+  MilkProductPage({super.key, required List cartProducts});
 
   @override
   Widget build(BuildContext context) {
@@ -46,12 +47,7 @@ class MilkProductPage extends StatelessWidget {
             icon: const Icon(Icons.account_circle),
             onPressed: () {
               // Navigate to the profile page or handle your action here
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ProfileScreen(),
-                ),
-              );
+              
             },
           ),
         ],
@@ -118,7 +114,12 @@ class MilkProductPage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
-                        onPressed: () {
+                        onPressed: () { Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+
+                              return AddToCartPage(cartProducts: [],);
+                            },
+                          ));
                           // Add to Cart functionality
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -143,7 +144,9 @@ class MilkProductPage extends StatelessWidget {
                               return BuyNowPage();
                             },
                           ));
+                      
                         },
+                    
                         child: const Text('Buy Now'),
                       ),
                     ],

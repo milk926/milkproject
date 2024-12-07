@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:milkproject/firebase_options.dart';
+import 'package:milkproject/user/page/buy_now.dart';
 import 'package:milkproject/user/page/edit_profile.dart';
+import 'package:milkproject/user/page/services/addtocart.dart';
 import 'package:milkproject/user/page/user_buynow.dart';
 import 'package:milkproject/user/page/userprofile.dart'; // Assuming ProfileScreen is in this file
 
@@ -29,7 +31,7 @@ Future<void> main() async {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MilkProductPage(), // Pass the test user to the ProfileScreen
+      home: BuyNowPage(), // Pass the test user to the ProfileScreen
     ),
   );
 }

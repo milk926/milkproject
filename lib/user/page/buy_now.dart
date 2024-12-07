@@ -12,15 +12,10 @@ class _BuyNowPageState extends State<BuyNowPage> {
   String? deliveryAddress;
   bool useSuperCoins = false;
   DateTime? selectedDate;
-  String paymentMethod = 'Credit/Debit Card';
+  String paymentMethod = 'Cash on Delivery'; // Default to COD
 
   final List<String> paymentOptions = [
-    'Credit/Debit Card',
-    'Net Banking',
-    'UPI',
-    'Wallets',
     'Cash on Delivery',
-    'Gift Cards'
   ];
 
   void _selectDeliveryDate(BuildContext context) async {
@@ -42,16 +37,10 @@ class _BuyNowPageState extends State<BuyNowPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Checkout'),
-        backgroundColor: Colors.blue[800],
+        backgroundColor: Colors.green[800],
       ),
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.blue[800]!, Colors.blue[400]!],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
+        color: Colors.white, // Background color set to white
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -65,7 +54,7 @@ class _BuyNowPageState extends State<BuyNowPage> {
                   _buildProgressConnector(),
                   _buildProgressStep("Details", true),
                   _buildProgressConnector(),
-                  _buildProgressStep("Payment", false),
+                  _buildProgressStep("Confirm", false),
                 ],
               ),
               const SizedBox(height: 16),
@@ -130,7 +119,7 @@ class _BuyNowPageState extends State<BuyNowPage> {
                     selectedDate == null
                         ? 'Select Date'
                         : '${selectedDate!.toLocal()}'.split(' ')[0],
-                    style: TextStyle(fontSize: 16, color: Colors.blue[800]),
+                    style: TextStyle(fontSize: 16, color: Colors.green[800]),
                   ),
                 ),
               ),
@@ -139,7 +128,7 @@ class _BuyNowPageState extends State<BuyNowPage> {
               // Payment Methods Section
               _buildSectionCard(
                 icon: Icons.payment,
-                title: "Payment Methods",
+                title: "Payment Method",
                 child: DropdownButton<String>(
                   isExpanded: true,
                   value: paymentMethod,
@@ -172,12 +161,19 @@ class _BuyNowPageState extends State<BuyNowPage> {
                     ),
                   ),
                   onPressed: () {
-                    // Navigate to the Payment Page
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            PaymentPage(paymentMethod: paymentMethod),
+                    if (deliveryAddress == null || deliveryAddress!.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Please enter a delivery address!'),
+                        ),
+                      );
+                      return;
+                    }
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Order placed successfully for $quantity item(s) to $deliveryAddress using $paymentMethod!',
+                        ),
                       ),
                     );
                   },
@@ -195,25 +191,31 @@ class _BuyNowPageState extends State<BuyNowPage> {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(icon, color: Colors.blue[800]),
-                const SizedBox(width: 8),
-                Text(
-                  title,
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            child,
-          ],
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.green.withOpacity(0.5), width: 2), // Green border
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(icon, color: Colors.green[800]),
+                  const SizedBox(width: 8),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              child,
+            ],
+          ),
         ),
       ),
     );
@@ -248,28 +250,6 @@ class _BuyNowPageState extends State<BuyNowPage> {
       width: 30,
       height: 2,
       color: Colors.grey,
-    );
-  }
-}
-
-class PaymentPage extends StatelessWidget {
-  final String paymentMethod;
-
-  const PaymentPage({super.key, required this.paymentMethod});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Payment"),
-        backgroundColor: Colors.blue[800],
-      ),
-      body: Center(
-        child: Text(
-          "Proceed with $paymentMethod",
-          style: const TextStyle(fontSize: 18),
-        ),
-      ),
     );
   }
 }
