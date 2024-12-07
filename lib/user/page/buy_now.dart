@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class BuyNowPage extends StatefulWidget {
-  BuyNowPage(Map map);
+  const BuyNowPage({super.key});
 
   @override
   _BuyNowPageState createState() => _BuyNowPageState();
@@ -28,7 +28,7 @@ class _BuyNowPageState extends State<BuyNowPage> {
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(Duration(days: 30)),
+      lastDate: DateTime.now().add(const Duration(days: 30)),
     );
     if (picked != null && picked != selectedDate) {
       setState(() {
@@ -41,7 +41,7 @@ class _BuyNowPageState extends State<BuyNowPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Checkout'),
+        title: const Text('Checkout'),
         backgroundColor: Colors.blue[800],
       ),
       body: Container(
@@ -68,7 +68,7 @@ class _BuyNowPageState extends State<BuyNowPage> {
                   _buildProgressStep("Payment", false),
                 ],
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               // Quantity Section
               _buildSectionCard(
@@ -89,7 +89,7 @@ class _BuyNowPageState extends State<BuyNowPage> {
                   },
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               // Delivery Address Section
               _buildSectionCard(
@@ -97,13 +97,13 @@ class _BuyNowPageState extends State<BuyNowPage> {
                 title: "Delivery Address",
                 child: TextField(
                   onChanged: (value) => deliveryAddress = value,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: 'Enter delivery address',
                     border: OutlineInputBorder(),
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               // SuperCoins Section
               _buildSectionCard(
@@ -118,7 +118,7 @@ class _BuyNowPageState extends State<BuyNowPage> {
                   },
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               // Delivery Date Section
               _buildSectionCard(
@@ -134,7 +134,7 @@ class _BuyNowPageState extends State<BuyNowPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               // Payment Methods Section
               _buildSectionCard(
@@ -156,16 +156,17 @@ class _BuyNowPageState extends State<BuyNowPage> {
                   },
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               // Place Order Button
               Center(
                 child: ElevatedButton.icon(
-                  icon: Icon(Icons.check_circle),
-                  label: Text('Place Order'),
+                  icon: const Icon(Icons.check_circle),
+                  label: const Text('Place Order'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
-                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 50, vertical: 15),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
                     ),
@@ -175,7 +176,8 @@ class _BuyNowPageState extends State<BuyNowPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => PaymentPage(paymentMethod: paymentMethod),
+                        builder: (context) =>
+                            PaymentPage(paymentMethod: paymentMethod),
                       ),
                     );
                   },
@@ -188,7 +190,8 @@ class _BuyNowPageState extends State<BuyNowPage> {
     );
   }
 
-  Widget _buildSectionCard({required IconData icon, required String title, required Widget child}) {
+  Widget _buildSectionCard(
+      {required IconData icon, required String title, required Widget child}) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -200,14 +203,15 @@ class _BuyNowPageState extends State<BuyNowPage> {
             Row(
               children: [
                 Icon(icon, color: Colors.blue[800]),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   title,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             child,
           ],
         ),
@@ -227,7 +231,7 @@ class _BuyNowPageState extends State<BuyNowPage> {
             color: Colors.white,
           ),
         ),
-        SizedBox(height: 4),
+        const SizedBox(height: 4),
         Text(
           title,
           style: TextStyle(
@@ -251,19 +255,19 @@ class _BuyNowPageState extends State<BuyNowPage> {
 class PaymentPage extends StatelessWidget {
   final String paymentMethod;
 
-  PaymentPage({required this.paymentMethod});
+  const PaymentPage({super.key, required this.paymentMethod});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Payment"),
+        title: const Text("Payment"),
         backgroundColor: Colors.blue[800],
       ),
       body: Center(
         child: Text(
           "Proceed with $paymentMethod",
-          style: TextStyle(fontSize: 18),
+          style: const TextStyle(fontSize: 18),
         ),
       ),
     );

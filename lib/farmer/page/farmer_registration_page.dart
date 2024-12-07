@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart'; // For picking document images
+import 'package:image_picker/image_picker.dart';
+import 'package:milkproject/farmer/services/farmer_auth.dart'; // For picking document images
 
 class FarmerRegistrationScreen extends StatefulWidget {
   const FarmerRegistrationScreen({super.key});
@@ -13,6 +14,8 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
   final _formKey = GlobalKey<FormState>(); // Form key for validation
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
+  final TextEditingController emailController =
+      TextEditingController(); // Email field
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
@@ -71,6 +74,37 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your name';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Email Text Field
+                  Row(
+                    children: [
+                      const Icon(Icons.email, size: 30, color: Colors.green),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextFormField(
+                          controller: emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: InputDecoration(
+                            labelText: 'Email Address',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your email address';
+                            }
+                            if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
+                                .hasMatch(value)) {
+                              return 'Please enter a valid email address';
                             }
                             return null;
                           },
@@ -282,12 +316,13 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                         if (_formKey.currentState?.validate() ?? false) {
                           // Handle successful registration logic
                           String name = nameController.text;
+                          String email = emailController.text;
                           String phone = phoneController.text;
                           String cows = cowsController.text;
+                          String password = passwordController.text;
 
                           // Example: print the data (you could send this to a server)
-                          print(
-                              'Farmer Registered: Name: $name, Phone: $phone, Cows: $cows');
+                          // FarmerAuthService().FarmerRegister(context: context, name: name, password: password, aadhar: aadhar, ration: ration, bank: bank, phone: phone, email: email)
                         } else {
                           // Show an error message if validation fails
                           ScaffoldMessenger.of(context).showSnackBar(

@@ -38,24 +38,29 @@ class _FarmerBottomNavScreenState extends State<FarmerBottomNavScreen> {
         onTap: _onItemTapped,
         selectedItemColor: Colors.green, // Selected item color (green)
         unselectedItemColor: Colors.black, // Unselected items color (black)
-        items:  [
-          BottomNavigationBarItem(
+        items: [
+          const BottomNavigationBarItem(
             icon: Icon(Icons.account_circle),
             label: 'Profile',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.notifications),
             label: 'Notifications',
           ),
           BottomNavigationBarItem(
-            icon: Image.asset('asset/manure.png', width: 30, height: 30,color: Colors.black,),
+            icon: Image.asset(
+              'asset/manure.png',
+              width: 30,
+              height: 30,
+              color: Colors.black,
+            ),
             label: ' Dung',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.local_drink),
             label: 'Milk ',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart),
             label: 'Buy Products',
           ),
@@ -63,4 +68,4 @@ class _FarmerBottomNavScreenState extends State<FarmerBottomNavScreen> {
       ),
     );
   }
-} 
+}

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:milkproject/society/page/homepage.dart';
 import 'package:milkproject/user/page/buy_now.dart';
+import 'package:milkproject/user/page/userprofile.dart';
 
 class MilkProductPage extends StatelessWidget {
   final List<Map<String, dynamic>> products = [
@@ -29,13 +31,30 @@ class MilkProductPage extends StatelessWidget {
     },
   ];
 
+  MilkProductPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Milk Products'),
+        title: const Text('Buy Now Page'),
+        titleTextStyle: TextStyle(color: Colors.white, fontSize: 25),
         centerTitle: true,
         backgroundColor: const Color(0xFF3EA120),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.account_circle),
+            onPressed: () {
+              // Navigate to the profile page or handle your action here
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfileScreen(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(16.0),
@@ -119,13 +138,11 @@ class MilkProductPage extends StatelessWidget {
                           ),
                         ),
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  BuyNowPage(product: product),
-                            ),
-                          );
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return BuyNowPage();
+                            },
+                          ));
                         },
                         child: const Text('Buy Now'),
                       ),
@@ -139,7 +156,4 @@ class MilkProductPage extends StatelessWidget {
       ),
     );
   }
-}
-
-class BuyNowPage {
 }

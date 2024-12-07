@@ -1,7 +1,6 @@
 import 'dart:async'; // Import for Timer
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:milkproject/user/page/buy_now.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomePage extends StatefulWidget {

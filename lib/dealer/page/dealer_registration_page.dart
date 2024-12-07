@@ -18,6 +18,9 @@ class _DealerRegistrationScreenState extends State<DealerRegistrationScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController contactNumberController = TextEditingController();
   final TextEditingController aadharNumberController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   XFile? _document;
 
   // Function to pick the document image
@@ -45,7 +48,6 @@ class _DealerRegistrationScreenState extends State<DealerRegistrationScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // "Dealer Registration" text
                   const Text(
                     'Dealer Registration',
                     style: TextStyle(
@@ -140,6 +142,50 @@ class _DealerRegistrationScreenState extends State<DealerRegistrationScreen> {
                   ),
                   const SizedBox(height: 20),
 
+                  // Password Field
+                  TextFormField(
+                    controller: passwordController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a password';
+                      }
+                      if (value.length < 6) {
+                        return 'Password must be at least 6 characters long';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Confirm Password Field
+                  TextFormField(
+                    controller: confirmPasswordController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      labelText: 'Confirm Password',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please confirm your password';
+                      }
+                      if (value != passwordController.text) {
+                        return 'Passwords do not match';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+
                   // Upload Document Button
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -174,7 +220,7 @@ class _DealerRegistrationScreenState extends State<DealerRegistrationScreen> {
                     ),
                   const SizedBox(height: 20),
 
-                  // Full-Width Register Button
+                  // Register Button
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -188,29 +234,25 @@ class _DealerRegistrationScreenState extends State<DealerRegistrationScreen> {
                       ),
                       onPressed: () {
                         if (_formKey.currentState?.validate() ?? false) {
-                          String name = nameController.text;
-                          String email = emailController.text;
-                          String contactNumber = contactNumberController.text;
-                          String aadharNumber = aadharNumberController.text;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Registration successful'),
+                            ),
+                          );
 
-                          // Print dealer details for debugging purposes
-                          print(
-                              'Dealer Registered: Name: $name, Email: $email, Contact: $contactNumber, Aadhaar: $aadharNumber');
-
-                          // Navigate to Dealer Homepage after successful registration
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => DealersHomepage(
-                                dealer: Dealer(name),
+                                dealer: Dealer(nameController.text),
                               ),
                             ),
                           );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                                content:
-                                    Text('Please fill all fields correctly')),
+                              content: Text('Please fill all fields correctly'),
+                            ),
                           );
                         }
                       },

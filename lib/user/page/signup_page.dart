@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:milkproject/user/page/services/user_auth.dart';
 
@@ -11,13 +10,13 @@ class UserSignupPage extends StatefulWidget {
 
 class UserSignupPageState extends State<UserSignupPage> {
   // Controllers for each field
-  TextEditingController name = TextEditingController();
-  TextEditingController password = TextEditingController();
-  TextEditingController aadhar = TextEditingController();
-  TextEditingController ration = TextEditingController();
-  TextEditingController bank = TextEditingController();
-  TextEditingController phone = TextEditingController();
-  TextEditingController email = TextEditingController();
+  final TextEditingController name = TextEditingController();
+  final TextEditingController password = TextEditingController();
+  final TextEditingController aadhar = TextEditingController();
+  final TextEditingController ration = TextEditingController();
+  final TextEditingController bank = TextEditingController();
+  final TextEditingController phone = TextEditingController();
+  final TextEditingController email = TextEditingController();
 
   // State for password visibility toggle
   bool showPassword = true;
@@ -45,7 +44,7 @@ class UserSignupPageState extends State<UserSignupPage> {
   String? validateAadhar(String? value) {
     if (value == null || value.isEmpty) {
       return 'Aadhar number cannot be empty';
-    } else if (value.length != 12) {
+    } else if (value.length != 12 || !RegExp(r'^\d+$').hasMatch(value)) {
       return 'Aadhar number must be 12 digits';
     }
     return null;
@@ -65,7 +64,7 @@ class UserSignupPageState extends State<UserSignupPage> {
   String? validatePhone(String? value) {
     if (value == null || value.isEmpty) {
       return 'Phone number cannot be empty';
-    } else if (value.length != 10) {
+    } else if (value.length != 10 || !RegExp(r'^\d+$').hasMatch(value)) {
       return 'Phone number must be 10 digits';
     }
     return null;
@@ -81,12 +80,34 @@ class UserSignupPageState extends State<UserSignupPage> {
   String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'Email cannot be empty';
-    } else if (!RegExp(
-            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+    } else if (!RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
         .hasMatch(value)) {
       return 'Please enter a valid email address';
     }
     return null;
+  }
+
+  bool loading = false;
+  void register() async {
+    setState(() {
+      loading = true;
+    });
+
+    if (_formKey.currentState?.validate() ?? false) {
+      await UserAuthService().userRegister(
+        context: context,
+        name: name.text,
+        password: password.text,
+        aadhar: aadhar.text,
+        ration: ration.text,
+        bank: bank.text,
+        phone: phone.text,
+        email: email.text,
+      );
+      setState(() {
+        loading = false;
+      });
+    }
   }
 
   @override
@@ -106,6 +127,7 @@ class UserSignupPageState extends State<UserSignupPage> {
                   width: 270,
                   height: 250,
                 ),
+                const SizedBox(height: 16.0),
                 // Username field
                 TextFormField(
                   controller: name,
@@ -157,7 +179,8 @@ class UserSignupPageState extends State<UserSignupPage> {
                   decoration: const InputDecoration(
                     labelText: 'Aadhar Number',
                     border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.card_membership, color: Colors.green),
+                    prefixIcon:
+                        Icon(Icons.card_membership, color: Colors.green),
                   ),
                   keyboardType: TextInputType.number,
                   validator: validateAadhar,
@@ -180,7 +203,8 @@ class UserSignupPageState extends State<UserSignupPage> {
                   decoration: const InputDecoration(
                     labelText: 'Bank Account Number',
                     border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.account_balance_wallet, color: Colors.green),
+                    prefixIcon:
+                        Icon(Icons.account_balance_wallet, color: Colors.green),
                   ),
                   keyboardType: TextInputType.number,
                   validator: validateBankAccount,
@@ -199,26 +223,14 @@ class UserSignupPageState extends State<UserSignupPage> {
                 ),
                 const SizedBox(height: 20.0),
                 // Signup button
-                OutlinedButton(
-                  onPressed: () {
-                    if (_formKey.currentState?.validate() ?? false) {
-                      UserAuthService().UserRegister(
-                        context: context,
-                        name: name.text,
-                        password: password.text,
-                        aadhar: aadhar.text,
-                        ration: ration.text,
-                        bank: bank.text,
-                        phone: phone.text,
-                        email: email.text,
-                      );
-                      print('Signup Successful');
-                    } else {
-                      print('Validation failed');
-                    }
-                  },
-                  child: const Text('Sign Up'),
-                ),
+                loading
+                    ? Center(child: CircularProgressIndicator())
+                    : OutlinedButton(
+                        onPressed: () {
+                          register();
+                        },
+                        child: const Text('Sign Up'),
+                      ),
               ],
             ),
           ),
