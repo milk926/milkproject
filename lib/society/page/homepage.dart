@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:milkproject/society/page/profilepage.dart';
 
 class MilkProjectHomePage extends StatelessWidget {
   const MilkProjectHomePage({super.key});
@@ -24,7 +25,7 @@ class MilkProjectHomePage extends StatelessWidget {
             onPressed: () {
               // Navigate to Profile Page
               Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => const ProfilePage()));
+                  MaterialPageRoute(builder: (_) => ProfilePage()));
             },
           ),
         ],
@@ -348,7 +349,7 @@ class MilkProjectHomePage extends StatelessWidget {
             break;
           case 2:
             Navigator.push(context,
-                MaterialPageRoute(builder: (_) => const ProfilePage()));
+                MaterialPageRoute(builder: (_) => ProfilePage()));
             break;
         }
       },
@@ -1110,162 +1111,6 @@ void main() {
 
 //import 'package:flutter/material.dart';
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF3EA120),
-        title: const Text('Profile'),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Profile Picture Section
-              Center(
-                child: Stack(
-                  children: [
-                    const CircleAvatar(
-                      radius: 50,
-                      backgroundImage: NetworkImage(
-                        'https://via.placeholder.com/150', // Placeholder Image URL
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white,
-                          border: Border.all(color: Colors.green, width: 2),
-                        ),
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.edit,
-                            color: Color(0xFF3EA120),
-                          ),
-                          onPressed: () {
-                            // Add image picker logic
-                            print('Edit Profile Picture');
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // User Details Section
-              const Text(
-                'John Doe',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              ),
-              const SizedBox(height: 4),
-              const Text(
-                'johndoe@example.com',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey,
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Editable Profile Fields
-              _buildEditableField(
-                context: context,
-                label: 'Full Name',
-                initialValue: 'John Doe',
-              ),
-              _buildEditableField(
-                context: context,
-                label: 'Email',
-                initialValue: 'johndoe@example.com',
-              ),
-              _buildEditableField(
-                context: context,
-                label: 'Phone Number',
-                initialValue: '+1234567890',
-              ),
-              _buildEditableField(
-                context: context,
-                label: 'Address',
-                initialValue: '1234 Elm Street',
-              ),
-
-              const SizedBox(height: 20),
-
-              // Save and Logout Buttons
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF3EA120),
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 10,
-                        horizontal: 20,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    onPressed: () {
-                      // Save logic here
-                      print('Profile Saved');
-                    },
-                    child: const Text(
-                      'Save',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 10,
-                        horizontal: 20,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    onPressed: () {
-                      // Logout logic here
-                      print('User Logged Out');
-                    },
-                    child: const Text(
-                      'Logout',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
   Widget _buildEditableField({
     required BuildContext context,
@@ -1288,7 +1133,7 @@ class ProfilePage extends StatelessWidget {
       ),
     );
   }
-}
+
 
 class NotificationPage extends StatelessWidget {
   final List<Map<String, String>> notifications = [
