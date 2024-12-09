@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:milkproject/user/page/homepageuser.dart';
 import 'package:milkproject/user/page/user_buynow.dart';
 
 class UserAuthService {
@@ -44,7 +43,7 @@ class UserAuthService {
         // Navigate to HomePage after successful registration
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MilkProductPage(cartProducts: [],)),
+          MaterialPageRoute(builder: (context) => MilkProductPage()),
         );
       }
     } catch (e) {
