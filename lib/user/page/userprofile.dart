@@ -40,7 +40,7 @@ class ProfileScreen extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const EditProfileScreen()),
+                MaterialPageRoute(builder: (context) => const EditProfileScreen(cartProducts: [],)),
               );
             },
           ),

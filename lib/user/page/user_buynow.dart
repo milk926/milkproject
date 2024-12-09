@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:milkproject/society/page/homepage.dart';
 import 'package:milkproject/user/page/buy_now.dart';
+import 'package:milkproject/user/page/edit_profile.dart';
 import 'package:milkproject/user/page/services/addtocart.dart';
 import 'package:milkproject/user/page/userprofile.dart';
 
@@ -46,6 +47,13 @@ class MilkProductPage extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.account_circle),
             onPressed: () {
+              Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return EditProfileScreen  (
+                                cartProducts: [],
+                              );
+                            },
+                          ));
               // Navigate to the profile page or handle your action here
             },
           ),

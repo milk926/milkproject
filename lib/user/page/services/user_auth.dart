@@ -44,7 +44,7 @@ class UserAuthService {
         // Navigate to HomePage after successful registration
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MilkProductPage()),
+          MaterialPageRoute(builder: (context) => MilkProductPage(cartProducts: [],)),
         );
       }
     } catch (e) {
