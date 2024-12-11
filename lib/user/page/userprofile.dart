@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:milkproject/firebase_options.dart';
 import 'package:milkproject/user/page/edit_profile.dart';
 
+<<<<<<< HEAD
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -19,6 +20,8 @@ void main() async {
   );
 }
 
+=======
+>>>>>>> e1a45804e002d21607a36cc0765aa36c1cca4671
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -40,7 +43,10 @@ class ProfileScreen extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const EditProfileScreen()),
+                MaterialPageRoute(
+                    builder: (context) => const EditProfileScreen(
+                          cartProducts: [],
+                        )),
               );
             },
           ),
@@ -83,9 +89,11 @@ class ProfileScreen extends StatelessWidget {
                     const SizedBox(height: 10),
                     _buildInfoCard("Aadhar", profileData['adhaar'] ?? 'N/A'),
                     const SizedBox(height: 10),
-                    _buildInfoCard("Ration Number", profileData['ration_card'] ?? 'N/A'),
+                    _buildInfoCard(
+                        "Ration Number", profileData['ration_card'] ?? 'N/A'),
                     const SizedBox(height: 10),
-                    _buildInfoCard("Bank A/C Number", profileData['bank_account'] ?? 'N/A'),
+                    _buildInfoCard("Bank A/C Number",
+                        profileData['bank_account'] ?? 'N/A'),
                     const SizedBox(height: 10),
                     _buildInfoCard("Phone", profileData['phone'] ?? 'N/A'),
                     const SizedBox(height: 10),
@@ -97,9 +105,11 @@ class ProfileScreen extends StatelessWidget {
                       onPressed: () async {
                         await FirebaseAuth.instance.signOut();
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Logged out! Redirecting...')),
+                          const SnackBar(
+                              content: Text('Logged out! Redirecting...')),
                         );
-                        Navigator.pop(context); // Redirect to login or previous page
+                        Navigator.pop(
+                            context); // Redirect to login or previous page
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,

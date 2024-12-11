@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:milkproject/farmer/page/farmer_root_screen.dart';
+import 'package:milkproject/user/page/buy_now.dart';
 import 'package:milkproject/user/page/choose_screen.dart';
+import 'package:milkproject/user/page/user_buynow.dart';
 
 class LoginScreen extends StatelessWidget {
   final GlobalKey<FormState> _formKey =
@@ -55,11 +57,10 @@ class LoginScreen extends StatelessWidget {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your email';
                     }
-                    // Check if the email format is correct
                     if (!RegExp(
                             r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
                         .hasMatch(value)) {
-                      return 'Please enter a valid email';
+                      return 'Please enter a valid email address';
                     }
                     return null;
                   },
@@ -80,6 +81,9 @@ class LoginScreen extends StatelessWidget {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your password';
                     }
+                    if (value.length < 6) {
+                      return 'Password must be at least 8 characters long';
+                    }
                     return null;
                   },
                 ),
@@ -98,39 +102,12 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.push(
+                      if (_formKey.currentState!.validate()) {
+                        // If the form is valid, navigate to HomePage
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const ChooseScreen()));
-                      // Validate the form
-                      if (_formKey.currentState?.validate() ?? false) {
-                        // Proceed with login
-                        String email = emailController.text;
-                        // ignore: unused_local_variable
-                        String password = passwordController.text;
-
-                        if (email == 'f@gmail.com') {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const FarmerBottomNavScreen(),
-                              ));
-                        }
-
-                        if (email == 'a@gmail.com') {
-                          //admin
-                        }
-
-                        if (email == 'user@gmail.com') {
-                          //user
-                        }
-                      } else {
-                        // If the form is not valid, show a message
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content:
-                                  Text('Please fill all fields correctly')),
+                              builder: (context) => MilkProductPage()),
                         );
                       }
                     },
@@ -149,10 +126,11 @@ class LoginScreen extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ChooseScreen(),
-                        ));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ChooseScreen(),
+                      ),
+                    );
                   },
                   child: const Text(
                     'Don\'t have an account? Sign Up',

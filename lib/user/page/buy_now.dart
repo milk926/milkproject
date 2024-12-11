@@ -94,21 +94,6 @@ class _BuyNowPageState extends State<BuyNowPage> {
               ),
               const SizedBox(height: 16),
 
-              // SuperCoins Section
-              _buildSectionCard(
-                icon: Icons.stars,
-                title: "Use SuperCoins",
-                child: Switch(
-                  value: useSuperCoins,
-                  onChanged: (value) {
-                    setState(() {
-                      useSuperCoins = value;
-                    });
-                  },
-                ),
-              ),
-              const SizedBox(height: 16),
-
               // Delivery Date Section
               _buildSectionCard(
                 icon: Icons.calendar_today,
@@ -121,28 +106,6 @@ class _BuyNowPageState extends State<BuyNowPage> {
                         : '${selectedDate!.toLocal()}'.split(' ')[0],
                     style: TextStyle(fontSize: 16, color: Colors.green[800]),
                   ),
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Payment Methods Section
-              _buildSectionCard(
-                icon: Icons.payment,
-                title: "Payment Method",
-                child: DropdownButton<String>(
-                  isExpanded: true,
-                  value: paymentMethod,
-                  items: paymentOptions
-                      .map((e) => DropdownMenuItem(
-                            value: e,
-                            child: Text(e),
-                          ))
-                      .toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      paymentMethod = value!;
-                    });
-                  },
                 ),
               ),
               const SizedBox(height: 16),
