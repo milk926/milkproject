@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatelessWidget {
+  const ProfilePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,11 +25,11 @@ class ProfilePage extends StatelessWidget {
           child: Column(
             children: [
               // User Icon
-              Center(
+              const Center(
                 child: CircleAvatar(
                   radius: 50,
                   backgroundColor: Colors.green,
-                  child: const Icon(
+                  child: Icon(
                     Icons.person,
                     size: 50,
                     color: Colors.white,

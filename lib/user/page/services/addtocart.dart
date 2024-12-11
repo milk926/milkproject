@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class AddToCartPage extends StatelessWidget {
   final List<Map<String, dynamic>> cartProducts;
 
-  AddToCartPage({super.key, required this.cartProducts});
+  const AddToCartPage({super.key, required this.cartProducts});
 
   @override
   Widget build(BuildContext context) {
@@ -186,9 +186,9 @@ class AddToCartPage extends StatelessWidget {
                                   height: 100,
                                   fit: BoxFit.cover,
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Text('Price: ₹${product['price']}'),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Text('Product Details: ${product['name']}'),
                               ],
                             ),

@@ -12,15 +12,15 @@ void main() async {
   );
 
   runApp(
-    MaterialApp(
+    const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const ProfileScreen(),
+      home: ProfileScreen(),
     ),
   );
 }
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

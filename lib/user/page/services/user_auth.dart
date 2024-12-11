@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:milkproject/user/page/homepageuser.dart';
 import 'package:milkproject/user/page/user_buynow.dart';
 
 class UserAuthService {
@@ -35,6 +34,7 @@ class UserAuthService {
           'aadhar': aadhar,
         });
 
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Registration successful'),
@@ -43,11 +43,13 @@ class UserAuthService {
 
         // Navigate to HomePage after successful registration
         Navigator.push(
+          // ignore: use_build_context_synchronously
           context,
-          MaterialPageRoute(builder: (context) => MilkProductPage()),
+          MaterialPageRoute(builder: (context) => MilkProductPage(cartProducts: const [],)),
         );
       }
     } catch (e) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Registration failed: ${e.toString()}'),

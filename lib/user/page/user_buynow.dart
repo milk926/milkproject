@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:milkproject/society/page/homepage.dart';
 import 'package:milkproject/user/page/buy_now.dart';
 import 'package:milkproject/user/page/services/addtocart.dart';
-import 'package:milkproject/user/page/userprofile.dart';
 
 class MilkProductPage extends StatelessWidget {
   final List<Map<String, dynamic>> products = [
@@ -39,7 +37,7 @@ class MilkProductPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Buy Now Page'),
-        titleTextStyle: TextStyle(color: Colors.white, fontSize: 25),
+        titleTextStyle: const TextStyle(color: Colors.white, fontSize: 25),
         centerTitle: true,
         backgroundColor: const Color(0xFF3EA120),
         actions: [
@@ -116,7 +114,7 @@ class MilkProductPage extends StatelessWidget {
                         onPressed: () {
                           Navigator.push(context, MaterialPageRoute(
                             builder: (context) {
-                              return AddToCartPage(
+                              return const AddToCartPage(
                                 cartProducts: [],
                               );
                             },
@@ -142,7 +140,7 @@ class MilkProductPage extends StatelessWidget {
                         onPressed: () {
                           Navigator.push(context, MaterialPageRoute(
                             builder: (context) {
-                              return BuyNowPage();
+                              return const BuyNowPage();
                             },
                           ));
                         },
