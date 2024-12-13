@@ -19,10 +19,51 @@ class DealerHomePage extends StatelessWidget {
   }
 }
 
-class DealerHome extends StatelessWidget {
-  final String dealerName = "John Doe";
-
+class DealerHome extends StatefulWidget {
   const DealerHome({super.key});
+
+  @override
+  State<DealerHome> createState() => _DealerHomeState();
+}
+
+class _DealerHomeState extends State<DealerHome> {
+  final String dealerName = "John Doe";
+  int _selectedIndex = 0;
+
+  void _onBottomNavigationBarTap(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0: // Home
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const DealerHomePage()),
+        );
+        break;
+      case 1: // Notifications
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const DealerNotificationScreen()),
+        );
+        break;
+      case 2: // Profile
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const DealerAccountPage(
+              dealerEmail: '',
+              dealerName: '',
+              dealerPhone: '',
+              dealerLocation: '',
+            ),
+          ),
+        );
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +83,7 @@ class DealerHome extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.edit), // Changed to edit profile icon
+            icon: const Icon(Icons.edit),
             onPressed: () {
               Navigator.push(
                 context,
@@ -135,7 +176,7 @@ class DealerHome extends StatelessWidget {
               child: Image.asset(
                 'asset/milkzone_dealer.jpeg',
                 width: double.infinity,
-                fit: BoxFit.none,
+                fit: BoxFit.cover,
               ),
             ),
             Padding(
@@ -169,6 +210,8 @@ class DealerHome extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onBottomNavigationBarTap,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -196,7 +239,6 @@ class DealerHome extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(
         onTap: () {
-          // Navigator logic for each card
           switch (title) {
             case 'Order':
               Navigator.push(
@@ -256,26 +298,30 @@ class DealerHome extends StatelessWidget {
   void _showSignOutDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Sign Out'),
-        content: const Text('Do you want to sign out?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context); // Close the dialog first
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => LoginScreen()),
-              );
-            },
-            child: const Text('Yes'),
-          ),
-        ],
-      ),
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Sign Out'),
+          content: const Text('Are you sure you want to sign out?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                  (Route<dynamic> route) => false,
+                );
+              },
+              child: const Text('Sign Out'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

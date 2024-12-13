@@ -36,9 +36,79 @@ class _UpdateLocationPageState extends State<UpdateLocationPage> {
       'Mattannur',
       'Iritty'
     ],
-    'Thiruvananthapuram': ['Kazhakoottam', 'Neyyattinkara', 'Attingal'],
-    'Kozhikode': ['Vadakara', 'Koyilandy', 'Balussery'],
-    // Add other districts and localities as needed
+    'Thiruvananthapuram': [
+      'Kazhakoottam',
+      'Neyyattinkara',
+      'Attingal',
+      'Varkala',
+      'Pothencode'
+    ],
+    'Kollam': ['Chathannoor', 'Karunagappally', 'Paravur', 'Punalur', 'Anchal'],
+    'Pathanamthitta': [
+      'Adoor',
+      'Thiruvalla',
+      'Pandalam',
+      'Ranni',
+      'Mallappally'
+    ],
+    'Alappuzha': [
+      'Cherthala',
+      'Haripad',
+      'Kayamkulam',
+      'Mavelikkara',
+      'Ambalapuzha'
+    ],
+    'Kottayam': [
+      'Changanassery',
+      'Pala',
+      'Ettumanoor',
+      'Vaikom',
+      'Kaduthuruthy'
+    ],
+    'Idukki': ['Thodupuzha', 'Nedumkandam', 'Peermade', 'Munnar', 'Adimali'],
+    'Ernakulam': [
+      'Kochi',
+      'Perumbavoor',
+      'Aluva',
+      'Muvattupuzha',
+      'North Paravur'
+    ],
+    'Thrissur': [
+      'Guruvayur',
+      'Kodungallur',
+      'Chalakudy',
+      'Irinjalakuda',
+      'Kunnamkulam'
+    ],
+    'Palakkad': ['Ottapalam', 'Chittur', 'Mannarkkad', 'Alathur', 'Nenmara'],
+    'Malappuram': [
+      'Manjeri',
+      'Perinthalmanna',
+      'Tirur',
+      'Nilambur',
+      'Kondotty'
+    ],
+    'Kozhikode': [
+      'Vadakara',
+      'Koyilandy',
+      'Balussery',
+      'Feroke',
+      'Ramanattukara'
+    ],
+    'Wayanad': [
+      'Kalpetta',
+      'Sulthan Bathery',
+      'Mananthavady',
+      'Meenangadi',
+      'Vythiri'
+    ],
+    'Kasaragod': [
+      'Kanhangad',
+      'Nileshwaram',
+      'Kasaragod Town',
+      'Bekal',
+      'Manjeshwar'
+    ]
   };
 
   String? selectedDistrict;
@@ -80,7 +150,7 @@ class _UpdateLocationPageState extends State<UpdateLocationPage> {
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Color.fromRGBO(73, 255, 41, 0.705),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -88,7 +158,8 @@ class _UpdateLocationPageState extends State<UpdateLocationPage> {
                   value: selectedDistrict,
                   decoration: InputDecoration(
                     labelText: 'Select District',
-                    labelStyle: const TextStyle(color: Colors.white),
+                    labelStyle:
+                        const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
                     filled: true,
                     fillColor: Colors.white.withOpacity(0.8),
                     border: OutlineInputBorder(
@@ -114,7 +185,8 @@ class _UpdateLocationPageState extends State<UpdateLocationPage> {
                     value: selectedLocality,
                     decoration: InputDecoration(
                       labelText: 'Select Locality',
-                      labelStyle: const TextStyle(color: Colors.white),
+                      labelStyle:
+                          const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
                       filled: true,
                       fillColor: Colors.white.withOpacity(0.8),
                       border: OutlineInputBorder(
@@ -137,7 +209,8 @@ class _UpdateLocationPageState extends State<UpdateLocationPage> {
                 TextField(
                   decoration: InputDecoration(
                     labelText: 'Enter Pincode',
-                    labelStyle: const TextStyle(color: Colors.white),
+                    labelStyle:
+                        const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
                     filled: true,
                     fillColor: Colors.white.withOpacity(0.8),
                     border: OutlineInputBorder(
@@ -153,7 +226,7 @@ class _UpdateLocationPageState extends State<UpdateLocationPage> {
                 Center(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green.shade800,
+                      backgroundColor: const Color.fromARGB(255, 3, 241, 15),
                       padding: const EdgeInsets.symmetric(
                           vertical: 12, horizontal: 24),
                       shape: RoundedRectangleBorder(

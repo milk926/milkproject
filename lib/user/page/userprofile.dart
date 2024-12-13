@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:milkproject/firebase_options.dart';
 import 'package:milkproject/user/page/edit_profile.dart';
 
-<<<<<<< HEAD
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -20,8 +19,6 @@ void main() async {
   );
 }
 
-=======
->>>>>>> e1a45804e002d21607a36cc0765aa36c1cca4671
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -44,9 +41,8 @@ class ProfileScreen extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const EditProfileScreen(
-                          cartProducts: [],
-                        )),
+                  builder: (context) => EditProfileScreen(),
+                ),
               );
             },
           ),
@@ -104,12 +100,14 @@ class ProfileScreen extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () async {
                         await FirebaseAuth.instance.signOut();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('Logged out! Redirecting...')),
-                        );
-                        Navigator.pop(
-                            context); // Redirect to login or previous page
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Logged out! Redirecting...')),
+                          );
+                          Navigator.pop(
+                              context); // Redirect to login or previous page
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,

@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 
 class EditProfileScreen extends StatefulWidget {
-<<<<<<< HEAD
-  const EditProfileScreen({super.key});
-=======
-  const EditProfileScreen({Key? key, required List cartProducts}) : super(key: key);
->>>>>>> e1a45804e002d21607a36cc0765aa36c1cca4671
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
