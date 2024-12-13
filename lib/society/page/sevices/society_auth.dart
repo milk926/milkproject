@@ -34,6 +34,9 @@ class SocietyAuthService {
         'password': password,
         'email': email
       });
+      fireStoreDatabase
+          .collection('role_tb')
+          .add({'uid': user.user?.uid, 'role': 'user'});
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('registration successfull'),
       ));

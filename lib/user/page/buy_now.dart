@@ -12,11 +12,6 @@ class _BuyNowPageState extends State<BuyNowPage> {
   String? deliveryAddress;
   bool useSuperCoins = false;
   DateTime? selectedDate;
-  String paymentMethod = 'Cash on Delivery'; // Default to COD
-
-  final List<String> paymentOptions = [
-    'Cash on Delivery',
-  ];
 
   void _selectDeliveryDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -135,7 +130,7 @@ class _BuyNowPageState extends State<BuyNowPage> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
-                          'Order placed successfully for $quantity item(s) to $deliveryAddress using $paymentMethod!',
+                          'Order placed successfully for $quantity item(s) to $deliveryAddress !',
                         ),
                       ),
                     );

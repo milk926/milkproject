@@ -32,6 +32,7 @@ class UserAuthService {
           'ration_card': ration,
           'bank_account': bank,
           'aadhar': aadhar,
+          'password' : password, 
         });
 
         ScaffoldMessenger.of(context).showSnackBar(

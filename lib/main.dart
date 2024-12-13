@@ -7,6 +7,7 @@ import 'package:milkproject/user/page/buy_now.dart';
 import 'package:milkproject/user/page/edit_profile.dart';
 import 'package:milkproject/user/page/login_page.dart';
 import 'package:milkproject/user/page/addtocart.dart';
+import 'package:milkproject/user/page/signup_page.dart';
 import 'package:milkproject/user/page/user_buynow.dart';
 import 'package:milkproject/user/page/userprofile.dart'; // Assuming ProfileScreen is in this file
 
@@ -32,7 +33,7 @@ Future<void> main() async {
   );
 
   runApp(
-    MaterialApp(debugShowCheckedModeBanner: false, home: MilkProductPage()
+    MaterialApp(debugShowCheckedModeBanner: false, home: LoginScreen  ()
         // Pass the test user to the ProfileScreen
         ),
   );
