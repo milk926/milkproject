@@ -1,11 +1,14 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:milkproject/farmer/services/farmer_auth.dart'; // For picking document images
+// For picking document images
 
 class FarmerRegistrationScreen extends StatefulWidget {
   const FarmerRegistrationScreen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _FarmerRegistrationScreenState createState() =>
       _FarmerRegistrationScreenState();
 }
@@ -315,7 +318,6 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                         // Validate the form before proceeding
                         if (_formKey.currentState?.validate() ?? false) {
                           // Handle successful registration logic
-                          String name = nameController.text;
                           String email = emailController.text;
                           String phone = phoneController.text;
                           String cows = cowsController.text;

@@ -35,6 +35,7 @@ class UserAuthService {
           'password' : password, 
         });
 
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Registration successful'),
@@ -43,11 +44,13 @@ class UserAuthService {
 
         // Navigate to HomePage after successful registration
         Navigator.push(
+          // ignore: use_build_context_synchronously
           context,
-          MaterialPageRoute(builder: (context) => MilkProductPage()),
+          MaterialPageRoute(builder: (context) => MilkProductPage(cartProducts: const [],)),
         );
       }
     } catch (e) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Registration failed: ${e.toString()}'),

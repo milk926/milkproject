@@ -107,7 +107,9 @@ class LoginScreen extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => MilkProductPage()),
+                              builder: (context) => MilkProductPage(
+                                    cartProducts: [],
+                                  )),
                         );
                       }
                     },

@@ -25,7 +25,7 @@ class MilkProjectHomePage extends StatelessWidget {
             onPressed: () {
               // Navigate to Profile Page
               Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => ProfilePage()));
+                  MaterialPageRoute(builder: (_) => const ProfilePage()));
             },
           ),
         ],
@@ -349,7 +349,7 @@ class MilkProjectHomePage extends StatelessWidget {
             break;
           case 2:
             Navigator.push(context,
-                MaterialPageRoute(builder: (_) => ProfilePage()));
+                MaterialPageRoute(builder: (_) => const ProfilePage()));
             break;
         }
       },

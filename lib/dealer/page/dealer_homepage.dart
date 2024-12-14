@@ -1,185 +1,293 @@
 import 'package:flutter/material.dart';
+import 'package:milkproject/dealer/DealerAccountPage.dart';
+import 'package:milkproject/dealer/dealerUpdateLocation.dart';
+import 'package:milkproject/dealer/dealer_notification.dart';
+import 'package:milkproject/dealer/page/dealer_editProfile.dart';
+import 'package:milkproject/dealer/viewOrder.dart';
+import 'package:milkproject/dealer/viewUser_Farmer.dart';
+import 'package:milkproject/user/page/login_page.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-// Dealer class to represent the dealer's information
-class Dealer {
-  final String name;
-
-  Dealer(this.name);
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class DealerHomePage extends StatelessWidget {
+  const DealerHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Dealer App',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
-      debugShowCheckedModeBanner: false, // Removes the "DEBUG" banner
-      home: const DealerLoginPage(),
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: DealerHome(),
     );
   }
 }
 
-class DealerLoginPage extends StatelessWidget {
-  const DealerLoginPage({super.key});
+class DealerHome extends StatefulWidget {
+  const DealerHome({super.key});
+
+  @override
+  State<DealerHome> createState() => _DealerHomeState();
+}
+
+class _DealerHomeState extends State<DealerHome> {
+  final String dealerName = "John Doe";
+  int _selectedIndex = 0;
+
+  void _onBottomNavigationBarTap(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0: // Home
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const DealerHomePage()),
+        );
+        break;
+      case 1: // Notifications
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const DealerNotificationScreen()),
+        );
+        break;
+      case 2: // Profile
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const DealerAccountPage(
+              dealerEmail: '',
+              dealerName: '',
+              dealerPhone: '',
+              dealerLocation: '',
+            ),
+          ),
+        );
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Simulating a dealer login
-    Dealer dealer = Dealer('John Doe'); // Example dealer name
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dealer Login'),
-        backgroundColor: const Color(0xFF3EA120),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            // Navigate to DealersHomepage and pass dealer object
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => DealersHomepage(dealer: dealer),
-              ),
+        title: const Text('Dealer Dashboard'),
+        backgroundColor: Colors.green.shade800,
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openEndDrawer();
+              },
             );
           },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF3EA120), // Green background
-            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-            textStyle: const TextStyle(fontSize: 18),
-          ),
-          child: const Text('Go to Homepage'),
         ),
-      ),
-    );
-  }
-}
-
-class DealersHomepage extends StatefulWidget {
-  final Dealer dealer;
-
-  const DealersHomepage({super.key, required this.dealer});
-
-  @override
-  _DealersHomepageState createState() => _DealersHomepageState();
-}
-
-class _DealersHomepageState extends State<DealersHomepage> {
-  int _notificationCount = 3; // Start with 3 notifications for demo purposes
-
-  void _incrementNotification(String message) {
-    setState(() {
-      _notificationCount++;
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
-  }
-
-  void _showDemoNotification(String orderStatus) {
-    // Show a demo notification related to the order status
-    String message;
-    if (orderStatus == 'Pending') {
-      message = 'Someone has placed a new order!';
-    } else if (orderStatus == 'Delivered') {
-      message = 'Order has been delivered!';
-    } else {
-      message = 'Order status updated!';
-    }
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Dealer Homepage'),
-        backgroundColor: const Color(0xFF3EA120), // Green AppBar
         actions: [
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.notifications),
-                onPressed: () {
-                  // Show demo notification when notifications are clicked
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text('You have a new notification!')),
-                  );
-                },
-              ),
-              if (_notificationCount > 0) // Badge for notifications
-                Positioned(
-                  right: 10,
-                  top: 10,
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: const BoxDecoration(
-                      color: Colors.red,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Text(
-                      '$_notificationCount',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-            ],
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const DealerEditProfilePage()),
+              );
+            },
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Welcome Header
-              Text(
-                'Welcome, ${widget.dealer.name}',
+      endDrawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.green.shade800,
+              ),
+              child: const Text(
+                'Menu',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.account_circle),
+              title: const Text('My Account'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const DealerAccountPage(
+                              dealerEmail: '',
+                              dealerName: '',
+                              dealerPhone: '',
+                              dealerLocation: '',
+                            )));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.notifications),
+              title: const Text('Notifications'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const DealerNotificationScreen()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.edit),
+              title: const Text('Edit Profile'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const DealerEditProfilePage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout, color: Colors.red),
+              title: const Text(
+                'Sign Out',
+                style: TextStyle(color: Colors.red),
+              ),
+              onTap: () {
+                _showSignOutDialog(context);
+              },
+            ),
+          ],
+        ),
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.green.shade100, Colors.green.shade500],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AspectRatio(
+              aspectRatio: 16 / 9,
+              child: Image.asset(
+                'asset/milkzone_dealer.jpeg',
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                'Welcome, $dealerName',
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: Colors.black87,
                 ),
               ),
-              const SizedBox(height: 20),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: GridView.count(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  children: [
+                    _buildCard('Order', Icons.shopping_cart, context),
+                    _buildCard('View User/Farmer', Icons.people, context),
+                    _buildCard('Update Location', Icons.location_on, context),
+                    _buildCard('Notifications', Icons.notifications, context),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onBottomNavigationBarTap,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications),
+            label: 'Notifications',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        selectedItemColor: Colors.green.shade800,
+        unselectedItemColor: Colors.grey,
+      ),
+    );
+  }
 
-              // Notification Section
-              _buildNotificationSection(),
-              const SizedBox(height: 20),
-
-              // Order View Section
-              const SectionHeader(title: 'Recent Orders'),
-              _buildOrderCard('Order #123', 'Pending', Icons.access_time),
-              _buildOrderCard('Order #124', 'Delivered', Icons.check_circle),
-              const SizedBox(height: 20),
-
-              // Location Update Section
-              const SectionHeader(
-                  title: 'Update Location', icon: Icons.location_on),
-              _buildLocationUpdateSection(),
-
-              const SizedBox(height: 20),
-
-              // Profile Edit Section
-              const SectionHeader(title: 'Edit Profile', icon: Icons.edit),
-              _buildProfileEditSection(),
+  Widget _buildCard(String title, IconData icon, BuildContext context) {
+    return Card(
+      elevation: 4,
+      color: Colors.white.withOpacity(0.9),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: InkWell(
+        onTap: () {
+          switch (title) {
+            case 'Order':
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const ViewOrderDetailsPage()),
+              );
+              break;
+            case 'View User/Farmer':
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const ViewUserFarmerPage()),
+              );
+              break;
+            case 'Update Location':
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const UpdateLocationPage()),
+              );
+              break;
+            case 'Notifications':
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const DealerNotificationScreen()),
+              );
+              break;
+            default:
+              break;
+          }
+        },
+        borderRadius: BorderRadius.circular(16),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon,
+                size: 40,
+                color: Colors.green.shade800,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                title,
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
             ],
           ),
         ),
@@ -187,185 +295,33 @@ class _DealersHomepageState extends State<DealersHomepage> {
     );
   }
 
-  // Notification Section
-  Widget _buildNotificationSection() {
-    return Card(
-      color: const Color(0xFFEAF7E4),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: ListTile(
-        leading:
-            const Icon(Icons.notifications_active, color: Color(0xFF3EA120)),
-        title: const Text(
-          'Notifications',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        subtitle: Text('You have $_notificationCount unread notifications.'),
-        trailing: IconButton(
-          icon: const Icon(Icons.add_alert, color: Color(0xFF3EA120)),
-          onPressed: () {
-            _incrementNotification('New notification added.');
-          },
-        ),
-      ),
-    );
-  }
-
-  // Helper function to build Order Card
-  Widget _buildOrderCard(String order, String status, IconData icon) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      color: const Color(0xFFEAF7E4),
-      child: ListTile(
-        leading: Icon(icon, color: const Color(0xFF3EA120)),
-        title: Text(order, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text('Status: $status'),
-        trailing: ElevatedButton(
-          onPressed: () {
-            _showDemoNotification(
-                status); // Show notification based on order status
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF3EA120),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-          child: const Text('View'),
-        ),
-      ),
-    );
-  }
-
-  // Location Update Section
-  Widget _buildLocationUpdateSection() {
-    return Card(
-      color: const Color(0xFFEAF7E4),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'New Location',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF3EA120),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
+  void _showSignOutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Sign Out'),
+          content: const Text('Are you sure you want to sign out?'),
+          actions: <Widget>[
+            TextButton(
               onPressed: () {
-                _incrementNotification('Location updated successfully.');
+                Navigator.of(context).pop();
               },
-              child: const Text('Update'),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                  (Route<dynamic> route) => false,
+                );
+              },
+              child: const Text('Sign Out'),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  // Profile Edit Section
-  Widget _buildProfileEditSection() {
-    return Card(
-      color: const Color(0xFFEAF7E4),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Name',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Email',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Current Password',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              obscureText: true,
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'New Password',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              obscureText: true,
-            ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF3EA120),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              onPressed: () {
-                _incrementNotification('Profile updated successfully.');
-              },
-              child: const Text('Save'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// Section Header Widget
-class SectionHeader extends StatelessWidget {
-  final String title;
-  final IconData? icon;
-
-  const SectionHeader({super.key, required this.title, this.icon});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        if (icon != null) ...[
-          Icon(icon, color: const Color(0xFF3EA120)),
-          const SizedBox(width: 10),
-        ],
-        Text(
-          title,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-      ],
+        );
+      },
     );
   }
 }

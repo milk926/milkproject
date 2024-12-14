@@ -224,7 +224,7 @@ class UserSignupPageState extends State<UserSignupPage> {
                 const SizedBox(height: 20.0),
                 // Signup button
                 loading
-                    ? Center(child: CircularProgressIndicator())
+                    ? const Center(child: CircularProgressIndicator())
                     : OutlinedButton(
                         onPressed: () {
                           register();

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:milkproject/user/page/buy_now.dart';
-import 'package:milkproject/user/page/edit_profile.dart';
 import 'package:milkproject/user/page/addtocart.dart';
+import 'package:milkproject/user/page/buy_now.dart';
 import 'package:milkproject/user/page/userprofile.dart';
 
 class MilkProductPage extends StatelessWidget {
@@ -36,17 +35,19 @@ class MilkProductPage extends StatelessWidget {
     },
   ];
 
+   MilkProductPage({super.key, required List cartProducts});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: Drawer(
         child: Column(
           children: [
-            DrawerHeader(
+            const DrawerHeader(
               decoration: BoxDecoration(color: Colors.white),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   Icon(Icons.store, size: 50, color: Colors.green),
                   SizedBox(height: 10),
                   Text(
@@ -57,8 +58,8 @@ class MilkProductPage extends StatelessWidget {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.account_circle),
-              title: Text('Profile'),
+              leading: const Icon(Icons.account_circle),
+              title: const Text('Profile'),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return ProfileScreen();
@@ -184,7 +185,9 @@ class MilkProductPage extends StatelessWidget {
                         onPressed: () {
                           Navigator.push(context, MaterialPageRoute(
                             builder: (context) {
-                              return AddToCartPage(cartProducts: []);
+                              return const AddToCartPage(
+                                cartProducts: [],
+                              );
                             },
                           ));
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -210,7 +213,7 @@ class MilkProductPage extends StatelessWidget {
                         onPressed: () {
                           Navigator.push(context, MaterialPageRoute(
                             builder: (context) {
-                              return BuyNowPage();
+                              return const BuyNowPage();
                             },
                           ));
                         },

@@ -5,8 +5,22 @@ import 'package:flutter/material.dart';
 import 'package:milkproject/firebase_options.dart';
 import 'package:milkproject/user/page/edit_profile.dart';
 
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  runApp(
+    const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: ProfileScreen(),
+    ),
+  );
+}
+
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +41,8 @@ class ProfileScreen extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const EditProfileScreen(
-                          cartProducts: [],
-                        )),
+                  builder: (context) => EditProfileScreen(),
+                ),
               );
             },
           ),
@@ -87,12 +100,14 @@ class ProfileScreen extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () async {
                         await FirebaseAuth.instance.signOut();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('Logged out! Redirecting...')),
-                        );
-                        Navigator.pop(
-                            context); // Redirect to login or previous page
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Logged out! Redirecting...')),
+                          );
+                          Navigator.pop(
+                              context); // Redirect to login or previous page
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
