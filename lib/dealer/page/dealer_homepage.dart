@@ -5,7 +5,7 @@ import 'package:milkproject/dealer/dealer_notification.dart';
 import 'package:milkproject/dealer/page/dealer_editProfile.dart';
 import 'package:milkproject/dealer/viewOrder.dart';
 import 'package:milkproject/dealer/viewUser_Farmer.dart';
-import 'package:milkproject/user/page/login_page.dart';
+import 'package:milkproject/login_page.dart';
 
 class DealerHomePage extends StatelessWidget {
   const DealerHomePage({super.key});
@@ -313,7 +313,7 @@ class _DealerHomeState extends State<DealerHome> {
               onPressed: () {
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                  MaterialPageRoute(builder: (context) => const LogIn()),
                   (Route<dynamic> route) => false,
                 );
               },

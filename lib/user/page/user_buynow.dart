@@ -62,23 +62,23 @@ class MilkProductPage extends StatelessWidget {
               title: const Text('Profile'),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return ProfileScreen();
+                  return const ProfileScreen();
                 }));
               },
             ),
             ListTile(
-              leading: Icon(Icons.shopping_cart),
-              title: Text('Cart'),
+              leading: const Icon(Icons.shopping_cart),
+              title: const Text('Cart'),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return AddToCartPage(cartProducts: []);
+                  return const AddToCartPage(cartProducts: []);
                 }));
               },
             ),
-            Spacer(),
+            const Spacer(),
             ListTile(
-              leading: Icon(Icons.logout),
-              title: Text('Log Out'),
+              leading: const Icon(Icons.logout),
+              title: const Text('Log Out'),
               onTap: () {
                 Navigator.pop(context);
               },
@@ -87,7 +87,7 @@ class MilkProductPage extends StatelessWidget {
         ),
       ),
       appBar: AppBar(
-        title: Row(
+        title: const Row(
           children: [
             SizedBox(width: 40),
             Text(
@@ -96,14 +96,14 @@ class MilkProductPage extends StatelessWidget {
             ),
           ],
         ),
-        backgroundColor: Color(0xFF3EA120),
+        backgroundColor: const Color(0xFF3EA120),
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.account_circle),
+            icon: const Icon(Icons.account_circle),
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return ProfileScreen();
+                return const ProfileScreen();
               }));
             },
           ),
