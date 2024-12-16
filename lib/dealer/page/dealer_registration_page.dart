@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:milkproject/dealer/page/dealer_homepage.dart';
+import 'package:milkproject/dealer/services/dealer_auth.dart';
 
 class DealerRegistrationScreen extends StatefulWidget {
   const DealerRegistrationScreen({super.key});
@@ -343,12 +344,13 @@ class _DealerRegistrationScreenState extends State<DealerRegistrationScreen> {
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           // Proceed with registration
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const DealerHomePage(),
-                            ),
-                          );
+                          DealerAuthService().dealerRegister(
+                              context: context,
+                              name: nameController.text,
+                              password: passwordController.text,
+                              aadhar: aadharNumberController.text,
+                              phone: contactNumberController.text,
+                              email: emailController.text);
                         }
                       },
                       style: ElevatedButton.styleFrom(

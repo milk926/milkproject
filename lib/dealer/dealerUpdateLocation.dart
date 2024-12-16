@@ -126,9 +126,9 @@ class _UpdateLocationPageState extends State<UpdateLocationPage> {
         children: [
           // Background Blur Effect
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
-                image: const AssetImage('assets/green_background.jpg'),
+                image: AssetImage('assets/green_background.jpg'),
                 fit: BoxFit.cover,
               ),
             ),

@@ -264,7 +264,7 @@ class _SocietyRegistrationScreenState extends State<SocietyRegistrationScreen> {
                                       buildingAddressController.text,
                                   location: locationController.text,
                                   contactnumber: contactNumberController.text,
-                                  managername: managerContactController.text,
+                                  managername: managerNameController.text,
                                   managercontact: managerContactController.text,
                                   password: passwordController.text,
                                   email: emailController.text);
