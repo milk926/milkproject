@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+
+import 'farmer_home_page.dart';
 // For picking document images
 
 class FarmerRegistrationScreen extends StatefulWidget {
@@ -228,8 +230,7 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                   // How Many Cows Field
                   Row(
                     children: [
-                      const Icon(Icons.agriculture,
-                          size: 30, color: Colors.green),
+                      Image.asset('asset/cow (1).png', width: 30, height: 30,color: Colors.green,),
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
@@ -320,6 +321,13 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                           String phone = phoneController.text;
                           String cows = cowsController.text;
                           String password = passwordController.text;
+
+                           Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FarmerChoiceScreen(),
+                  ),
+                );
 
                           // Example: print the data (you could send this to a server)
                           // FarmerAuthService().FarmerRegister(context: context, name: name, password: password, aadhar: aadhar, ration: ration, bank: bank, phone: phone, email: email)

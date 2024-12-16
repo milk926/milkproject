@@ -10,33 +10,27 @@ class AddToCartPage extends StatelessWidget {
     // Demo products to display when cart is empty
     final List<Map<String, dynamic>> demoProducts = [
       {
-        'name': 'milk',
-        'price': 26,
+        'name': 'cattle feed',
+        'price': 450,
         'description': 'This is a sample description for Demo Product 1.',
         'image':
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSAyH854FlWZlrM6qQL95q_2xSbyYjkUzP-w&s',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShA5-IzufSUe4yV_FOPOfnS1u-QCPwXHwjuA&s',
       },
       {
-        'name': 'cheese',
-        'price': 24,
+        'name': 'hay',
+        'price': 120,
         'description': 'This is a sample description for Demo Product 2.',
         'image':
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0TMriLN-YT6t2VZvr8tFMXSWPf4sFS8sH6Q&s',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ86-e2WOw0LMIfTzvBrA4lfltpS86ltjJ0DA&s',
       },
       {
-        'name': 'butter',
-        'price': 22,
+        'name': 'green grass',
+        'price': 200,
         'description': 'This is a sample description for Demo Product 3.',
         'image':
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0TMriLN-YT6t2VZvr8tFMXSWPf4sFS8sH6Q&s',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVGRRSpqRbq4b7ie-zsQEZkrmP4GiG2nRYbQ&s',
       },
-      {
-        'name': 'yogurt',
-        'price': 30,
-        'description': 'This is a sample description for Demo Product 4.',
-        'image':
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7ua1fAq4_iTDCcNw1r8VLTW-i5GAnmKYcTA&s',
-      },
+      
     ];
 
     return Scaffold(

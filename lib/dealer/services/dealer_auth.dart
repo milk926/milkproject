@@ -46,7 +46,7 @@ class DealerAuthService {
         Navigator.push(
           // ignore: use_build_context_synchronously
           context,
-          MaterialPageRoute(builder: (context) => DealerHomePage()),
+          MaterialPageRoute(builder: (context) => const DealerHomePage()),
         );
       }
     } catch (e) {

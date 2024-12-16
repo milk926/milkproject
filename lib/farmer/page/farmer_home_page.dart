@@ -1,12 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:milkproject/farmer/page/dailymilk-quandity.dart';
 import 'package:milkproject/farmer/page/dung-cake.dart';
+import 'package:milkproject/farmer/page/farmer_profile_page.dart';
 import 'package:milkproject/user/page/addtocart.dart';
 import 'package:milkproject/user/page/buy_now.dart';
+
 
 void main() {
   runApp(const MyApp());
 }
+
+final List<Map<String, dynamic>> demoProducts = [
+      {
+        'name': 'cattle feed',
+        'price': 450,
+        'description': 'This is a sample description for Demo Product 1.',
+        'image':
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShA5-IzufSUe4yV_FOPOfnS1u-QCPwXHwjuA&s',
+      },
+      {
+        'name': 'hay',
+        'price': 120,
+        'description': 'This is a sample description for Demo Product 2.',
+        'image':
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ86-e2WOw0LMIfTzvBrA4lfltpS86ltjJ0DA&s',
+      },
+      {
+        'name': 'green grass',
+        'price': 200,
+        'description': 'This is a sample description for Demo Product 3.',
+        'image':
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVGRRSpqRbq4b7ie-zsQEZkrmP4GiG2nRYbQ&s',
+      },
+      
+    ];
+
+
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -33,6 +63,13 @@ class FarmerChoiceScreen extends StatelessWidget {
             icon: const Icon(Icons.account_circle),
             onPressed: () {
               // Navigate to profile screen
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>  FarmerProfileScreen(),
+                ),
+              );
             },
           ),
         ],
@@ -155,7 +192,7 @@ Row(
           Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AddToCartPage(cartProducts: [],),
+                    builder: (context) => AddToCartPage(cartProducts: demoProducts,),
                   ),
                 );
           // Handle second button press actionAddToCartPage

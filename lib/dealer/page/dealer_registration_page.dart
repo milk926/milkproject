@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:milkproject/dealer/page/dealer_homepage.dart';
 import 'package:milkproject/dealer/services/dealer_auth.dart';
 
 class DealerRegistrationScreen extends StatefulWidget {
