@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:milkproject/dealer/page/dealer_registration_page.dart';
 import 'package:milkproject/farmer/page/farmer_registration_page.dart';
 import 'package:milkproject/firebase_options.dart';
-import 'package:milkproject/user/page/login_page.dart';
+import 'package:milkproject/login_page.dart';
 // Assuming ProfileScreen is in this file
 
 // Define a simple User class if not already defined
@@ -40,8 +40,8 @@ Future<void> main() async {
   );
 
   runApp(
-    MaterialApp(
-        debugShowCheckedModeBanner: false, home: LoginScreen()
+    const MaterialApp(
+        debugShowCheckedModeBanner: false, home: LoginPage()
         // Pass the test user to the ProfileScreen
         ),
   );
