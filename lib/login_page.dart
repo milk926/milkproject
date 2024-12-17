@@ -4,7 +4,6 @@ import 'package:milkproject/sevices/services/login_service_fire.dart'; // Ensure
 import 'package:milkproject/user/page/user_buynow.dart'; // Ensure correct import // Add the admin page if it's not already imported
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Ensure correct import
-// Ensure correct import // Add the admin page if it's not already imported
 
 class LogIn extends StatelessWidget {
   const LogIn({super.key});
@@ -31,6 +30,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController passwordController = TextEditingController();
 
   bool loading = false;
+  bool _isPasswordVisible = false; // State variable to toggle password visibility
 
   // Function to fetch user role from Firestore
   void LoginHandler() async {
@@ -98,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                       return 'Please enter your email';
                     }
                     if (!RegExp(
-                            r'^[a-zA-Z0-9._%+-]+@[a-zAZ0-9.-]+\.[a-zA-Z]{2,}$')
+                            r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
                         .hasMatch(value)) {
                       return 'Please enter a valid email address';
                     }
@@ -106,13 +106,25 @@ class _LoginPageState extends State<LoginPage> {
                   },
                 ),
                 const SizedBox(height: 20),
-                // Password Text Field with Icon
+                // Password Text Field with Eye Icon
                 TextFormField(
                   controller: passwordController,
-                  obscureText: true,
+                  obscureText: !_isPasswordVisible, // Toggles password visibility
                   decoration: InputDecoration(
                     labelText: 'Password',
                     prefixIcon: const Icon(Icons.lock),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:milkproject/farmer/page/farmer_home_page.dart';
+import 'package:milkproject/farmer/services/farmer_auth.dart';
 
-import 'farmer_home_page.dart';
 // For picking document images
 
 class FarmerRegistrationScreen extends StatefulWidget {
@@ -23,7 +24,8 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
       TextEditingController();
   final TextEditingController cowsController = TextEditingController();
   XFile? _document; // To hold the selected document image
-  bool _isPasswordVisible = false; // Control password visibility
+  bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false; // Control password visibility
 
   // Function to pick the document image (e.g., farmer's ID or farm document)
   Future<void> _pickDocument() async {
@@ -230,7 +232,12 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                   // How Many Cows Field
                   Row(
                     children: [
-                      Image.asset('asset/cow (1).png', width: 30, height: 30,color: Colors.green,),
+                      Image.asset(
+                        'asset/cow (1).png',
+                        width: 30,
+                        height: 30,
+                        color: Colors.green,
+                      ),
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
@@ -316,18 +323,20 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                         // Validate the form before proceeding
                         if (_formKey.currentState?.validate() ?? false) {
                           // Handle successful registration logic
-                          String name = nameController.text;
-                          String email = emailController.text;
-                          String phone = phoneController.text;
-                          String cows = cowsController.text;
-                          String password = passwordController.text;
+                          FarmerAuthService().FarmerRegister(
+                              context: context,
+                              name: nameController.text,
+                              password: passwordController.text,
+                              phone: phoneController.text,
+                              cow: cowsController.text,
+                              email: emailController.text);
 
-                           Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FarmerChoiceScreen(),
-                  ),
-                );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FarmerChoiceScreen(),
+                            ),
+                          );
 
                           // Example: print the data (you could send this to a server)
                           // FarmerAuthService().FarmerRegister(context: context, name: name, password: password, aadhar: aadhar, ration: ration, bank: bank, phone: phone, email: email)

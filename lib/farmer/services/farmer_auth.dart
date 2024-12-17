@@ -13,9 +13,7 @@ class FarmerAuthService {
       required String name,
       required String password,
       required String phone,
-      required String aadhar,
-      required String ration,
-      required String bank,
+      required String cow,
       required String email}) async {
     try {
       final user = await firebaseAuth.createUserWithEmailAndPassword(
@@ -26,9 +24,8 @@ class FarmerAuthService {
         'name': name,
         'email': email,
         'phone': phone,
-        'ration_card': ration,
-        'bank_account': bank,
-        'adhaar': aadhar
+        'password': password,
+        'cow': cow
       });
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('registration successfull'),
