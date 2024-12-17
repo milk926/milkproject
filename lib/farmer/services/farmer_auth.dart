@@ -27,6 +27,9 @@ class FarmerAuthService {
         'password': password,
         'cow': cow
       });
+      fireStoreDatabase
+          .collection('role_tb')
+          .add({'uid': user.user?.uid, 'role': 'farmer'});
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('registration successfull'),
       ));
