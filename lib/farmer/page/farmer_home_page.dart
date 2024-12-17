@@ -5,50 +5,29 @@ import 'package:milkproject/farmer/page/farmer_profile_page.dart';
 import 'package:milkproject/user/page/addtocart.dart';
 import 'package:milkproject/user/page/buy_now.dart';
 
-
-void main() {
-  runApp(const MyApp());
-}
-
 final List<Map<String, dynamic>> demoProducts = [
-      {
-        'name': 'cattle feed',
-        'price': 450,
-        'description': 'This is a sample description for Demo Product 1.',
-        'image':
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShA5-IzufSUe4yV_FOPOfnS1u-QCPwXHwjuA&s',
-      },
-      {
-        'name': 'hay',
-        'price': 120,
-        'description': 'This is a sample description for Demo Product 2.',
-        'image':
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ86-e2WOw0LMIfTzvBrA4lfltpS86ltjJ0DA&s',
-      },
-      {
-        'name': 'green grass',
-        'price': 200,
-        'description': 'This is a sample description for Demo Product 3.',
-        'image':
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVGRRSpqRbq4b7ie-zsQEZkrmP4GiG2nRYbQ&s',
-      },
-      
-    ];
-
-
-
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false, // Remove the debug banner
-      home: FarmerChoiceScreen(),
-    );
-  }
-}
+  {
+    'name': 'cattle feed',
+    'price': 450,
+    'description': 'This is a sample description for Demo Product 1.',
+    'image':
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShA5-IzufSUe4yV_FOPOfnS1u-QCPwXHwjuA&s',
+  },
+  {
+    'name': 'hay',
+    'price': 120,
+    'description': 'This is a sample description for Demo Product 2.',
+    'image':
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ86-e2WOw0LMIfTzvBrA4lfltpS86ltjJ0DA&s',
+  },
+  {
+    'name': 'green grass',
+    'price': 200,
+    'description': 'This is a sample description for Demo Product 3.',
+    'image':
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVGRRSpqRbq4b7ie-zsQEZkrmP4GiG2nRYbQ&s',
+  },
+];
 
 class FarmerChoiceScreen extends StatelessWidget {
   const FarmerChoiceScreen({super.key});
@@ -67,7 +46,7 @@ class FarmerChoiceScreen extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>  const FarmerProfileScreen(),
+                  builder: (context) => const FarmerProfileScreen(),
                 ),
               );
             },
@@ -110,115 +89,126 @@ class FarmerChoiceScreen extends StatelessWidget {
             const SizedBox(height: 20),
 
             // Daily Milk Details
-          
-        Card(
-          elevation: 5,
-          margin: const EdgeInsets.symmetric(vertical: 10),
-          child: ListTile(
-            title: const Text('Daily Milk Details', style: TextStyle(fontSize: 18)),
-            subtitle: const Text('Milk Yield: 1 liters\nPrice per liter: ₹60'),
-            leading: const Icon(Icons.local_drink, size: 40, color: Colors.blue),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>  MilkForm(),
-                ),
-              );
-            },
-          ),
-        ),
+
+            Card(
+              elevation: 5,
+              margin: const EdgeInsets.symmetric(vertical: 10),
+              child: ListTile(
+                title: const Text('Daily Milk Details',
+                    style: TextStyle(fontSize: 18)),
+                subtitle:
+                    const Text('Milk Yield: 1 liters\nPrice per liter: ₹60'),
+                leading:
+                    const Icon(Icons.local_drink, size: 40, color: Colors.blue),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MilkForm(),
+                    ),
+                  );
+                },
+              ),
+            ),
             // Cow Dung Cake
             Card(
               elevation: 5,
               margin: const EdgeInsets.symmetric(vertical: 10),
               child: ListTile(
-                title: const Text('Cow Dung Cake', style: TextStyle(fontSize: 18)),
+                title:
+                    const Text('Cow Dung Cake', style: TextStyle(fontSize: 18)),
                 subtitle: const Text('Price: ₹50\\nAvailable: 1 budget'),
                 leading: Image.network(
                   'https://media.istockphoto.com/id/1443057822/vector/compost-bin-icon-waste-clipart-isolated-on-white-background.jpg?s=612x612&w=0&k=20&c=emYkaS9ylxy-ccjFDT3WlfF1h9-Nx-dzKbuZAR1IiLI=',
                   width: 40,
                 ),
                 onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>  DungForm(),
-                ),
-              );
-            },
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DungForm(),
+                    ),
+                  );
+                },
               ),
             ),
-            const SizedBox(height: 30,),
-Row(
-  mainAxisAlignment: MainAxisAlignment.center, // Center align the buttons
-  children: [
-    SizedBox(
-      width: 150.0, // Set the desired button width
-      child: ElevatedButton(
-        onPressed: () {
-
-          Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const BuyNowPage(),
+            const SizedBox(
+              height: 30,
+            ),
+            Row(
+              mainAxisAlignment:
+                  MainAxisAlignment.center, // Center align the buttons
+              children: [
+                SizedBox(
+                  width: 150.0, // Set the desired button width
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const BuyNowPage(),
+                        ),
+                      );
+                      // Handle button press action
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor:
+                          const Color.fromARGB(255, 19, 137, 37), // Text color
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(16.0), // Rounded corners
+                      ),
+                      elevation: 8.0, // Shadow depth
+                    ),
+                    child: const Text(
+                      'Buy Now',
+                      style: TextStyle(
+                        fontSize: 16.0, // Font size
+                        fontWeight: FontWeight.bold, // Font weight
+                      ),
+                    ),
                   ),
-                );
-          // Handle button press action
-        },
-        style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white, 
-          backgroundColor: const Color.fromARGB(255, 19, 137, 37), // Text color
-          padding: const EdgeInsets.symmetric(vertical: 12.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0), // Rounded corners
-          ),
-          elevation: 8.0, // Shadow depth
-        ),
-        child: const Text(
-          'Buy Now',
-          style: TextStyle(
-            fontSize: 16.0, // Font size
-            fontWeight: FontWeight.bold, // Font weight
-          ),
-        ),
-      ),
-    ),
-    const SizedBox(width: 20.0), // Add some spacing between the buttons
-    SizedBox(
-      width: 150.0, // Set the desired button width
-      child: ElevatedButton(
-        onPressed: () {
-          Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AddToCartPage(cartProducts: demoProducts,),
+                ),
+                const SizedBox(
+                    width: 20.0), // Add some spacing between the buttons
+                SizedBox(
+                  width: 150.0, // Set the desired button width
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddToCartPage(
+                            cartProducts: demoProducts,
+                          ),
+                        ),
+                      );
+                      // Handle second button press actionAddToCartPage
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor:
+                          const Color.fromARGB(255, 19, 137, 37), // Text color
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(16.0), // Rounded corners
+                      ),
+                      elevation: 8.0, // Shadow depth
+                    ),
+                    child: const Text(
+                      'Add to Cart',
+                      style: TextStyle(
+                        fontSize: 16.0, // Font size
+                        fontWeight: FontWeight.bold, // Font weight
+                      ),
+                    ),
                   ),
-                );
-          // Handle second button press actionAddToCartPage
-        },
-        style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white, 
-          backgroundColor: const Color.fromARGB(255, 19, 137, 37), // Text color
-          padding: const EdgeInsets.symmetric(vertical: 12.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0), // Rounded corners
-          ),
-          elevation: 8.0, // Shadow depth
-        ),
-        child: const Text(
-          'Add to Cart',
-          style: TextStyle(
-            fontSize: 16.0, // Font size
-            fontWeight: FontWeight.bold, // Font weight
-          ),
-        ),
-      ),
-    ),
-  ],
-)
-
-
+                ),
+              ],
+            )
           ],
         ),
       ),
@@ -226,7 +216,8 @@ Row(
   }
 
   // Product Card Widget with Buy Now button
-  Widget productCard(String productName, String imagePath, BuildContext context) {
+  Widget productCard(
+      String productName, String imagePath, BuildContext context) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 10),
       elevation: 5,
@@ -283,7 +274,9 @@ class _BuyNowButtonState extends State<BuyNowButton> {
           width: 40, // Reduced width
           height: 40, // Reduced height
           decoration: BoxDecoration(
-            color: isSelected ? Colors.green : Colors.greenAccent, // Green background
+            color: isSelected
+                ? Colors.green
+                : Colors.greenAccent, // Green background
             shape: BoxShape.circle, // Circle button
           ),
           child: isSelected

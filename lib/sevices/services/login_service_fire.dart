@@ -51,12 +51,11 @@ class LoginServiceFire {
             );
             break;
           case 'farmer':
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const FarmerChoiceScreen(),
-              ),
-            );
+            Navigator.push(context, MaterialPageRoute(
+              builder: (context) {
+                return FarmerChoiceScreen();
+              },
+            ));
             break;
           case 'dealer':
             Navigator.push(
