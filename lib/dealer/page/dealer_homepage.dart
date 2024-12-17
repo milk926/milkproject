@@ -76,7 +76,7 @@ class _DealerHomeState extends State<DealerHome> {
             return IconButton(
               icon: const Icon(Icons.menu),
               onPressed: () {
-                Scaffold.of(context).openEndDrawer();
+                Scaffold.of(context).openDrawer();
               },
             );
           },
@@ -94,7 +94,7 @@ class _DealerHomeState extends State<DealerHome> {
           ),
         ],
       ),
-      endDrawer: Drawer(
+      drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
@@ -258,7 +258,7 @@ class _DealerHomeState extends State<DealerHome> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const UpdateLocationPage()),
+                    builder: (context) => UpdateLocationPage()),
               );
               break;
             case 'Notifications':

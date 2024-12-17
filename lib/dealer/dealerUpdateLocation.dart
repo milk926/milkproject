@@ -1,290 +1,206 @@
-// ignore: file_names
 import 'package:flutter/material.dart';
-import 'dart:ui';
+
+void main() {
+  runApp(MaterialApp(
+    home: UpdateLocationPage(),
+    debugShowCheckedModeBanner: false,
+  ));
+}
 
 class UpdateLocationPage extends StatefulWidget {
-  const UpdateLocationPage({super.key});
-
   @override
-  State<UpdateLocationPage> createState() => _UpdateLocationPageState();
+  _UpdateLocationPageState createState() => _UpdateLocationPageState();
 }
 
 class _UpdateLocationPageState extends State<UpdateLocationPage> {
-  final List<String> districts = [
-    'Thiruvananthapuram',
-    'Kollam',
-    'Pathanamthitta',
-    'Alappuzha',
-    'Kottayam',
-    'Idukki',
-    'Ernakulam',
-    'Thrissur',
-    'Palakkad',
-    'Malappuram',
-    'Kozhikode',
-    'Wayanad',
-    'Kannur',
-    'Kasaragod',
+  // Mocked list of delivery statuses
+  final List<Map<String, String>> _deliveryUpdates = [
+    {
+      'time': '08:30 AM',
+      'status': 'Order Placed',
+      'location': 'Warehouse, City A',
+    },
+    {
+      'time': '10:00 AM',
+      'status': 'Out for Delivery',
+      'location': 'Delivery Hub, City B',
+    },
+    {
+      'time': '12:45 PM',
+      'status': 'Near Destination',
+      'location': 'Local Facility, City C',
+    },
+    {
+      'time': '02:00 PM',
+      'status': 'Delivered',
+      'location': 'Customer Location, City D',
+    },
   ];
 
-  final Map<String, List<String>> localities = {
-    'Kannur': [
-      'Anjarakkandy',
-      'Chavassery',
-      'Thalassery',
-      'Payyannur',
-      'Mattannur',
-      'Iritty'
-    ],
-    'Thiruvananthapuram': [
-      'Kazhakoottam',
-      'Neyyattinkara',
-      'Attingal',
-      'Varkala',
-      'Pothencode'
-    ],
-    'Kollam': ['Chathannoor', 'Karunagappally', 'Paravur', 'Punalur', 'Anchal'],
-    'Pathanamthitta': [
-      'Adoor',
-      'Thiruvalla',
-      'Pandalam',
-      'Ranni',
-      'Mallappally'
-    ],
-    'Alappuzha': [
-      'Cherthala',
-      'Haripad',
-      'Kayamkulam',
-      'Mavelikkara',
-      'Ambalapuzha'
-    ],
-    'Kottayam': [
-      'Changanassery',
-      'Pala',
-      'Ettumanoor',
-      'Vaikom',
-      'Kaduthuruthy'
-    ],
-    'Idukki': ['Thodupuzha', 'Nedumkandam', 'Peermade', 'Munnar', 'Adimali'],
-    'Ernakulam': [
-      'Kochi',
-      'Perumbavoor',
-      'Aluva',
-      'Muvattupuzha',
-      'North Paravur'
-    ],
-    'Thrissur': [
-      'Guruvayur',
-      'Kodungallur',
-      'Chalakudy',
-      'Irinjalakuda',
-      'Kunnamkulam'
-    ],
-    'Palakkad': ['Ottapalam', 'Chittur', 'Mannarkkad', 'Alathur', 'Nenmara'],
-    'Malappuram': [
-      'Manjeri',
-      'Perinthalmanna',
-      'Tirur',
-      'Nilambur',
-      'Kondotty'
-    ],
-    'Kozhikode': [
-      'Vadakara',
-      'Koyilandy',
-      'Balussery',
-      'Feroke',
-      'Ramanattukara'
-    ],
-    'Wayanad': [
-      'Kalpetta',
-      'Sulthan Bathery',
-      'Mananthavady',
-      'Meenangadi',
-      'Vythiri'
-    ],
-    'Kasaragod': [
-      'Kanhangad',
-      'Nileshwaram',
-      'Kasaragod Town',
-      'Bekal',
-      'Manjeshwar'
-    ]
-  };
+  Future<List<Map<String, String>>> _fetchDeliveryUpdates() async {
+    // Simulate a network call delay
+    await Future.delayed(Duration(seconds: 2));
+    return _deliveryUpdates;
+  }
 
-  String? selectedDistrict;
-  String? selectedLocality;
-  String? pincode;
+  // Method to update the delivery details
+  void _updateDeliveryDetails(int index, String status, String location) {
+    setState(() {
+      _deliveryUpdates[index]['status'] = status;
+      _deliveryUpdates[index]['location'] = location;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Update Location'),
-        backgroundColor: Colors.green.shade800,
+        title: Text('Delivery Status'),
+        backgroundColor: Colors.blueAccent,
       ),
-      body: Stack(
-        children: [
-          // Background Blur Effect
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/green_background.jpg'),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-              child: Container(
-                color: Colors.black.withOpacity(0.3),
-              ),
-            ),
-          ),
-          // Main Content
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'State: Kerala',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromRGBO(73, 255, 41, 0.705),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                DropdownButtonFormField<String>(
-                  value: selectedDistrict,
-                  decoration: InputDecoration(
-                    labelText: 'Select District',
-                    labelStyle:
-                        const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-                    filled: true,
-                    fillColor: Colors.white.withOpacity(0.8),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  items: districts
-                      .map((district) => DropdownMenuItem(
-                            value: district,
-                            child: Text(district),
-                          ))
-                      .toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      selectedDistrict = value;
-                      selectedLocality = null;
-                    });
+      body: FutureBuilder<List<Map<String, String>>>(
+        future: _fetchDeliveryUpdates(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error fetching data'));
+          } else {
+            final updates = snapshot.data ?? [];
+            return ListView.builder(
+              itemCount: updates.length,
+              itemBuilder: (context, index) {
+                final update = updates[index];
+                return DeliveryStatusCard(
+                  time: update['time']!,
+                  status: update['status']!,
+                  location: update['location']!,
+                  isLast: index == updates.length - 1,
+                  onUpdate: (status, location) {
+                    _updateDeliveryDetails(index, status, location);
                   },
-                ),
-                const SizedBox(height: 16),
-                if (selectedDistrict != null)
-                  DropdownButtonFormField<String>(
-                    value: selectedLocality,
-                    decoration: InputDecoration(
-                      labelText: 'Select Locality',
-                      labelStyle:
-                          const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-                      filled: true,
-                      fillColor: Colors.white.withOpacity(0.8),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    items: localities[selectedDistrict!]
-                        ?.map((locality) => DropdownMenuItem(
-                              value: locality,
-                              child: Text(locality),
-                            ))
-                        .toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        selectedLocality = value;
-                      });
-                    },
-                  ),
-                const SizedBox(height: 16),
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Enter Pincode',
-                    labelStyle:
-                        const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-                    filled: true,
-                    fillColor: Colors.white.withOpacity(0.8),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    pincode = value;
-                  },
-                ),
-                const SizedBox(height: 32),
-                Center(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 3, 241, 15),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 12, horizontal: 24),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    onPressed: () {
-                      if (selectedDistrict != null &&
-                          selectedLocality != null &&
-                          pincode != null &&
-                          pincode!.length == 6) {
-                        _showConfirmationDialog(context);
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Please fill all fields correctly'),
-                          ),
-                        );
-                      }
-                    },
-                    child: const Text(
-                      'Save Changes',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+                );
+              },
+            );
+          }
+        },
       ),
     );
   }
+}
 
-  void _showConfirmationDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Confirm Changes'),
-        content: const Text('Are you sure you want to save the changes?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+class DeliveryStatusCard extends StatefulWidget {
+  final String time;
+  final String status;
+  final String location;
+  final bool isLast;
+  final Function(String, String) onUpdate;
+
+  const DeliveryStatusCard({
+    required this.time,
+    required this.status,
+    required this.location,
+    required this.onUpdate,
+    this.isLast = false,
+  });
+
+  @override
+  _DeliveryStatusCardState createState() => _DeliveryStatusCardState();
+}
+
+class _DeliveryStatusCardState extends State<DeliveryStatusCard> {
+  late TextEditingController _statusController;
+  late TextEditingController _locationController;
+
+  @override
+  void initState() {
+    super.initState();
+    _statusController = TextEditingController(text: widget.status);
+    _locationController = TextEditingController(text: widget.location);
+  }
+
+  @override
+  void dispose() {
+    _statusController.dispose();
+    _locationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Column(
+          children: [
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+              height: 12,
+              width: 12,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.blueAccent,
+              ),
+            ),
+            if (!widget.isLast)
+              Container(
+                width: 2,
+                height: 60,
+                color: Colors.blueAccent,
+              ),
+          ],
+        ),
+        Expanded(
+          child: Card(
+            margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+            elevation: 3,
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.time,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  TextField(
+                    controller: _statusController,
+                    decoration: InputDecoration(
+                      labelText: 'Status',
+                      labelStyle: TextStyle(color: Colors.green[700]),
+                    ),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                  ),
+                  SizedBox(height: 4),
+                  TextField(
+                    controller: _locationController,
+                    decoration: InputDecoration(
+                      labelText: 'Location',
+                      labelStyle: TextStyle(color: Colors.black54),
+                    ),
+                    style: TextStyle(fontSize: 13),
+                  ),
+                  SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      widget.onUpdate(
+                          _statusController.text, _locationController.text);
+                    },
+                    child: Text('Update Details'),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blueAccent),
+                  ),
+                ],
+              ),
+            ),
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Location updated successfully!'),
-                ),
-              );
-            },
-            child: const Text('Yes'),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

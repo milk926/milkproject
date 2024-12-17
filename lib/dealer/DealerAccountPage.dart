@@ -1,19 +1,14 @@
-// ignore: duplicate_ignore
-// ignore: file_names
-// ignore_for_file: file_names
-
 import 'package:flutter/material.dart';
+import 'package:milkproject/dealer/page/dealer_editProfile.dart';
 import 'package:milkproject/dealer/page/dealer_homepage.dart';
-// Correct import for DealerLoginPage
-// ignore: duplicate_import
-import 'package:milkproject/dealer/page/dealer_homepage.dart';
+import 'package:milkproject/login_page.dart';
 
 class DealerAccountPage extends StatelessWidget {
   final String dealerEmail;
   final String dealerName;
   final String dealerPhone;
   final String dealerLocation;
-  final dynamic dealer; // Make this nullable
+  final dynamic dealer; // Nullable
 
   const DealerAccountPage({
     super.key,
@@ -30,57 +25,111 @@ class DealerAccountPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('My Account'),
         backgroundColor: const Color(0xFF3EA120),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () {
+              // Action to edit profile
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const DealerEditProfilePage(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
-        // Wrap the body inside SingleChildScrollView
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Account Details',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-              _buildDetailCard('Name', dealerName),
-              _buildDetailCard('Email', dealerEmail),
-              _buildDetailCard('Phone', dealerPhone),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  // Navigate to registration page if needed to update details
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const DealerHomePage(),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF3EA120),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 20),
+            // Profile Icon at the Center
+            Center(
+              child: CircleAvatar(
+                radius: 60,
+                backgroundColor: Color(0xFF3EA120),
+                child: const Icon(
+                  Icons.person,
+                  size: 80,
+                  color: Colors.white,
                 ),
-                child: const Text('Edit Details'),
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Account Details',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+            _buildDetailCard('Name', dealerName),
+            _buildDetailCard('Email', dealerEmail),
+            _buildDetailCard('Phone', dealerPhone),
+            _buildDetailCard('Location', dealerLocation),
+            const SizedBox(height: 30),
+            // Logout Button
+            ElevatedButton.icon(
+              onPressed: () {
+                _showLogoutDialog(context);
+              },
+              icon: const Icon(Icons.logout),
+              label: const Text('Log Out'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.redAccent,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
   Widget _buildDetailCard(String label, String value) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        color: const Color(0xFFEAF7E4),
+        child: ListTile(
+          title:
+              Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+          subtitle: Text(value),
+        ),
       ),
-      color: const Color(0xFFEAF7E4),
-      child: ListTile(
-        title: Text(label),
-        subtitle: Text(value),
-      ),
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Logout'),
+          content: const Text('Do you want to log out?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close dialog
+              },
+              child: const Text('No'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LogIn()),
+                );
+              },
+              child: const Text('Yes'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
