@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:milkproject/farmer/page/farmer_home_page.dart';
-import 'package:milkproject/farmer/services/farmer_auth.dart';
 
 // For picking document images
 
@@ -331,12 +329,12 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                               cow: cowsController.text,
                               email: emailController.text);
 
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => FarmerChoiceScreen(),
-                            ),
-                          );
+                           Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FarmerChoiceScreen(),
+                  ),
+                );
 
                           // Example: print the data (you could send this to a server)
                           // FarmerAuthService().FarmerRegister(context: context, name: name, password: password, aadhar: aadhar, ration: ration, bank: bank, phone: phone, email: email)
