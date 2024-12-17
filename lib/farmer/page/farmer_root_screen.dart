@@ -17,7 +17,7 @@ class _FarmerBottomNavScreenState extends State<FarmerBottomNavScreen> {
     const Scaffold(),
     const Scaffold(),
     const Scaffold(),
-  ];
+  ]
 
   // Handle tab selection
   void _onItemTapped(int index) {

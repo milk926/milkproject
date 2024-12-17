@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:milkproject/society/page/homepage.dart';
 import 'package:milkproject/sevices/society_auth.dart'; // Import HomePage
@@ -278,7 +280,6 @@ class _SocietyRegistrationScreenState extends State<SocietyRegistrationScreen> {
                               color: Colors.white,
                             ),
                           );
-                          child:
                           null;
                         },
                         child: null,

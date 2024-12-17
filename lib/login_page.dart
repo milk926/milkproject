@@ -3,7 +3,8 @@ import 'package:milkproject/choose_screen.dart';
 import 'package:milkproject/sevices/services/login_service_fire.dart'; // Ensure correct import
 import 'package:milkproject/user/page/user_buynow.dart'; // Ensure correct import // Add the admin page if it's not already imported
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Ensure correct import
+// Ensure correct import // Add the admin page if it's not already imported
 
 class LogIn extends StatelessWidget {
   const LogIn({super.key});

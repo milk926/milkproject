@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:milkproject/dealer/page/dealer_homepage.dart';
 import 'package:milkproject/dealer/services/dealer_auth.dart';
 
 class DealerRegistrationScreen extends StatefulWidget {
@@ -324,20 +323,21 @@ class _DealerRegistrationScreenState extends State<DealerRegistrationScreen> {
                   const SizedBox(height: 20),
 
                   // Upload Document Button
-                  ElevatedButton(
-                    onPressed: _pickDocument,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 15.0, horizontal: 60.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: _pickDocument,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 15.0, horizontal: 60.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
+                      child: const Text('Upload Document'),
                     ),
-                    child: const Text('Upload Document'),
                   ),
                   const SizedBox(height: 20),
-
                   // Register Button
                   Center(
                     child: ElevatedButton(
