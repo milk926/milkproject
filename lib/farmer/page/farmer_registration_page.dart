@@ -326,7 +326,7 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                            Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => FarmerChoiceScreen(),
+                    builder: (context) => const FarmerChoiceScreen(),
                   ),
                 );
 

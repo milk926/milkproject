@@ -43,9 +43,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false, // Remove the debug banner
-      home: const FarmerChoiceScreen(),
+      home: FarmerChoiceScreen(),
     );
   }
 }
@@ -67,7 +67,7 @@ class FarmerChoiceScreen extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>  FarmerProfileScreen(),
+                  builder: (context) =>  const FarmerProfileScreen(),
                 ),
               );
             },
@@ -113,11 +113,11 @@ class FarmerChoiceScreen extends StatelessWidget {
           
         Card(
           elevation: 5,
-          margin: EdgeInsets.symmetric(vertical: 10),
+          margin: const EdgeInsets.symmetric(vertical: 10),
           child: ListTile(
-            title: Text('Daily Milk Details', style: TextStyle(fontSize: 18)),
-            subtitle: Text('Milk Yield: 1 liters\nPrice per liter: ₹60'),
-            leading: Icon(Icons.local_drink, size: 40, color: Colors.blue),
+            title: const Text('Daily Milk Details', style: TextStyle(fontSize: 18)),
+            subtitle: const Text('Milk Yield: 1 liters\nPrice per liter: ₹60'),
+            leading: const Icon(Icons.local_drink, size: 40, color: Colors.blue),
             onTap: () {
               Navigator.push(
                 context,
@@ -149,7 +149,7 @@ class FarmerChoiceScreen extends StatelessWidget {
             },
               ),
             ),
-            SizedBox(height: 30,),
+            const SizedBox(height: 30,),
 Row(
   mainAxisAlignment: MainAxisAlignment.center, // Center align the buttons
   children: [
@@ -161,7 +161,7 @@ Row(
           Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => BuyNowPage(),
+                    builder: (context) => const BuyNowPage(),
                   ),
                 );
           // Handle button press action
@@ -169,13 +169,13 @@ Row(
         style: ElevatedButton.styleFrom(
           foregroundColor: Colors.white, 
           backgroundColor: const Color.fromARGB(255, 19, 137, 37), // Text color
-          padding: EdgeInsets.symmetric(vertical: 12.0),
+          padding: const EdgeInsets.symmetric(vertical: 12.0),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16.0), // Rounded corners
           ),
           elevation: 8.0, // Shadow depth
         ),
-        child: Text(
+        child: const Text(
           'Buy Now',
           style: TextStyle(
             fontSize: 16.0, // Font size
@@ -184,7 +184,7 @@ Row(
         ),
       ),
     ),
-    SizedBox(width: 20.0), // Add some spacing between the buttons
+    const SizedBox(width: 20.0), // Add some spacing between the buttons
     SizedBox(
       width: 150.0, // Set the desired button width
       child: ElevatedButton(
@@ -200,13 +200,13 @@ Row(
         style: ElevatedButton.styleFrom(
           foregroundColor: Colors.white, 
           backgroundColor: const Color.fromARGB(255, 19, 137, 37), // Text color
-          padding: EdgeInsets.symmetric(vertical: 12.0),
+          padding: const EdgeInsets.symmetric(vertical: 12.0),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16.0), // Rounded corners
           ),
           elevation: 8.0, // Shadow depth
         ),
-        child: Text(
+        child: const Text(
           'Add to Cart',
           style: TextStyle(
             fontSize: 16.0, // Font size
@@ -243,7 +243,7 @@ Row(
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
-            BuyNowButton(),
+            const BuyNowButton(),
           ],
         ),
       ),
@@ -252,7 +252,7 @@ Row(
 }
 
 class BuyNowButton extends StatefulWidget {
-  const BuyNowButton({Key? key}) : super(key: key);
+  const BuyNowButton({super.key});
 
   @override
   _BuyNowButtonState createState() => _BuyNowButtonState();
