@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:milkproject/farmer/page/farmer_home_page.dart';
 
-import 'farmer_home_page.dart';
+
 // For picking document images
 
 class FarmerRegistrationScreen extends StatefulWidget {

@@ -174,17 +174,17 @@ class _DealerHomeState extends State<DealerHome> {
             AspectRatio(
               aspectRatio: 16 / 9,
               child: Image.asset(
-                'asset/milkzone_dealer.jpeg',
+                'asset/dealer_milksociety_img.jpeg',
                 width: double.infinity,
-                fit: BoxFit.cover,
+                fit: BoxFit.fitHeight,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(1.1),
               child: Text(
                 'Welcome, $dealerName',
                 style: const TextStyle(
-                  fontSize: 24,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
                 ),
