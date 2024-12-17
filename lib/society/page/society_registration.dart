@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:milkproject/society/page/homepage.dart';
-import 'package:milkproject/society/page/sevices/society_auth.dart'; // Import HomePage
+import 'package:milkproject/sevices/society_auth.dart'; // Import HomePage
 
 class SocietyRegistrationScreen extends StatefulWidget {
   const SocietyRegistrationScreen({super.key});

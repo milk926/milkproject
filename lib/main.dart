@@ -40,7 +40,7 @@ Future<void> main() async {
   );
 
   runApp(
-    const MaterialApp(debugShowCheckedModeBanner: false, home: LoginPage()
+    const MaterialApp(debugShowCheckedModeBanner: false, home: FarmerRegistrationScreen()
         // Pass the test user to the ProfileScreen
         ),
   );

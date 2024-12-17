@@ -29,6 +29,7 @@ class LoginServiceFire {
         final role = await firestoreDatabse
             .collection('role_tb')
             .where('uid', isEqualTo: userCredential.user?.uid)
+            
             .get();
 
         final roledata = role.docs.first.data();
