@@ -1,9 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:milkproject/farmer/page/farmer_home_page.dart';
+import 'package:http/http.dart' as http;
+import 'package:milkproject/farmer/page/HomePage.dart';
 import 'package:milkproject/farmer/services/farmer_auth.dart';
-
-// For picking document images
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FarmerRegistrationScreen extends StatefulWidget {
   const FarmerRegistrationScreen({super.key});
@@ -17,8 +18,7 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
   final _formKey = GlobalKey<FormState>(); // Form key for validation
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
-  final TextEditingController emailController =
-      TextEditingController(); // Email field
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
@@ -26,6 +26,12 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
   XFile? _document; // To hold the selected document image
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false; // Control password visibility
+  bool _isUploading = false; // Track the upload process
+
+  // Cloudinary details
+  final String cloudinaryUrl =
+      'https://api.cloudinary.com/v1_1/dsdvk2lms/image/upload';
+  final String uploadPreset = 'milk project'; // Replace with your preset
 
   // Function to pick the document image (e.g., farmer's ID or farm document)
   Future<void> _pickDocument() async {
@@ -34,6 +40,84 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
     setState(() {
       _document = pickedFile;
     });
+  }
+
+  // Upload the selected document to Cloudinary
+  Future<String?> _uploadDocumentToCloudinary(XFile file) async {
+    try {
+      setState(() {
+        _isUploading = true;
+      });
+
+      final bytes = await file.readAsBytes();
+      final request = http.MultipartRequest('POST', Uri.parse(cloudinaryUrl))
+        ..fields['upload_preset'] = uploadPreset
+        ..files.add(
+            http.MultipartFile.fromBytes('file', bytes, filename: file.name));
+
+      final response = await request.send();
+      if (response.statusCode == 200) {
+        final responseData = await response.stream.bytesToString();
+        final json = jsonDecode(responseData);
+        return json['secure_url']; // Cloudinary URL of the uploaded file
+      } else {
+        throw Exception('Failed to upload document: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('Error uploading document: $e');
+      return null;
+    } finally {
+      setState(() {
+        _isUploading = false;
+      });
+    }
+  }
+
+  // Submit registration form
+  Future<void> _registerFarmer() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      if (_document == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please upload a document')),
+        );
+        return;
+      }
+
+      // Upload the document and get the URL
+      final documentUrl = await _uploadDocumentToCloudinary(_document!);
+      if (documentUrl == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to upload the document')),
+        );
+        return;
+      }
+
+      // Save farmer data to Firestore
+      try {
+        await FirebaseFirestore.instance.collection('farmers').add({
+          'name': nameController.text,
+          'email': emailController.text,
+          'phone': phoneController.text,
+          'password': passwordController.text, // Should hash in production
+          'cows': cowsController.text,
+          'document_url': documentUrl,
+        });
+
+        // Navigate to home page
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => FarmerHome()),
+        );
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Registration successful!')),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to register: $e')),
+        );
+      }
+    }
   }
 
   @override
@@ -45,12 +129,10 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Form(
-              key: _formKey, // Attach the form key for validation
+              key: _formKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // "Farmer Registration" text
                   const Text(
                     'Farmer Registration',
                     style: TextStyle(
@@ -60,318 +142,143 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
-
-                  // Name Text Field
-                  Row(
-                    children: [
-                      const Icon(Icons.person, size: 30, color: Colors.green),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: TextFormField(
-                          controller: nameController,
-                          decoration: InputDecoration(
-                            labelText: 'Name',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your name';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                    ],
+                  _buildTextField(
+                    controller: nameController,
+                    label: 'Name',
+                    icon: Icons.person,
+                    validator: (value) =>
+                        value!.isEmpty ? 'Please enter your name' : null,
                   ),
                   const SizedBox(height: 20),
-
-                  // Email Text Field
-                  Row(
-                    children: [
-                      const Icon(Icons.email, size: 30, color: Colors.green),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: TextFormField(
-                          controller: emailController,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: InputDecoration(
-                            labelText: 'Email Address',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your email address';
-                            }
-                            if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
-                                .hasMatch(value)) {
-                              return 'Please enter a valid email address';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                    ],
+                  _buildTextField(
+                    controller: emailController,
+                    label: 'Email Address',
+                    icon: Icons.email,
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value!.isEmpty) return 'Please enter your email';
+                      if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                        return 'Enter a valid email address';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 20),
-
-                  // Phone Text Field
-                  Row(
-                    children: [
-                      const Icon(Icons.phone, size: 30, color: Colors.green),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: TextFormField(
-                          controller: phoneController,
-                          decoration: InputDecoration(
-                            labelText: 'Phone Number',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your phone number';
-                            }
-                            if (!RegExp(r'^\+?[0-9]{10,13}$').hasMatch(value)) {
-                              return 'Please enter a valid phone number';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                    ],
+                  _buildTextField(
+                    controller: phoneController,
+                    label: 'Phone Number',
+                    icon: Icons.phone,
+                    keyboardType: TextInputType.phone,
+                    validator: (value) {
+                      if (value!.isEmpty)
+                        return 'Please enter your phone number';
+                      if (!RegExp(r'^\+?[0-9]{10,13}$').hasMatch(value)) {
+                        return 'Enter a valid phone number';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 20),
-
-                  // Password Text Field with Eye Icon
-                  Row(
-                    children: [
-                      const Icon(Icons.lock, size: 30, color: Colors.green),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: TextFormField(
-                          controller: passwordController,
-                          obscureText: !_isPasswordVisible,
-                          decoration: InputDecoration(
-                            labelText: 'Password',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _isPasswordVisible
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _isPasswordVisible = !_isPasswordVisible;
-                                });
-                              },
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter a password';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                    ],
+                  _buildPasswordField(passwordController, 'Password'),
+                  const SizedBox(height: 20),
+                  _buildPasswordField(
+                      confirmPasswordController, 'Confirm Password',
+                      validator: (value) {
+                    if (value!.isEmpty) return 'Please confirm your password';
+                    if (value != passwordController.text) {
+                      return 'Passwords do not match';
+                    }
+                    return null;
+                  }),
+                  const SizedBox(height: 20),
+                  _buildTextField(
+                    controller: cowsController,
+                    label: 'Number of Cows',
+                    icon: Icons.local_florist,
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value!.isEmpty)
+                        return 'Please enter the number of cows';
+                      if (int.tryParse(value) == null ||
+                          int.parse(value) <= 0) {
+                        return 'Enter a valid number';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 20),
-
-                  // Confirm Password Text Field with Eye Icon
-                  Row(
-                    children: [
-                      const Icon(Icons.lock_outline,
-                          size: 30, color: Colors.green),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: TextFormField(
-                          controller: confirmPasswordController,
-                          obscureText: !_isPasswordVisible,
-                          decoration: InputDecoration(
-                            labelText: 'Confirm Password',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _isPasswordVisible
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _isPasswordVisible = !_isPasswordVisible;
-                                });
-                              },
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please confirm your password';
-                            }
-                            if (value != passwordController.text) {
-                              return 'Passwords do not match';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-
-                  // How Many Cows Field
-                  Row(
-                    children: [
-                      Image.asset(
-                        'asset/cow (1).png',
-                        width: 30,
-                        height: 30,
-                        color: Colors.green,
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: TextFormField(
-                          controller: cowsController,
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            labelText: 'How many cows?',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter the number of cows';
-                            }
-                            if (int.tryParse(value) == null ||
-                                int.parse(value) <= 0) {
-                              return 'Please enter a valid number of cows';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Upload Document Button
                   ElevatedButton(
+                    onPressed: _pickDocument,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF3EA120),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 15.0, horizontal: 60.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
                     ),
-                    onPressed: _pickDocument,
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.upload_file, color: Colors.white),
-                        SizedBox(width: 8),
-                        Text(
-                          'Upload Document',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
+                    child: const Text('Upload Document'),
                   ),
+                  if (_document != null) Text('Selected: ${_document!.name}'),
                   const SizedBox(height: 20),
-
-                  // If a document is selected, show the document name
-                  if (_document != null)
-                    Text(
-                      'Document Selected: ${_document!.name}',
-                      style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black),
-                    ),
-
-                  const SizedBox(height: 20),
-
-                  // Full-Width Register Button
-                  SizedBox(
-                    width: double
-                        .infinity, // This ensures the button is full width
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF3EA120),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 15.0, horizontal: 60.0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      onPressed: () {
-                        // Validate the form before proceeding
-                        if (_formKey.currentState?.validate() ?? false) {
-                          // Handle successful registration logic
-                          FarmerAuthService().FarmerRegister(
-                              context: context,
-                              name: nameController.text,
-                              password: passwordController.text,
-                              phone: phoneController.text,
-                              cow: cowsController.text,
-                              email: emailController.text);
-
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => FarmerChoiceScreen(),
-                            ),
-                          );
-
-                          // Example: print the data (you could send this to a server)
-                          // FarmerAuthService().FarmerRegister(context: context, name: name, password: password, aadhar: aadhar, ration: ration, bank: bank, phone: phone, email: email)
-                        } else {
-                          // Show an error message if validation fails
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content:
-                                    Text('Please fill all fields correctly')),
-                          );
-                        }
-                      },
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.check_circle, color: Colors.white),
-                          SizedBox(width: 8),
-                          Text(
-                            'Register',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
+                  _isUploading
+                      ? const CircularProgressIndicator()
+                      : ElevatedButton(
+                          onPressed: _registerFarmer,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF3EA120),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
+                          child: const Text('Register'),
+                        ),
                 ],
               ),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  // Helper to build text fields
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    TextInputType keyboardType = TextInputType.text,
+    String? Function(String?)? validator,
+  }) {
+    return TextFormField(
+      controller: controller,
+      keyboardType: keyboardType,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon, color: Colors.green),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+      validator: validator,
+    );
+  }
+
+  // Helper to build password fields
+  Widget _buildPasswordField(
+    TextEditingController controller,
+    String label, {
+    String? Function(String?)? validator,
+  }) {
+    return TextFormField(
+      controller: controller,
+      obscureText: !_isPasswordVisible,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: const Icon(Icons.lock, color: Colors.green),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        suffixIcon: IconButton(
+          icon: Icon(
+            _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+          ),
+          onPressed: () {
+            setState(() {
+              _isPasswordVisible = !_isPasswordVisible;
+            });
+          },
+        ),
+      ),
+      validator: validator,
     );
   }
 }

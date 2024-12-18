@@ -261,15 +261,17 @@ class _SocietyRegistrationScreenState extends State<SocietyRegistrationScreen> {
                             _navigateToHomePage();
                             {
                               SocietyAuthService().societyRegister(
-                                  context: context,
-                                  buildingaddress:
-                                      buildingAddressController.text,
-                                  location: locationController.text,
-                                  contactnumber: contactNumberController.text,
-                                  managername: managerNameController.text,
-                                  managercontact: managerContactController.text,
-                                  password: passwordController.text,
-                                  email: emailController.text);
+                                context: context,
+                                buildingaddress: buildingAddressController.text,
+                                location: locationController.text,
+                                contactnumber: contactNumberController.text,
+                                managername: managerNameController.text,
+                                managercontact: managerContactController.text,
+                                password: passwordController.text,
+                                email: emailController.text,
+                                pincode: pincodeController.text,
+                                licencenumber: licenseNumberController.text,
+                              );
                             }
                           }
                           const Text(

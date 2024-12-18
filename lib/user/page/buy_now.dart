@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class BuyNowPage extends StatefulWidget {
-  const BuyNowPage({super.key});
+  final String productName; // Expecting the product name as an argument
+
+  const BuyNowPage({
+    super.key,
+    required this.productName,
+  });
 
   @override
   _BuyNowPageState createState() => _BuyNowPageState();
@@ -10,9 +16,49 @@ class BuyNowPage extends StatefulWidget {
 class _BuyNowPageState extends State<BuyNowPage> {
   int quantity = 1;
   String? deliveryAddress;
-  bool useSuperCoins = false;
   DateTime? selectedDate;
+  bool isPlacingOrder = false;
+  bool isLoading = true;
 
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  Map<String, dynamic>? productDetails;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchProductDetails();
+  }
+
+  /// Fetch product details from Firestore
+  Future<void> _fetchProductDetails() async {
+    try {
+      final querySnapshot = await _firestore
+          .collection('products')
+          .where('name', isEqualTo: widget.productName)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        setState(() {
+          productDetails = querySnapshot.docs.first.data();
+          isLoading = false;
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Product "${widget.productName}" not found!'),
+          ),
+        );
+        Navigator.pop(context); // Return to the previous screen
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to fetch product details: $e')),
+      );
+      Navigator.pop(context); // Return to the previous screen
+    }
+  }
+
+  /// Function to select a delivery date
   void _selectDeliveryDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -27,8 +73,78 @@ class _BuyNowPageState extends State<BuyNowPage> {
     }
   }
 
+  /// Function to calculate total price
+  num _calculateTotalPrice() {
+    if (productDetails == null) return 0;
+    return (productDetails!['price'] as num) * quantity;
+  }
+
+  /// Function to place order and save to Firestore
+  Future<void> _placeOrder() async {
+    if (deliveryAddress == null || deliveryAddress!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter a delivery address!')),
+      );
+      return;
+    }
+    if (selectedDate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a delivery date!')),
+      );
+      return;
+    }
+
+    setState(() {
+      isPlacingOrder = true;
+    });
+
+    try {
+      final order = {
+        'productName': productDetails!['name'],
+        'quantity': quantity,
+        'totalPrice': _calculateTotalPrice(),
+        'address': deliveryAddress,
+        'deliveryDate': selectedDate,
+        'timestamp': FieldValue.serverTimestamp(),
+      };
+
+      // Add order to Firestore
+      await _firestore.collection('orders').add(order);
+
+      // Success feedback
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Order placed successfully for $quantity item(s) to $deliveryAddress!',
+          ),
+        ),
+      );
+
+      // Reset form
+      setState(() {
+        quantity = 1;
+        deliveryAddress = null;
+        selectedDate = null;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to place order: $e')),
+      );
+    }
+
+    setState(() {
+      isPlacingOrder = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Checkout'),
@@ -51,6 +167,39 @@ class _BuyNowPageState extends State<BuyNowPage> {
                   _buildProgressConnector(),
                   _buildProgressStep("Confirm", false),
                 ],
+              ),
+              const SizedBox(height: 16),
+
+              // Product Details Section
+              _buildSectionCard(
+                icon: Icons.info,
+                title: "Product Details",
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      productDetails!['name'],
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      productDetails!['description'] ?? '',
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Price: \$${productDetails!['price']}',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.green,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 16),
 
@@ -105,11 +254,28 @@ class _BuyNowPageState extends State<BuyNowPage> {
               ),
               const SizedBox(height: 16),
 
+              // Total Price Section
+              _buildSectionCard(
+                icon: Icons.monetization_on,
+                title: "Total Price",
+                child: Text(
+                  '\$${_calculateTotalPrice().toStringAsFixed(2)}',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+              const SizedBox(height: 16),
+
               // Place Order Button
               Center(
                 child: ElevatedButton.icon(
-                  icon: const Icon(Icons.check_circle),
-                  label: const Text('Place Order'),
+                  icon: isPlacingOrder
+                      ? const CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation(Colors.white),
+                        )
+                      : const Icon(Icons.check_circle),
+                  label: Text(
+                    isPlacingOrder ? 'Placing Order...' : 'Place Order',
+                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                     padding: const EdgeInsets.symmetric(
@@ -118,23 +284,7 @@ class _BuyNowPageState extends State<BuyNowPage> {
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                   ),
-                  onPressed: () {
-                    if (deliveryAddress == null || deliveryAddress!.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Please enter a delivery address!'),
-                        ),
-                      );
-                      return;
-                    }
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'Order placed successfully for $quantity item(s) to $deliveryAddress !',
-                        ),
-                      ),
-                    );
-                  },
+                  onPressed: isPlacingOrder ? null : _placeOrder,
                 ),
               ),
             ],

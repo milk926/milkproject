@@ -1,7 +1,7 @@
 // ignore_for_file: library_private_types_in_public_ap
 
 import 'package:flutter/material.dart';
-import 'package:milkproject/farmer/page/farmer_profile_page.dart';
+import 'package:milkproject/farmer/page/HomePage.dart';
 
 class FarmerBottomNavScreen extends StatefulWidget {
   const FarmerBottomNavScreen({super.key});
@@ -15,7 +15,7 @@ class _FarmerBottomNavScreenState extends State<FarmerBottomNavScreen> {
 
   // List of screens for each section
   final List<Widget> _screens = [
-    const FarmerProfileScreen(),
+    FarmerHome(),
     const Scaffold(),
     const Scaffold(),
     const Scaffold(),

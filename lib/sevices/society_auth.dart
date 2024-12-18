@@ -20,7 +20,9 @@ class SocietyAuthService {
       required String managername,
       required String managercontact,
       required String password,
-      required String email}) async {
+      required String email,
+      required String pincode,
+      required String licencenumber}) async {
     try {
       final user = await firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
@@ -32,7 +34,10 @@ class SocietyAuthService {
         'contactnumber': contactnumber,
         'managername': managername,
         'password': password,
-        'email': email
+        'email': email,
+        'pincode': pincode,
+        'licencenumber': licencenumber,
+        'managercontact': managercontact
       });
       fireStoreDatabase
           .collection('role_tb')

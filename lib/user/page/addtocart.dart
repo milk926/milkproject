@@ -1,43 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AddToCartPage extends StatelessWidget {
-  final List<Map<String, dynamic>> cartProducts;
-
-  const AddToCartPage({super.key, required this.cartProducts});
+  const AddToCartPage({super.key, required List cartProducts});
 
   @override
   Widget build(BuildContext context) {
-    // Demo products to display when cart is empty
-    final List<Map<String, dynamic>> demoProducts = [
-      {
-        'name': 'milk',
-        'price': 26,
-        'description': 'This is a sample description for Demo Product 1.',
-        'image':
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSAyH854FlWZlrM6qQL95q_2xSbyYjkUzP-w&s',
-      },
-      {
-        'name': 'cheese',
-        'price': 24,
-        'description': 'This is a sample description for Demo Product 2.',
-        'image':
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0TMriLN-YT6t2VZvr8tFMXSWPf4sFS8sH6Q&s',
-      },
-      {
-        'name': 'butter',
-        'price': 22,
-        'description': 'This is a sample description for Demo Product 3.',
-        'image':
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0TMriLN-YT6t2VZvr8tFMXSWPf4sFS8sH6Q&s',
-      },
-      {
-        'name': 'yogurt',
-        'price': 30,
-        'description': 'This is a sample description for Demo Product 4.',
-        'image':
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7ua1fAq4_iTDCcNw1r8VLTW-i5GAnmKYcTA&s',
-      },
-    ];
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
     return Scaffold(
       appBar: AppBar(
@@ -46,41 +15,75 @@ class AddToCartPage extends StatelessWidget {
         backgroundColor: const Color(0xFF3EA120),
         foregroundColor: Colors.white,
       ),
-      body: cartProducts.isEmpty
-          ? ListView.builder(
-              itemCount: demoProducts.length,
-              itemBuilder: (context, index) {
-                final product = demoProducts[index];
-                return Card(
-                  margin: const EdgeInsets.all(8.0),
-                  child: Column(
+      body: StreamBuilder<QuerySnapshot>(
+        stream: firestore.collection('cart').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return const Center(
+              child: Text(
+                'Your cart is empty!',
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+            );
+          }
+
+          final cartProducts = snapshot.data!.docs.map((doc) {
+            final data = doc.data() as Map<String, dynamic>;
+            return {'id': doc.id, ...data};
+          }).toList();
+
+          return ListView.builder(
+            itemCount: cartProducts.length,
+            itemBuilder: (context, index) {
+              final product = cartProducts[index];
+
+              return Card(
+                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                elevation: 4,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Image.network(
-                        product['image'],
-                        height: 150,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return const SizedBox(
-                            height: 150,
-                            child: Center(
-                              child: Icon(
+                      // Product Image
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.network(
+                          product['image'] ?? '',
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              width: 100,
+                              height: 100,
+                              color: Colors.grey[300],
+                              child: const Icon(
                                 Icons.broken_image,
-                                size: 60,
+                                size: 50,
                                 color: Colors.grey,
                               ),
-                            ),
-                          );
-                        },
+                            );
+                          },
+                        ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
+                      const SizedBox(width: 10),
+                      // Product Details
+                      Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              product['name'],
+                              product['name'] ?? 'Unnamed Product',
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -88,7 +91,10 @@ class AddToCartPage extends StatelessWidget {
                             ),
                             const SizedBox(height: 5),
                             Text(
-                              product['description'],
+                              product['description'] ??
+                                  'No description available.',
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey,
@@ -96,125 +102,62 @@ class AddToCartPage extends StatelessWidget {
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              'Price: ₹${product['price']}',
+                              'Price: ₹${product['price'] ?? 'N/A'}',
                               style: const TextStyle(
-                                fontSize: 14,
+                                fontSize: 16,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.green,
                               ),
                             ),
                             const SizedBox(height: 10),
-                            ElevatedButton(
-                              onPressed: () {
-                                // Implement Order Now action here
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                        'Order placed for ${product['name']}!'),
+                            Row(
+                              children: [
+                                // Remove from Cart Button
+                                ElevatedButton.icon(
+                                  onPressed: () async {
+                                    try {
+                                      await firestore
+                                          .collection('cart')
+                                          .doc(product['id'])
+                                          .delete();
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                              '${product['name']} removed from the cart!'),
+                                        ),
+                                      );
+                                    } catch (error) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                              'Failed to remove ${product['name']} from the cart.'),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  icon: const Icon(Icons.delete),
+                                  label: const Text('Remove'),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.green,
+                                    foregroundColor: Colors.white,
                                   ),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF3EA120),
-                              ),
-                              child: const Text(
-                                'Order Now',
-                                style: TextStyle(
-                                  color:
-                                      Colors.white, // Text color is now white
                                 ),
-                              ),
+                                const SizedBox(width: 10),
+                              ],
                             ),
                           ],
                         ),
                       ),
                     ],
                   ),
-                );
-              },
-            )
-          : ListView.builder(
-              itemCount: cartProducts.length,
-              itemBuilder: (context, index) {
-                final product = cartProducts[index];
-                return Card(
-                  margin: const EdgeInsets.all(8.0),
-                  child: ListTile(
-                    leading: Image.network(
-                      product['image'],
-                      width: 60,
-                      height: 60,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Icon(
-                          Icons.broken_image,
-                          size: 60,
-                          color: Colors.grey,
-                        );
-                      },
-                    ),
-                    title: Text(product['name']),
-                    subtitle: Text('₹${product['price']}'),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () {
-                        // Remove product from the cart
-                        cartProducts.removeAt(index);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content:
-                                Text('${product['name']} removed from cart!'),
-                          ),
-                        );
-                        // Refresh the UI by updating the page
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                AddToCartPage(cartProducts: cartProducts),
-                          ),
-                        );
-                      },
-                    ),
-                    onTap: () {
-                      // Show product details on tap
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: Text(product['name']),
-                            content: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Image.network(
-                                  product['image'],
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                ),
-                                const SizedBox(height: 10),
-                                Text('Price: ₹${product['price']}'),
-                                const SizedBox(height: 10),
-                                Text('Product Details: ${product['name']}'),
-                              ],
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('Close'),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                  ),
-                );
-              },
-            ),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

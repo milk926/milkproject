@@ -1,29 +1,87 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
-
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  // Controllers for text fields
-  final TextEditingController nameController =
-      TextEditingController(text: "John Doe");
-  final TextEditingController aadharController =
-      TextEditingController(text: "1234-5678-9012");
-  final TextEditingController rationController =
-      TextEditingController(text: "RAT123456789");
-  final TextEditingController bankController =
-      TextEditingController(text: "1234567890");
-  final TextEditingController phoneController =
-      TextEditingController(text: "+1234567890");
-  final TextEditingController emailController =
-      TextEditingController(text: "john.doe@example.com");
-
   final _formKey = GlobalKey<FormState>();
+
+  // Controllers for text fields
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController aadharController = TextEditingController();
+  final TextEditingController rationController = TextEditingController();
+  final TextEditingController bankController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  // To track loading state
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  // Load current user's data from Firestore
+  Future<void> _loadUserData() async {
+    final currentUser = _auth.currentUser;
+    if (currentUser != null) {
+      final userDoc =
+          await _firestore.collection('user').doc(currentUser.uid).get();
+
+      if (userDoc.exists) {
+        final data = userDoc.data()!;
+        setState(() {
+          nameController.text = data['name'] ?? '';
+          aadharController.text = data['adhaar'] ?? '';
+          rationController.text = data['ration_card'] ?? '';
+          bankController.text = data['bank_account'] ?? '';
+          phoneController.text = data['phone'] ?? '';
+          emailController.text = data['email'] ?? '';
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  // Update user's data in Firestore
+  Future<void> _updateUserData() async {
+    final currentUser = _auth.currentUser;
+    if (currentUser != null) {
+      try {
+        await _firestore.collection('user').doc(currentUser.uid).update({
+          'name': nameController.text.trim(),
+          'adhaar': aadharController.text.trim(),
+          'ration_card': rationController.text.trim(),
+          'bank_account': bankController.text.trim(),
+          'phone': phoneController.text.trim(),
+          'email': emailController.text.trim(),
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Profile updated successfully!')),
+        );
+        Navigator.pop(context); // Return to the previous screen
+      } catch (error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to update profile!')),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,90 +96,88 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           },
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 20),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 20),
 
-                // Name Field
-                _buildEditableField("Name", nameController, "Enter your name"),
-                const SizedBox(height: 10),
+                      // Name Field
+                      _buildEditableField(
+                          "Name", nameController, "Enter your name"),
+                      const SizedBox(height: 10),
 
-                // Aadhar Field
-                _buildEditableField(
-                    "Aadhar", aadharController, "Enter your Aadhar number",
-                    keyboardType: TextInputType.number),
+                      // Aadhar Field
+                      _buildEditableField("Aadhar", aadharController,
+                          "Enter your Aadhar number",
+                          keyboardType: TextInputType.number),
 
-                const SizedBox(height: 10),
+                      const SizedBox(height: 10),
 
-                // Ration Number Field
-                _buildEditableField("Ration Number", rationController,
-                    "Enter your ration number"),
+                      // Ration Number Field
+                      _buildEditableField("Ration Number", rationController,
+                          "Enter your ration number"),
 
-                const SizedBox(height: 10),
+                      const SizedBox(height: 10),
 
-                // Bank Details Field
-                _buildEditableField("A/C Number", bankController,
-                    "Enter your bank account number",
-                    keyboardType: TextInputType.number),
+                      // Bank Details Field
+                      _buildEditableField("A/C Number", bankController,
+                          "Enter your bank account number",
+                          keyboardType: TextInputType.number),
 
-                const SizedBox(height: 10),
+                      const SizedBox(height: 10),
 
-                // Phone Field
-                _buildEditableField(
-                    "Phone", phoneController, "Enter your phone number",
-                    keyboardType: TextInputType.phone),
+                      // Phone Field
+                      _buildEditableField(
+                          "Phone", phoneController, "Enter your phone number",
+                          keyboardType: TextInputType.phone),
 
-                const SizedBox(height: 10),
+                      const SizedBox(height: 10),
 
-                // Email Field
-                _buildEditableField(
-                    "Email", emailController, "Enter your email address",
-                    keyboardType: TextInputType.emailAddress),
+                      // Email Field
+                      _buildEditableField(
+                          "Email", emailController, "Enter your email address",
+                          keyboardType: TextInputType.emailAddress),
 
-                const SizedBox(height: 30),
+                      const SizedBox(height: 30),
 
-                // Save Button
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState?.validate() ?? false) {
-                        // Save changes and return to Profile Page
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text("Profile updated successfully!")),
-                        );
-                        Navigator.pop(context);
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 15, horizontal: 50),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                      // Save Button
+                      Center(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (_formKey.currentState?.validate() ?? false) {
+                              _updateUserData();
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 15, horizontal: 50),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: const Text(
+                            "Save Changes",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                    child: const Text(
-                      "Save Changes",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 

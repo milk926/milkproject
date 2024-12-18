@@ -4,7 +4,6 @@ import 'dart:math';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:milkproject/dealer/page/dealer_registration_page.dart';
 import 'package:milkproject/farmer/page/farmer_registration_page.dart';
 import 'package:milkproject/firebase_options.dart';
 import 'package:milkproject/login_page.dart';
@@ -40,7 +39,7 @@ Future<void> main() async {
   );
 
   runApp(
-    const MaterialApp(debugShowCheckedModeBanner: false, home: LogIn()
+    const MaterialApp(debugShowCheckedModeBanner: false, home: LoginPage()
         // Pass the test user to the ProfileScreen
         ),
   );

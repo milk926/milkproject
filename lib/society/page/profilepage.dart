@@ -1,7 +1,48 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  late Future<Map<String, dynamic>> _profileData;
+
+  @override
+  void initState() {
+    super.initState();
+    _profileData = fetchProfileData();
+  }
+
+  // Fetch profile data for the logged-in user
+  Future<Map<String, dynamic>> fetchProfileData() async {
+    try {
+      // Get the current user
+      final User? user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        throw Exception('User not logged in');
+      }
+
+      // Fetch the document for the logged-in user
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('society')
+          .doc(user.uid) // Use the logged-in user's UID
+          .get();
+
+      if (snapshot.exists) {
+        return snapshot.data() as Map<String, dynamic>;
+      } else {
+        throw Exception('Profile not found for user: ${user.uid}');
+      }
+    } catch (e) {
+      print('Error fetching profile data: $e');
+      throw Exception('Failed to load profile');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,87 +60,115 @@ class ProfilePage extends StatelessWidget {
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              // User Icon
-              const Center(
-                child: CircleAvatar(
-                  radius: 50,
-                  backgroundColor: Colors.green,
-                  child: Icon(
-                    Icons.person,
-                    size: 50,
-                    color: Colors.white,
+      body: FutureBuilder<Map<String, dynamic>>(
+        future: _profileData,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                'Error: ${snapshot.error}',
+                style: const TextStyle(color: Colors.red),
+              ),
+            );
+          } else if (!snapshot.hasData) {
+            return const Center(
+              child: Text(
+                'No profile data found',
+                style: TextStyle(color: Colors.black),
+              ),
+            );
+          }
+
+          // Data loaded successfully
+          final profile = snapshot.data!;
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  // User Icon
+                  const Center(
+                    child: CircleAvatar(
+                      radius: 50,
+                      backgroundColor: Colors.green,
+                      child: Icon(
+                        Icons.person,
+                        size: 50,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              // Individual Cards for Each Detail
-              buildDetailCard(
-                icon: Icons.location_city,
-                label: 'Building Address',
-                value: '123 Society Lane, Green Valley',
-              ),
-              buildDetailCard(
-                icon: Icons.location_on,
-                label: 'Location',
-                value: 'Green Valley, Metropolis',
-              ),
-              buildDetailCard(
-                icon: Icons.pin_drop,
-                label: 'Pincode',
-                value: '123456',
-              ),
-              buildDetailCard(
-                icon: Icons.phone,
-                label: 'Contact Number',
-                value: '+91 9876543210',
-              ),
-              buildDetailCard(
-                icon: Icons.confirmation_number,
-                label: 'License Number',
-                value: 'LIC-20231234',
-              ),
-              buildDetailCard(
-                icon: Icons.person_outline,
-                label: 'Manager Name',
-                value: 'John Doe',
-              ),
-              buildDetailCard(
-                icon: Icons.phone_android,
-                label: 'Manager Contact Number',
-                value: '+91 9876501234',
-              ),
-              buildDetailCard(
-                icon: Icons.email,
-                label: 'Email ID',
-                value: 'society@example.com',
-              ),
-              const SizedBox(height: 30),
-              // Logout Button
-              ElevatedButton(
-                onPressed: () {
-                  // Perform logout logic here
-                  Navigator.pop(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                  const SizedBox(height: 20),
+
+                  // Individual Cards for Each Detail
+                  buildDetailCard(
+                    icon: Icons.location_city,
+                    label: 'Building Address',
+                    value: profile['buildingaddress'] ?? 'N/A',
                   ),
-                ),
-                child: const Text(
-                  'Logout',
-                  style: TextStyle(fontSize: 18),
-                ),
+                  buildDetailCard(
+                    icon: Icons.location_on,
+                    label: 'Location',
+                    value: profile['location'] ?? 'N/A',
+                  ),
+                  buildDetailCard(
+                    icon: Icons.pin_drop,
+                    label: 'Pincode',
+                    value: profile['pincode'] ?? 'N/A',
+                  ),
+                  buildDetailCard(
+                    icon: Icons.phone,
+                    label: 'Contact Number',
+                    value: profile['contactnumber'] ?? 'N/A',
+                  ),
+                  buildDetailCard(
+                    icon: Icons.confirmation_number,
+                    label: 'License Number',
+                    value: profile['licencenumber'] ?? 'N/A',
+                  ),
+                  buildDetailCard(
+                    icon: Icons.person_outline,
+                    label: 'Manager Name',
+                    value: profile['managername'] ?? 'N/A',
+                  ),
+                  buildDetailCard(
+                    icon: Icons.phone_android,
+                    label: 'Manager Contact Number',
+                    value: profile['managercontact'] ?? 'N/A',
+                  ),
+                  buildDetailCard(
+                    icon: Icons.email,
+                    label: 'Email ID',
+                    value: profile['email'] ?? 'N/A',
+                  ),
+                  const SizedBox(height: 30),
+
+                  // Logout Button
+                  ElevatedButton(
+                    onPressed: () async {
+                      // Perform logout
+                      await FirebaseAuth.instance.signOut();
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      'Logout',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

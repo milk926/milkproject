@@ -25,7 +25,8 @@ class FarmerAuthService {
         'email': email,
         'phone': phone,
         'password': password,
-        'cow': cow
+        'cow': cow,
+        'isApproved':false
       });
       fireStoreDatabase
           .collection('role_tb')

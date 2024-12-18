@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:milkproject/dealer/page/dealer_homepage.dart';
-import 'package:milkproject/farmer/page/farmer_home_page.dart';
+
+import 'package:milkproject/farmer/page/HomePage.dart';
 import 'package:milkproject/society/page/homepage.dart';
 import 'package:milkproject/user/page/user_buynow.dart';
 
@@ -53,17 +53,9 @@ class LoginServiceFire {
           case 'farmer':
             Navigator.push(context, MaterialPageRoute(
               builder: (context) {
-                return FarmerChoiceScreen();
+                return FarmerHome();
               },
             ));
-            break;
-          case 'dealer':
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const DealerHomePage(),
-              ),
-            );
             break;
           default:
             ScaffoldMessenger.of(context).showSnackBar(
