@@ -35,7 +35,11 @@ class AddToCartPage extends StatelessWidget {
 
           final cartProducts = snapshot.data!.docs.map((doc) {
             final data = doc.data() as Map<String, dynamic>;
-            return {'id': doc.id, ...data};
+            return {
+              'name': data['name'],
+              'id': doc.id,
+              ...data
+            }; // Keep the id for future use
           }).toList();
 
           return ListView.builder(
@@ -115,11 +119,41 @@ class AddToCartPage extends StatelessWidget {
                                 // Remove from Cart Button
                                 ElevatedButton.icon(
                                   onPressed: () async {
+                                    if (product['name'] == null) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content:
+                                              Text('Invalid product name.'),
+                                        ),
+                                      );
+                                      return;
+                                    }
+
                                     try {
+                                      // Check if the product is present in the 'cart' collection by name
+                                      final productToDelete = await firestore
+                                          .collection('cart')
+                                          .where('name',
+                                              isEqualTo: product['name'])
+                                          .get();
+
+                                      if (productToDelete.docs.isEmpty) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                                'Product not found in cart for removal.'),
+                                          ),
+                                        );
+                                        return;
+                                      }
+
                                       await firestore
                                           .collection('cart')
-                                          .doc(product['id'])
+                                          .doc(productToDelete.docs.first.id)
                                           .delete();
+
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
                                         SnackBar(

@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:milkproject/login_page.dart';
-import 'package:milkproject/user/page/buy_now.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore package
+import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth for user ID
 import 'profile.dart';
-import 'cart.dart';
-import 'orders.dart';
-import 'supplies.dart';
 
 class FarmerHome extends StatelessWidget {
   @override
@@ -154,158 +151,165 @@ class FarmerHomePage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 12),
-              ProductList(),
+
+              // Fetch and display products from Firestore
+              CattleFeedProductList(),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: FarmerBottomNavigationBar(),
     );
   }
 }
 
-// Bottom Navigation Bar
-class FarmerBottomNavigationBar extends StatefulWidget {
-  @override
-  _FarmerBottomNavigationBarState createState() =>
-      _FarmerBottomNavigationBarState();
-}
-
-class _FarmerBottomNavigationBarState extends State<FarmerBottomNavigationBar> {
-  int _currentIndex = 0;
-
-  final List<Widget> _pages = [
-    FarmerHomePage(),
-    CartPage(),
-    FarmerProfilePage(),
-  ];
-
+// Cattle Feed Product List Widget
+class CattleFeedProductList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      selectedItemColor: Colors.green[800],
-      unselectedItemColor: Colors.grey,
-      currentIndex: _currentIndex,
-      onTap: (index) {
-        setState(() {
-          _currentIndex = index;
-        });
+    // Fetch data from Firestore
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection(
+              'cattleFeedProduct') // Fetch from cattleFeedProduct collection
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text("Error: ${snapshot.error}"));
+        }
 
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => _pages[index]),
+        final products = snapshot.data!.docs;
+
+        return Column(
+          children: products.map((product) {
+            final productMap = product.data() as Map<String, dynamic>;
+
+            return Card(
+              margin: EdgeInsets.only(bottom: 16),
+              elevation: 5,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16)),
+              child: Column(
+                children: [
+                  ClipRRect(
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(16)),
+                    child: Image.network(
+                      productMap['image_url'], // Image URL from Firestore
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          productMap['name'], // Product name
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(height: 6),
+                        Text(
+                          productMap['description'], // Product description
+                          style:
+                              TextStyle(color: Colors.grey[600], fontSize: 14),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          "Price: ₹${productMap['price']}", // Product price
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green[700],
+                            fontSize: 16,
+                          ),
+                        ),
+                        SizedBox(height: 12),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green[800],
+                                foregroundColor: Colors.white,
+                              ),
+                              onPressed: () async {
+                                final userId =
+                                    FirebaseAuth.instance.currentUser?.uid;
+                                if (userId == null) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text("Please log in first."),
+                                    ),
+                                  );
+                                  return;
+                                }
+
+                                final cartProductData = {
+                                  'name': productMap['name'],
+                                  'price': productMap['price'],
+                                  'image_url': productMap['image_url'],
+                                  'quantity':
+                                      1, // Initial quantity when added to cart
+                                };
+
+                                try {
+                                  await FirebaseFirestore.instance
+                                      .collection('users')
+                                      .doc(userId)
+                                      .collection('cart')
+                                      .add(
+                                          cartProductData); // Adding product to cart
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                          "${cartProductData['name']} added to cart!"),
+                                    ),
+                                  );
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                          "Failed to add product to cart. Please try again."),
+                                    ),
+                                  );
+                                }
+                              },
+                              icon: Icon(Icons.add_shopping_cart),
+                              label: Text("Add to Cart"),
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.orange[700],
+                                foregroundColor: Colors.white,
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => BuyNowPage(
+                                      productName: productMap['name'],
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Text("Buy Now"),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
         );
       },
-      items: [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-        BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: "Cart"),
-        BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
-      ],
-    );
-  }
-}
-
-// Product List
-class ProductList extends StatelessWidget {
-  final List<Map<String, String>> products = [
-    {
-      "name": "Premium Feed 50kg",
-      "description": "Boost milk yield with premium quality feed.",
-      "price": "₹1,500",
-      "image": "https://via.placeholder.com/400x200"
-    },
-    {
-      "name": "Basic Cattle Feed",
-      "description": "Affordable and healthy feed for your cattle.",
-      "price": "₹900",
-      "image": "https://via.placeholder.com/400x200"
-    },
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: products.map((product) {
-        return Card(
-          margin: EdgeInsets.only(bottom: 16),
-          elevation: 5,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          child: Column(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-                child: Image.network(product['image']!, fit: BoxFit.cover),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      product['name']!,
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                    ),
-                    SizedBox(height: 6),
-                    Text(
-                      product['description']!,
-                      style: TextStyle(color: Colors.grey[600], fontSize: 14),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      "Price: ${product['price']}",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green[700],
-                          fontSize: 16),
-                    ),
-                    SizedBox(height: 12),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green[800],
-                            foregroundColor: Colors.white,
-                          ),
-                          onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content:
-                                    Text("${product['name']} added to cart!"),
-                              ),
-                            );
-                          },
-                          icon: Icon(Icons.add_shopping_cart),
-                          label: Text("Add to Cart"),
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.orange[700],
-                            foregroundColor: Colors.white,
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => BuyNowPage(
-                                  productName: 'milk',
-                                ),
-                              ),
-                            );
-                          },
-                          child: Text("Buy Now"),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      }).toList(),
     );
   }
 }
@@ -343,58 +347,35 @@ class InfoCard extends StatelessWidget {
   }
 }
 
-// Drawer Menu Widget
+// Drawer for Farmer Menu
 class FarmerMenuDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: Column(
+      child: ListView(
+        padding: EdgeInsets.zero,
         children: [
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.green[800]!, Colors.green[400]!],
-              ),
-            ),
-            padding: EdgeInsets.only(top: 60, bottom: 20),
-            child: Column(
-              children: [
-                CircleAvatar(
-                  radius: 50,
-                  backgroundColor: Colors.white,
-                  child: Icon(Icons.person, size: 50, color: Colors.green[800]),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  "Farmer Name",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
-                ),
-              ],
+          UserAccountsDrawerHeader(
+            accountName: Text("Farmer Name"),
+            accountEmail: Text("farmer@example.com"),
+            currentAccountPicture: CircleAvatar(
+              backgroundColor: Colors.green,
+              child: Icon(Icons.person, color: Colors.white),
             ),
           ),
           ListTile(
-            leading: Icon(Icons.home),
             title: Text("Home"),
+            leading: Icon(Icons.home),
             onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.shelves),
-            title: Text("Supplies"),
-            onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => SuppliesHistoryPage()),
+                MaterialPageRoute(builder: (context) => FarmerHomePage()),
               );
             },
           ),
           ListTile(
-            leading: Icon(Icons.shopping_bag),
             title: Text("My Orders"),
+            leading: Icon(Icons.shopping_basket),
             onTap: () {
               Navigator.push(
                 context,
@@ -403,8 +384,8 @@ class FarmerMenuDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.shopping_cart),
             title: Text("Cart"),
+            leading: Icon(Icons.shopping_cart),
             onTap: () {
               Navigator.push(
                 context,
@@ -413,8 +394,8 @@ class FarmerMenuDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.person),
             title: Text("Profile"),
+            leading: Icon(Icons.person),
             onTap: () {
               Navigator.push(
                 context,
@@ -422,20 +403,50 @@ class FarmerMenuDrawer extends StatelessWidget {
               );
             },
           ),
-          Spacer(),
           ListTile(
-            leading: Icon(Icons.logout, color: Colors.red),
-            title: Text("Logout", style: TextStyle(color: Colors.red)),
+            title: Text("Logout"),
+            leading: Icon(Icons.exit_to_app),
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => LoginPage(),
-                  ));
+              FirebaseAuth.instance.signOut();
+              Navigator.pop(context);
             },
           ),
         ],
       ),
+    );
+  }
+}
+
+class MyOrdersPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("My Orders")),
+      body: Center(child: Text("Your orders will be displayed here")),
+    );
+  }
+}
+
+class CartPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Cart")),
+      body: Center(child: Text("Your cart items will be displayed here")),
+    );
+  }
+}
+
+class BuyNowPage extends StatelessWidget {
+  final String productName;
+
+  BuyNowPage({required this.productName});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Buy $productName")),
+      body: Center(child: Text("Buying process for $productName")),
     );
   }
 }

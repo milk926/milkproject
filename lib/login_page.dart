@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:milkproject/choose_screen.dart';
 import 'package:milkproject/sevices/services/login_service_fire.dart'; // Ensure correct import
-import 'package:milkproject/user/page/user_buynow.dart'; // Ensure correct import // Add the admin page if it's not already imported
+import 'package:milkproject/user/page/user_home.dart'; // Ensure correct import // Add the admin page if it's not already imported
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Ensure correct import
 

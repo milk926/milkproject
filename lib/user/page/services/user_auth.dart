@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:milkproject/user/page/user_buynow.dart';
+import 'package:milkproject/user/page/user_home.dart';
 
 class UserAuthService {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;

@@ -83,7 +83,7 @@ class ProfileScreen extends StatelessWidget {
                     // User Details in Individual Cards
                     _buildInfoCard("Name", profileData['name'] ?? 'N/A'),
                     const SizedBox(height: 10),
-                    _buildInfoCard("Aadhar", profileData['adhaar'] ?? 'N/A'),
+                    _buildInfoCard("Aadhar", profileData['aadhar'] ?? 'N/A'),
                     const SizedBox(height: 10),
                     _buildInfoCard(
                         "Ration Number", profileData['ration_card'] ?? 'N/A'),

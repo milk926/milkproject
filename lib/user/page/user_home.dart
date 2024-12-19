@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:milkproject/user/page/addtocart.dart';
 import 'package:milkproject/user/page/buy_now.dart';
+import 'package:milkproject/user/page/feedback.dart';
 import 'package:milkproject/user/page/userprofile.dart';
 
 class MilkProductPage extends StatelessWidget {
@@ -44,6 +46,38 @@ class MilkProductPage extends StatelessWidget {
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return const AddToCartPage(cartProducts: []); // Existing cart
+                }));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.shopping_cart),
+              title: const Text('Feedback'),
+              onTap: () async {
+                // Retrieve the current user's username
+                String? userName;
+
+                try {
+                  final currentUser = FirebaseAuth.instance.currentUser;
+                  if (currentUser != null) {
+                    // Assuming the user's name is stored in the Firestore `users` collection
+                    final userDoc = await FirebaseFirestore.instance
+                        .collection('user')
+                        .doc(currentUser.uid)
+                        .get();
+
+                    userName = userDoc.data()?['name'] ??
+                        currentUser.displayName ??
+                        "Guest";
+                  } else {
+                    userName = "Guest";
+                  }
+                } catch (e) {
+                  userName = "Guest"; // Fallback if there's an error
+                }
+
+                // Navigate to the FeedbackPage with the username
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return FeedbackPage(userName: userName ?? "Guest");
                 }));
               },
             ),
@@ -139,8 +173,8 @@ class MilkProductPage extends StatelessWidget {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8.0),
                         child: Image.network(
-                          product['image'] ?? '',
-                          height: 120,
+                          product['image_url'] ?? '',
+                          height: 150,
                           width: double.infinity,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
@@ -176,7 +210,7 @@ class MilkProductPage extends StatelessWidget {
                                 await firestore.collection('cart').add({
                                   'name': product['name'],
                                   'price': product['price'],
-                                  'image': product['image'],
+                                  'image': product['image_url'],
                                   'description': product['description'],
                                 });
 

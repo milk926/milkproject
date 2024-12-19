@@ -105,6 +105,7 @@ class _BuyNowPageState extends State<BuyNowPage> {
         'totalPrice': _calculateTotalPrice(),
         'address': deliveryAddress,
         'deliveryDate': selectedDate,
+        'status': 'Pending',
         'timestamp': FieldValue.serverTimestamp(),
       };
 

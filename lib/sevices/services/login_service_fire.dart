@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:milkproject/farmer/page/HomePage.dart';
 import 'package:milkproject/society/page/homepage.dart';
-import 'package:milkproject/user/page/user_buynow.dart';
+import 'package:milkproject/user/page/user_home.dart';
 
 class LoginServiceFire {
   final firebaseAuth = FirebaseAuth.instance;
@@ -50,7 +50,7 @@ class LoginServiceFire {
               ),
             );
             break;
-          case 'farmer':
+          case 'farmers':
             Navigator.push(context, MaterialPageRoute(
               builder: (context) {
                 return FarmerHome();
