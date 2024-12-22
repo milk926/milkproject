@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AddToCartPage extends StatelessWidget {
   const AddToCartPage({super.key, required List cartProducts});
@@ -7,6 +8,25 @@ class AddToCartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final String? currentUserUid = auth.currentUser?.uid;
+
+    if (currentUserUid == null) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('My Cart'),
+          centerTitle: true,
+          backgroundColor: const Color(0xFF3EA120),
+          foregroundColor: Colors.white,
+        ),
+        body: const Center(
+          child: Text(
+            'You need to log in to view your cart.',
+            style: TextStyle(fontSize: 16, color: Colors.grey),
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -16,7 +36,10 @@ class AddToCartPage extends StatelessWidget {
         foregroundColor: Colors.white,
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: firestore.collection('cart').snapshots(),
+        stream: firestore
+            .collection('cart')
+            .where('user_id', isEqualTo: currentUserUid)
+            .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -38,7 +61,7 @@ class AddToCartPage extends StatelessWidget {
             return {
               'name': data['name'],
               'id': doc.id,
-              ...data
+              ...data,
             }; // Keep the id for future use
           }).toList();
 
@@ -119,39 +142,10 @@ class AddToCartPage extends StatelessWidget {
                                 // Remove from Cart Button
                                 ElevatedButton.icon(
                                   onPressed: () async {
-                                    if (product['name'] == null) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content:
-                                              Text('Invalid product name.'),
-                                        ),
-                                      );
-                                      return;
-                                    }
-
                                     try {
-                                      // Check if the product is present in the 'cart' collection by name
-                                      final productToDelete = await firestore
-                                          .collection('cart')
-                                          .where('name',
-                                              isEqualTo: product['name'])
-                                          .get();
-
-                                      if (productToDelete.docs.isEmpty) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                                'Product not found in cart for removal.'),
-                                          ),
-                                        );
-                                        return;
-                                      }
-
                                       await firestore
                                           .collection('cart')
-                                          .doc(productToDelete.docs.first.id)
+                                          .doc(product['id'])
                                           .delete();
 
                                       ScaffoldMessenger.of(context)

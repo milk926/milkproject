@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:milkproject/society/farmeraccount.dart';
 import 'package:milkproject/society/page/ordermanagement.dart';
 import 'package:milkproject/society/page/product_upload.dart';
 import 'package:milkproject/society/page/profilepage.dart';
@@ -93,6 +94,14 @@ class MilkProjectHomePage extends StatelessWidget {
             title: const Text('Home'),
             onTap: () {
               Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.people),
+            title: const Text('Farmer Accounts'),
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (_) => FarmerListPage()));
             },
           ),
           ListTile(

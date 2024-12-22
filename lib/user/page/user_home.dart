@@ -1,10 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:milkproject/farmer/page/orders.dart';
 import 'package:milkproject/user/page/addtocart.dart';
 import 'package:milkproject/user/page/buy_now.dart';
 import 'package:milkproject/user/page/feedback.dart';
 import 'package:milkproject/user/page/userprofile.dart';
+
+final currentUser = FirebaseAuth.instance.currentUser;
 
 class MilkProductPage extends StatelessWidget {
   const MilkProductPage({super.key, required List cartProducts});
@@ -41,6 +44,15 @@ class MilkProductPage extends StatelessWidget {
               },
             ),
             ListTile(
+              leading: const Icon(Icons.online_prediction_rounded),
+              title: const Text('My Orders'),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return MyOrdersPage();
+                }));
+              },
+            ),
+            ListTile(
               leading: const Icon(Icons.shopping_cart),
               title: const Text('Cart'),
               onTap: () {
@@ -59,7 +71,7 @@ class MilkProductPage extends StatelessWidget {
                 try {
                   final currentUser = FirebaseAuth.instance.currentUser;
                   if (currentUser != null) {
-                    // Assuming the user's name is stored in the Firestore `users` collection
+                    // Assuming the user's name is stored in the Firestore users collection
                     final userDoc = await FirebaseFirestore.instance
                         .collection('user')
                         .doc(currentUser.uid)
@@ -208,6 +220,7 @@ class MilkProductPage extends StatelessWidget {
                             onPressed: () async {
                               try {
                                 await firestore.collection('cart').add({
+                                  'user_id': currentUser?.uid,
                                   'name': product['name'],
                                   'price': product['price'],
                                   'image': product['image_url'],

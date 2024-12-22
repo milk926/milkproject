@@ -13,10 +13,10 @@ class _FarmerProfilePageState extends State<FarmerProfilePage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  String name = "";
-  String email = "";
-  String phoneNumber = "";
-  String numberOfCows = "";
+  String name = "Loading...";
+  String email = "Loading...";
+  String phoneNumber = "Loading...";
+  String numberOfCows = "Loading...";
 
   @override
   void initState() {
@@ -26,24 +26,46 @@ class _FarmerProfilePageState extends State<FarmerProfilePage> {
 
   Future<void> _fetchUserData() async {
     try {
-      User? currentUser = _auth.currentUser;
+      User? currentUser = _auth.currentUser; // Get the logged-in user
       if (currentUser != null) {
-        DocumentSnapshot userDoc = await _firestore
-            .collection('farmer') // Replace with your Firestore collection name
-            .doc(currentUser.uid)
-            .get();
+        // Query the 'farmers' collection for the user's document
+        DocumentSnapshot userDoc =
+            await _firestore.collection('farmer').doc(currentUser.uid).get();
 
         if (userDoc.exists) {
+          // Extract the required fields from Firestore
           setState(() {
             name = userDoc['name'] ?? "N/A";
             email = userDoc['email'] ?? "N/A";
             phoneNumber = userDoc['phone'] ?? "N/A";
-            numberOfCows = userDoc['cow'].toString() ?? "N/A";
+            numberOfCows = userDoc['cow'] != null
+                ? userDoc['cow'].toString()
+                : "N/A";
+          });
+        } else {
+          setState(() {
+            name = "No Data Found";
+            email = "No Data Found";
+            phoneNumber = "No Data Found";
+            numberOfCows = "No Data Found";
           });
         }
+      } else {
+        setState(() {
+          name = "User Not Logged In";
+          email = "User Not Logged In";
+          phoneNumber = "User Not Logged In";
+          numberOfCows = "User Not Logged In";
+        });
       }
     } catch (e) {
       print("Error fetching user data: $e");
+      setState(() {
+        name = "Error";
+        email = "Error";
+        phoneNumber = "Error";
+        numberOfCows = "Error";
+      });
     }
   }
 
@@ -168,8 +190,9 @@ class _FarmerProfilePageState extends State<FarmerProfilePage> {
                     "Logout",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                   ),
-                  onPressed: () {
-                    Navigator.push(
+                  onPressed: () async {
+                    await _auth.signOut();
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                         builder: (context) => LoginPage(),

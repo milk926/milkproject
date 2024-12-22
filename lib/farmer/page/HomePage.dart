@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore package
-import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth for user ID
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:milkproject/farmer/page/BuyNow.dart';
+import 'package:milkproject/farmer/page/orders.dart';
+import 'package:milkproject/user/page/addtocart.dart';
 import 'profile.dart';
 
 class FarmerHome extends StatelessWidget {
@@ -21,12 +24,54 @@ class FarmerHome extends StatelessWidget {
   }
 }
 
-class FarmerHomePage extends StatelessWidget {
+class FarmerHomePage extends StatefulWidget {
+  @override
+  _FarmerHomePageState createState() => _FarmerHomePageState();
+}
+
+class _FarmerHomePageState extends State<FarmerHomePage> {
   final List<String> carouselImages = [
     "https://via.placeholder.com/600x300.png?text=Welcome+to+Milk+Zone",
     "https://via.placeholder.com/600x300.png?text=Quality+Products",
     "https://via.placeholder.com/600x300.png?text=Farm+Fresh+Feed",
   ];
+
+  int? totalQuantity;
+  double? totalPayment;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchFarmerData();
+  }
+
+  Future<void> _fetchFarmerData() async {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId == null) return;
+
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('farmerSales')
+          .doc(userId)
+          .get();
+
+      if (doc.exists) {
+        setState(() {
+          totalQuantity = doc.data()?['totalQuantity'] ?? 0;
+          totalPayment = doc.data()?['totalPayment']?.toDouble() ?? 0.0;
+        });
+      } else {
+        setState(() {
+          totalQuantity = 0;
+          totalPayment = 0.0;
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error fetching data: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -125,17 +170,26 @@ class FarmerHomePage extends StatelessWidget {
               ),
               SizedBox(height: 16),
 
-              // Info Cards
+              // Info Cards (Dynamic Data)
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                    child:
-                        InfoCard(title: "Today's Supply", value: "25 Liters"),
+                    child: InfoCard(
+                      title: "Today's Supply",
+                      value: totalQuantity != null
+                          ? "$totalQuantity Liters"
+                          : "Loading...",
+                    ),
                   ),
                   SizedBox(width: 10),
                   Expanded(
-                    child: InfoCard(title: "Payment Received", value: "₹1,200"),
+                    child: InfoCard(
+                      title: "Payment Received",
+                      value: totalPayment != null
+                          ? "₹${totalPayment?.toStringAsFixed(2)}"
+                          : "Loading...",
+                    ),
                   ),
                 ],
               ),
@@ -166,11 +220,9 @@ class FarmerHomePage extends StatelessWidget {
 class CattleFeedProductList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // Fetch data from Firestore
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
-          .collection(
-              'cattleFeedProduct') // Fetch from cattleFeedProduct collection
+          .collection('cattleFeedProduct')
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -197,7 +249,7 @@ class CattleFeedProductList extends StatelessWidget {
                     borderRadius:
                         BorderRadius.vertical(top: Radius.circular(16)),
                     child: Image.network(
-                      productMap['image_url'], // Image URL from Firestore
+                      productMap['image_url'],
                       fit: BoxFit.cover,
                       width: double.infinity,
                     ),
@@ -208,19 +260,19 @@ class CattleFeedProductList extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          productMap['name'], // Product name
+                          productMap['name'],
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.w600),
                         ),
                         SizedBox(height: 6),
                         Text(
-                          productMap['description'], // Product description
+                          productMap['description'],
                           style:
                               TextStyle(color: Colors.grey[600], fontSize: 14),
                         ),
                         SizedBox(height: 8),
                         Text(
-                          "Price: ₹${productMap['price']}", // Product price
+                          "Price: ₹${productMap['price']}",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.green[700],
@@ -237,33 +289,31 @@ class CattleFeedProductList extends StatelessWidget {
                                 foregroundColor: Colors.white,
                               ),
                               onPressed: () async {
-                                final userId =
-                                    FirebaseAuth.instance.currentUser?.uid;
-                                if (userId == null) {
+                                final user =
+                                    FirebaseAuth.instance.currentUser;
+
+                                if (user == null) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Text("Please log in first."),
-                                    ),
+                                        content: Text(
+                                            "Please log in to add items to the cart.")),
                                   );
                                   return;
                                 }
 
                                 final cartProductData = {
                                   'name': productMap['name'],
+                                  'description': productMap['description'],
                                   'price': productMap['price'],
                                   'image_url': productMap['image_url'],
-                                  'quantity':
-                                      1, // Initial quantity when added to cart
+                                  'quantity': 1,
+                                  'user_id': user.uid,
                                 };
 
                                 try {
                                   await FirebaseFirestore.instance
-                                      .collection('users')
-                                      .doc(userId)
                                       .collection('cart')
-                                      .add(
-                                          cartProductData); // Adding product to cart
-
+                                      .add(cartProductData);
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text(
@@ -273,9 +323,8 @@ class CattleFeedProductList extends StatelessWidget {
                                 } catch (e) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Text(
-                                          "Failed to add product to cart. Please try again."),
-                                    ),
+                                        content: Text(
+                                            "Failed to add to cart. Please try again.")),
                                   );
                                 }
                               },
@@ -291,7 +340,7 @@ class CattleFeedProductList extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => BuyNowPage(
+                                    builder: (context) => FarmerBuyNowPage(
                                       productName: productMap['name'],
                                     ),
                                   ),
@@ -319,26 +368,28 @@ class InfoCard extends StatelessWidget {
   final String title;
   final String value;
 
-  const InfoCard({required this.title, required this.value});
+  const InfoCard({
+    required this.title,
+    required this.value,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Text(title,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+            Text(
+              title,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
             SizedBox(height: 8),
             Text(
               value,
-              style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green[700]),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
           ],
         ),
@@ -347,7 +398,7 @@ class InfoCard extends StatelessWidget {
   }
 }
 
-// Drawer for Farmer Menu
+// Drawer Widget (Menu)
 class FarmerMenuDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -355,27 +406,27 @@ class FarmerMenuDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          UserAccountsDrawerHeader(
-            accountName: Text("Farmer Name"),
-            accountEmail: Text("farmer@example.com"),
-            currentAccountPicture: CircleAvatar(
-              backgroundColor: Colors.green,
-              child: Icon(Icons.person, color: Colors.white),
+          DrawerHeader(
+            decoration: BoxDecoration(
+              color: Colors.green[800],
+            ),
+            child: Text(
+              'Milk Zone',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           ListTile(
-            title: Text("Home"),
-            leading: Icon(Icons.home),
+            title: Text('Home'),
             onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => FarmerHomePage()),
-              );
+              Navigator.pop(context);
             },
           ),
           ListTile(
-            title: Text("My Orders"),
-            leading: Icon(Icons.shopping_basket),
+            title: Text('My Orders'),
             onTap: () {
               Navigator.push(
                 context,
@@ -384,18 +435,18 @@ class FarmerMenuDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            title: Text("Cart"),
-            leading: Icon(Icons.shopping_cart),
+            title: Text('Cart'),
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => CartPage()),
+                MaterialPageRoute(
+                  builder: (context) => AddToCartPage(cartProducts: []),
+                ),
               );
             },
           ),
           ListTile(
-            title: Text("Profile"),
-            leading: Icon(Icons.person),
+            title: Text('Profile'),
             onTap: () {
               Navigator.push(
                 context,
@@ -404,8 +455,7 @@ class FarmerMenuDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            title: Text("Logout"),
-            leading: Icon(Icons.exit_to_app),
+            title: Text('Logout'),
             onTap: () {
               FirebaseAuth.instance.signOut();
               Navigator.pop(context);
@@ -413,40 +463,6 @@ class FarmerMenuDrawer extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class MyOrdersPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("My Orders")),
-      body: Center(child: Text("Your orders will be displayed here")),
-    );
-  }
-}
-
-class CartPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Cart")),
-      body: Center(child: Text("Your cart items will be displayed here")),
-    );
-  }
-}
-
-class BuyNowPage extends StatelessWidget {
-  final String productName;
-
-  BuyNowPage({required this.productName});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Buy $productName")),
-      body: Center(child: Text("Buying process for $productName")),
     );
   }
 }

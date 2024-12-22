@@ -50,7 +50,7 @@ class LoginServiceFire {
               ),
             );
             break;
-          case 'farmers':
+          case 'farmer':
             Navigator.push(context, MaterialPageRoute(
               builder: (context) {
                 return FarmerHome();

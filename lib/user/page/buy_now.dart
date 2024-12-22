@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class BuyNowPage extends StatefulWidget {
-  final String productName; // Expecting the product name as an argument
+  final String productName;
 
   const BuyNowPage({
     super.key,
@@ -21,6 +22,7 @@ class _BuyNowPageState extends State<BuyNowPage> {
   bool isLoading = true;
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   Map<String, dynamic>? productDetails;
 
   @override
@@ -94,6 +96,14 @@ class _BuyNowPageState extends State<BuyNowPage> {
       return;
     }
 
+    final user = _auth.currentUser;
+    if (user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('User is not logged in!')),
+      );
+      return;
+    }
+
     setState(() {
       isPlacingOrder = true;
     });
@@ -105,6 +115,7 @@ class _BuyNowPageState extends State<BuyNowPage> {
         'totalPrice': _calculateTotalPrice(),
         'address': deliveryAddress,
         'deliveryDate': selectedDate,
+        'user_id': user.uid, // Add user_id to the collection
         'status': 'Pending',
         'timestamp': FieldValue.serverTimestamp(),
       };
@@ -192,7 +203,7 @@ class _BuyNowPageState extends State<BuyNowPage> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Price: \$${productDetails!['price']}',
+                      'Price: ₹${productDetails!['price']}',
                       style: const TextStyle(
                         fontSize: 14,
                         color: Colors.green,
@@ -260,7 +271,7 @@ class _BuyNowPageState extends State<BuyNowPage> {
                 icon: Icons.monetization_on,
                 title: "Total Price",
                 child: Text(
-                  '\$${_calculateTotalPrice().toStringAsFixed(2)}',
+                  '₹${_calculateTotalPrice().toStringAsFixed(2)}',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),

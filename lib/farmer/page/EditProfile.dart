@@ -1,172 +1,302 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
-class EditProfilePage extends StatefulWidget {
+class FarmerBuyNowPage extends StatefulWidget {
+  final String productName; // Expecting the product name as an argument
+
+  const FarmerBuyNowPage({
+    super.key,
+    required this.productName,
+  });
+
   @override
-  _EditProfilePageState createState() => _EditProfilePageState();
+  _FarmerBuyNowPageState createState() => _FarmerBuyNowPageState();
 }
 
-class _EditProfilePageState extends State<EditProfilePage> {
-  // Firestore and FirebaseAuth instances
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+class _FarmerBuyNowPageState extends State<FarmerBuyNowPage> {
+  int quantity = 1;
+  String? deliveryAddress;
+  DateTime? selectedDate;
+  bool isPlacingOrder = false;
+  bool isLoading = true;
 
-  // TextEditingControllers to hold input values
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _cowsController = TextEditingController();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  Map<String, dynamic>? productDetails;
 
   @override
   void initState() {
     super.initState();
-    _fetchUserData();
+    _fetchProductDetails();
   }
 
-  Future<void> _fetchUserData() async {
+  /// Fetch product details from Firestore
+  Future<void> _fetchProductDetails() async {
     try {
-      User? currentUser = _auth.currentUser;
-      if (currentUser != null) {
-        DocumentSnapshot userDoc = await _firestore
-            .collection('farmer') // Replace with your Firestore collection name
-            .doc(currentUser.uid)
-            .get();
+      final querySnapshot = await _firestore
+          .collection('cattleFeedProduct')
+          .where('name', isEqualTo: widget.productName)
+          .get();
 
-        if (userDoc.exists) {
-          setState(() {
-            _nameController.text = userDoc['name'] ?? '';
-            _emailController.text = userDoc['email'] ?? '';
-            _phoneController.text = userDoc['phone'] ?? '';
-            _cowsController.text = userDoc['cow']?.toString() ?? '';
-          });
-        }
+      if (querySnapshot.docs.isNotEmpty) {
+        setState(() {
+          productDetails = querySnapshot.docs.first.data();
+          isLoading = false;
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Product "${widget.productName}" not found!'),
+          ),
+        );
+        Navigator.pop(context); // Return to the previous screen
       }
     } catch (e) {
-      print("Error fetching user data: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to fetch product details: $e')),
+      );
+      Navigator.pop(context); // Return to the previous screen
     }
   }
 
-  Future<void> _saveProfile() async {
-    try {
-      User? currentUser = _auth.currentUser;
-      if (currentUser != null) {
-        await _firestore.collection('farmer').doc(currentUser.uid).update({
-          'name': _nameController.text,
-          'email': _emailController.text,
-          'phone': _phoneController.text,
-          'cow': int.parse(_cowsController.text),
-        });
+  /// Function to select a delivery date
+  void _selectDeliveryDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 30)),
+    );
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Profile Updated Successfully!")),
-        );
-        Navigator.pop(context); // Return to Profile Page
-      }
-    } catch (e) {
-      print("Error saving profile: $e");
+  /// Function to calculate total price
+  num _calculateTotalPrice() {
+    if (productDetails == null) return 0;
+    return (productDetails!['price'] as num) * quantity;
+  }
+
+  /// Function to place order and save to Firestore
+  Future<void> _placeOrder() async {
+    if (deliveryAddress == null || deliveryAddress!.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Failed to update profile. Please try again.")),
+        const SnackBar(content: Text('Please enter a delivery address!')),
+      );
+      return;
+    }
+    if (selectedDate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a delivery date!')),
+      );
+      return;
+    }
+     final user = _auth.currentUser;
+    if (user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('User is not logged in!')),
+      );
+      return;
+    }
+
+
+    setState(() {
+      isPlacingOrder = true;
+    });
+
+    try {
+      final order = {
+        'productName': productDetails!['name'],
+        'quantity': quantity,
+        'totalPrice': _calculateTotalPrice(),
+        'address': deliveryAddress,
+        'deliveryDate': selectedDate,
+        'user_id': user.uid,
+        'status': 'Pending',
+        'timestamp': FieldValue.serverTimestamp(),
+      };
+
+      // Add order to Firestore
+      await _firestore.collection('orders').add(order);
+
+      // Success feedback
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Order placed successfully for $quantity item(s) to $deliveryAddress!',
+          ),
+        ),
+      );
+
+      // Reset form
+      setState(() {
+        quantity = 1;
+        deliveryAddress = null;
+        selectedDate = null;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to place order: $e')),
       );
     }
+
+    setState(() {
+      isPlacingOrder = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "Edit Profile",
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.green[800]!, Colors.green[400]!],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
+        title: const Text('Checkout'),
+        backgroundColor: Colors.green[800],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
+      body: Container(
+        color: Colors.white, // Background color set to white
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: CircleAvatar(
-                  radius: 60,
-                  backgroundColor: Colors.green[200],
-                  child: Icon(
-                    Icons.person,
-                    size: 70,
-                    color: Colors.white,
+              // Progress Indicator
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildProgressStep("Cart", true),
+                  _buildProgressConnector(),
+                  _buildProgressStep("Details", true),
+                  _buildProgressConnector(),
+                  _buildProgressStep("Confirm", false),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              // Product Details Section
+              _buildSectionCard(
+                icon: Icons.info,
+                title: "Product Details",
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      productDetails!['name'],
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      productDetails!['description'] ?? '',
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Price: \$${productDetails!['price']}',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.green,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Quantity Section
+              _buildSectionCard(
+                icon: Icons.shopping_cart,
+                title: "Select Quantity",
+                child: DropdownButton<int>(
+                  value: quantity,
+                  items: List.generate(10, (index) => index + 1)
+                      .map((e) => DropdownMenuItem(
+                            value: e,
+                            child: Text(e.toString()),
+                          ))
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      quantity = value!;
+                    });
+                  },
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Delivery Address Section
+              _buildSectionCard(
+                icon: Icons.location_on,
+                title: "Delivery Address",
+                child: TextField(
+                  onChanged: (value) => deliveryAddress = value,
+                  decoration: const InputDecoration(
+                    hintText: 'Enter delivery address',
+                    border: OutlineInputBorder(),
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 16),
 
-              // Name Field
-              Text("Name", style: fieldLabelStyle()),
-              TextField(
-                controller: _nameController,
-                decoration: inputDecoration("Enter your name"),
+              // Delivery Date Section
+              _buildSectionCard(
+                icon: Icons.calendar_today,
+                title: "Delivery Date",
+                child: TextButton(
+                  onPressed: () => _selectDeliveryDate(context),
+                  child: Text(
+                    selectedDate == null
+                        ? 'Select Date'
+                        : '${selectedDate!.toLocal()}'.split(' ')[0],
+                    style: TextStyle(fontSize: 16, color: Colors.green[800]),
+                  ),
+                ),
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: 16),
 
-              // Email Field
-              Text("Email", style: fieldLabelStyle()),
-              TextField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: inputDecoration("Enter your email"),
+              // Total Price Section
+              _buildSectionCard(
+                icon: Icons.monetization_on,
+                title: "Total Price",
+                child: Text(
+                  '\$${_calculateTotalPrice().toStringAsFixed(2)}',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: 16),
 
-              // Phone Number Field
-              Text("Phone Number", style: fieldLabelStyle()),
-              TextField(
-                controller: _phoneController,
-                keyboardType: TextInputType.phone,
-                decoration: inputDecoration("Enter your phone number"),
-              ),
-              SizedBox(height: 15),
-
-              // Number of Cows Field
-              Text("No. of Cows", style: fieldLabelStyle()),
-              TextField(
-                controller: _cowsController,
-                keyboardType: TextInputType.number,
-                decoration: inputDecoration("Enter number of cows"),
-              ),
-              SizedBox(height: 30),
-
-              // Save Button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _saveProfile,
+              // Place Order Button
+              Center(
+                child: ElevatedButton.icon(
+                  icon: isPlacingOrder
+                      ? const CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation(Colors.white),
+                        )
+                      : const Icon(Icons.check_circle),
+                  label: Text(
+                    isPlacingOrder ? 'Placing Order...' : 'Place Order',
+                  ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green[800],
-                    padding: EdgeInsets.symmetric(vertical: 14),
+                    backgroundColor: Colors.green,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 50, vertical: 15),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(28),
+                      borderRadius: BorderRadius.circular(30.0),
                     ),
                   ),
-                  child: Text(
-                    "Save Changes",
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
+                  onPressed: isPlacingOrder ? null : _placeOrder,
                 ),
               ),
             ],
@@ -176,28 +306,71 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  // Input Decoration for TextFields
-  InputDecoration inputDecoration(String hint) {
-    return InputDecoration(
-      hintText: hint,
-      contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8),
-        borderSide: BorderSide(color: Colors.grey),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(8),
-        borderSide: BorderSide(color: Colors.green),
+  Widget _buildSectionCard(
+      {required IconData icon, required String title, required Widget child}) {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+              color: Colors.green.withOpacity(0.5), width: 2), // Green border
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(icon, color: Colors.green[800]),
+                  const SizedBox(width: 8),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              child,
+            ],
+          ),
+        ),
       ),
     );
   }
 
-  // Label Style for the TextFields
-  TextStyle fieldLabelStyle() {
-    return TextStyle(
-      fontSize: 16,
-      fontWeight: FontWeight.bold,
-      color: Colors.green[800],
+  Widget _buildProgressStep(String title, bool isCompleted) {
+    return Column(
+      children: [
+        CircleAvatar(
+          radius: 12,
+          backgroundColor: isCompleted ? Colors.green : Colors.grey,
+          child: Icon(
+            isCompleted ? Icons.check : Icons.circle,
+            size: 16,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 12,
+            color: isCompleted ? Colors.green : Colors.grey,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildProgressConnector() {
+    return Container(
+      width: 30,
+      height: 2,
+      color: Colors.grey,
     );
   }
 }

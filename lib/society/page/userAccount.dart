@@ -24,20 +24,6 @@ class _UserAccountPageState extends State<UserAccountPage> {
     }
   }
 
-  // Function to delete a farmer
-  Future<void> _deleteFarmer(String farmerId) async {
-    try {
-      await _firestore.collection('farmer').doc(farmerId).delete();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Farmer deleted successfully.')),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to delete farmer: $e')),
-      );
-    }
-  }
-
   // Function to view user details in a dialog
   void _viewUserDetails(Map<String, dynamic> user) {
     showDialog(
@@ -68,36 +54,6 @@ class _UserAccountPageState extends State<UserAccountPage> {
     );
   }
 
-  // Function to view farmer details in a dialog
-  void _viewFarmerDetails(Map<String, dynamic> farmer) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Farmer Details: ${farmer['name'] ?? 'N/A'}'),
-        content: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Name: ${farmer['name'] ?? 'N/A'}'),
-              Text('Farm Name: ${farmer['farm_name'] ?? 'N/A'}'),
-              Text('Phone: ${farmer['phone'] ?? 'N/A'}'),
-              Text('Location: ${farmer['location'] ?? 'N/A'}'),
-              Text('Products Sold: ${farmer['products'] ?? 'N/A'}'),
-              Text(
-                  'Registered On: ${_formatTimestamp(farmer['registeredAt']) ?? 'N/A'}'),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
-          ),
-        ],
-      ),
-    );
-  }
-
   // Format Firestore Timestamp to readable date
   String? _formatTimestamp(Timestamp? timestamp) {
     if (timestamp == null) return null;
@@ -109,7 +65,7 @@ class _UserAccountPageState extends State<UserAccountPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('User & Farmer Management'),
+        title: const Text('User Management'),
         backgroundColor: Colors.green.shade700,
       ),
       body: Padding(
@@ -208,110 +164,6 @@ class _UserAccountPageState extends State<UserAccountPage> {
                                   const PopupMenuItem(
                                     value: 'Delete',
                                     child: Text('Delete User'),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  );
-                },
-              ),
-
-              // Farmer StreamBuilder
-              StreamBuilder<QuerySnapshot>(
-                stream: _firestore.collection('farmers').snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-
-                  if (snapshot.hasError) {
-                    return const Center(
-                      child: Text(
-                        'Failed to load farmers. Please try again later.',
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    );
-                  }
-
-                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                    return const Center(
-                      child: Text(
-                        'No farmers found.',
-                        style: TextStyle(fontSize: 16, color: Colors.grey),
-                      ),
-                    );
-                  }
-
-                  final farmers = snapshot.data!.docs;
-
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('Farmers', style: TextStyle(fontSize: 20)),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: farmers.length,
-                        itemBuilder: (context, index) {
-                          final farmerDoc = farmers[index];
-                          final farmerId = farmerDoc.id;
-                          final farmerData =
-                              farmerDoc.data() as Map<String, dynamic>;
-
-                          return Card(
-                            elevation: 3,
-                            margin: const EdgeInsets.symmetric(vertical: 8),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: ListTile(
-                              leading: CircleAvatar(
-                                backgroundColor: Colors.green.shade700,
-                                child: Text(
-                                  farmerData['name'] != null &&
-                                          farmerData['name']!.isNotEmpty
-                                      ? farmerData['name']![0].toUpperCase()
-                                      : '?',
-                                  style: const TextStyle(color: Colors.white),
-                                ),
-                              ),
-                              title: Text(
-                                farmerData['name'] ?? 'N/A',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('Name: ${farmerData['name'] ?? 'N/A'}'),
-                                  Text(
-                                      'Phone: ${farmerData['phone'] ?? 'N/A'}'),
-                                  Text(
-                                      'Email : ${farmerData['email'] ?? 'N/A'}'),
-                                  Text(
-                                      'Number of cows : ${farmerData['cows'] ?? 'N/A'}'),
-                                ],
-                              ),
-                              trailing: PopupMenuButton<String>(
-                                onSelected: (value) {
-                                  if (value == 'View Details') {
-                                    _viewFarmerDetails(farmerData);
-                                  } else if (value == 'Delete') {
-                                    _deleteFarmer(farmerId);
-                                  }
-                                },
-                                itemBuilder: (context) => [
-                                  const PopupMenuItem(
-                                    value: 'View Details',
-                                    child: Text('View Details'),
-                                  ),
-                                  const PopupMenuItem(
-                                    value: 'Delete',
-                                    child: Text('Delete Farmer'),
                                   ),
                                 ],
                               ),

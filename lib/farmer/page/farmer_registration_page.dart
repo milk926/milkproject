@@ -4,10 +4,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:milkproject/farmer/page/HomePage.dart';
 import 'package:milkproject/farmer/services/farmer_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FarmerRegistrationScreen extends StatefulWidget {
-  const FarmerRegistrationScreen({super.key});
+  const FarmerRegistrationScreen({Key? key}) : super(key: key);
 
   @override
   _FarmerRegistrationScreenState createState() =>
@@ -25,7 +24,6 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
   final TextEditingController cowsController = TextEditingController();
   XFile? _document; // To hold the selected document image
   bool _isPasswordVisible = false;
-  bool _isConfirmPasswordVisible = false; // Control password visibility
   bool _isUploading = false; // Track the upload process
 
   // Cloudinary details
@@ -92,31 +90,17 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
         return;
       }
 
-      // Save farmer data to Firestore
-      try {
-        await FirebaseFirestore.instance.collection('farmers').add({
-          'name': nameController.text,
-          'email': emailController.text,
-          'phone': phoneController.text,
-          'password': passwordController.text, // Should hash in production
-          'cows': cowsController.text,
-          'document_url': documentUrl,
-        });
-
-        // Navigate to home page
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => FarmerHome()),
-        );
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Registration successful!')),
-        );
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to register: $e')),
-        );
-      }
+      // Register the farmer
+      FarmerAuthService authService = FarmerAuthService();
+      await authService.societyRegister(
+        context: context,
+        name: nameController.text.trim(),
+        password: passwordController.text.trim(),
+        phone: phoneController.text.trim(),
+        cow: cowsController.text.trim(),
+        email: emailController.text.trim(),
+        documentUrl: documentUrl,
+      );
     }
   }
 
@@ -169,14 +153,9 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                     label: 'Phone Number',
                     icon: Icons.phone,
                     keyboardType: TextInputType.phone,
-                    validator: (value) {
-                      if (value!.isEmpty)
-                        return 'Please enter your phone number';
-                      if (!RegExp(r'^\+?[0-9]{10,13}$').hasMatch(value)) {
-                        return 'Enter a valid phone number';
-                      }
-                      return null;
-                    },
+                    validator: (value) => value!.isEmpty
+                        ? 'Please enter your phone number'
+                        : null,
                   ),
                   const SizedBox(height: 20),
                   _buildPasswordField(passwordController, 'Password'),
@@ -184,7 +163,6 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                   _buildPasswordField(
                       confirmPasswordController, 'Confirm Password',
                       validator: (value) {
-                    if (value!.isEmpty) return 'Please confirm your password';
                     if (value != passwordController.text) {
                       return 'Passwords do not match';
                     }
@@ -196,22 +174,13 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                     label: 'Number of Cows',
                     icon: Icons.local_florist,
                     keyboardType: TextInputType.number,
-                    validator: (value) {
-                      if (value!.isEmpty)
-                        return 'Please enter the number of cows';
-                      if (int.tryParse(value) == null ||
-                          int.parse(value) <= 0) {
-                        return 'Enter a valid number';
-                      }
-                      return null;
-                    },
+                    validator: (value) => value!.isEmpty
+                        ? 'Please enter the number of cows'
+                        : null,
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: _pickDocument,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF3EA120),
-                    ),
                     child: const Text('Upload Document'),
                   ),
                   if (_document != null) Text('Selected: ${_document!.name}'),
@@ -220,9 +189,6 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
                       ? const CircularProgressIndicator()
                       : ElevatedButton(
                           onPressed: _registerFarmer,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF3EA120),
-                          ),
                           child: const Text('Register'),
                         ),
                 ],
@@ -234,7 +200,6 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
     );
   }
 
-  // Helper to build text fields
   Widget _buildTextField({
     required TextEditingController controller,
     required String label,
@@ -254,7 +219,6 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
     );
   }
 
-  // Helper to build password fields
   Widget _buildPasswordField(
     TextEditingController controller,
     String label, {
