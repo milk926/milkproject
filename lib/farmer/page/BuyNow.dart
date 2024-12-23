@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FarmerBuyNowPage extends StatefulWidget {
-  final String productName; // Expecting the product name as an argument
+  final String productName;
+  final int productPrice;
+  final String productImageUrl; // Expecting the product name as an argument
 
   const FarmerBuyNowPage({
     super.key,
     required this.productName,
+    required this.productPrice,
+    required this.productImageUrl,
   });
 
   @override
@@ -95,14 +99,13 @@ class _FarmerBuyNowPageState extends State<FarmerBuyNowPage> {
       );
       return;
     }
-     final user = _auth.currentUser;
+    final user = _auth.currentUser;
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('User is not logged in!')),
       );
       return;
     }
-
 
     setState(() {
       isPlacingOrder = true;

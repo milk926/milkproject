@@ -283,6 +283,8 @@ class MilkProductPage extends StatelessWidget {
                                       builder: (context) {
                                         return BuyNowPage(
                                           productName: product['name'],
+                                          productPrice: product['price'],
+                                          productImageUrl: product['image_url'],
                                         );
                                       },
                                     ));

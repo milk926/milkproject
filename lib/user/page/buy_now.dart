@@ -7,7 +7,7 @@ class BuyNowPage extends StatefulWidget {
 
   const BuyNowPage({
     super.key,
-    required this.productName,
+    required this.productName, required productPrice, required productImageUrl,
   });
 
   @override

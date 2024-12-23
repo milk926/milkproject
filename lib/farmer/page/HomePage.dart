@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:milkproject/farmer/page/BuyNow.dart';
 import 'package:milkproject/farmer/page/orders.dart';
 import 'package:milkproject/user/page/addtocart.dart';
+import 'package:milkproject/user/page/buy_now.dart';
 import 'profile.dart';
 
 class FarmerHome extends StatelessWidget {
@@ -342,7 +343,26 @@ class CattleFeedProductList extends StatelessWidget {
                                 }
                               },
                               icon: Icon(Icons.add_shopping_cart),
-                              label: Text("Buy Now"),
+                              label: Text("Add to Cart"),
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                foregroundColor: Colors.white,
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => FarmerBuyNowPage(
+                                      productName: productMap['name'],
+                                      productPrice: productMap['price'],
+                                      productImageUrl: productMap['image_url'],
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Text("Buy Now"),
                             ),
                           ],
                         )
