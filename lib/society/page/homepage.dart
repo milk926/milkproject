@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:milkproject/society/farmeraccount.dart';
+import 'package:milkproject/society/page/announcement.dart';
 import 'package:milkproject/society/page/ordermanagement.dart';
 import 'package:milkproject/society/page/product_upload.dart';
 import 'package:milkproject/society/page/profilepage.dart';
@@ -75,7 +76,7 @@ class MilkProjectHomePage extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 30,
-                  backgroundImage: AssetImage('assets/images/profile.png'),
+                  backgroundImage: AssetImage('asset/profile.png'),
                 ),
                 SizedBox(height: 10),
                 Text(
@@ -157,34 +158,57 @@ class MilkProjectHomePage extends StatelessWidget {
     );
   }
 
-  // Carousel Slider Widget
   Widget _buildCarouselSlider() {
-    final List<String> imgList = [
-      'assets/images/announcement1.png',
-      'assets/images/announcement2.png',
-      'assets/images/announcement3.png',
-    ];
+    return StreamBuilder<DocumentSnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('announcements')
+          .doc('main')
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-    return CarouselSlider(
-      options: CarouselOptions(
-        height: 180.0,
-        autoPlay: true,
-        enlargeCenterPage: true,
-        aspectRatio: 16 / 9,
-        autoPlayInterval: const Duration(seconds: 5),
-      ),
-      items: imgList
-          .map((item) => Container(
-                margin: const EdgeInsets.all(5.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                  image: DecorationImage(
-                    image: AssetImage(item),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ))
-          .toList(),
+        if (snapshot.hasError) {
+          return const Center(child: Text('Error fetching announcements'));
+        }
+
+        if (!snapshot.hasData || snapshot.data?.data() == null) {
+          return const Center(child: Text('No announcements available'));
+        }
+
+        final data = snapshot.data!.data() as Map<String, dynamic>;
+        final List<String> imgList = (data['image_urls'] as List<dynamic>?)
+                ?.map((item) => item.toString())
+                .toList() ??
+            [];
+
+        if (imgList.isEmpty) {
+          return const Center(child: Text('No announcements available'));
+        }
+
+        return CarouselSlider(
+          options: CarouselOptions(
+            height: 180.0,
+            autoPlay: true,
+            enlargeCenterPage: true,
+            aspectRatio: 16 / 9,
+            autoPlayInterval: const Duration(seconds: 5),
+          ),
+          items: imgList
+              .map((item) => Container(
+                    margin: const EdgeInsets.all(5.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      image: DecorationImage(
+                        image: NetworkImage(item),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ))
+              .toList(),
+        );
+      },
     );
   }
 
@@ -399,8 +423,8 @@ class MilkProjectHomePage extends StatelessWidget {
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.bar_chart),
-          label: 'Products',
+          icon: Icon(Icons.announcement),
+          label: 'Announcement',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.person),
@@ -417,7 +441,7 @@ class MilkProjectHomePage extends StatelessWidget {
             break;
           case 1:
             Navigator.push(context,
-                MaterialPageRoute(builder: (_) => UserProductUpload()));
+                MaterialPageRoute(builder: (_) => PostAnnouncementPage()));
             break;
           case 2:
             Navigator.push(context,

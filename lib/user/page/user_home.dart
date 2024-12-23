@@ -6,6 +6,7 @@ import 'package:milkproject/user/page/addtocart.dart';
 import 'package:milkproject/user/page/buy_now.dart';
 import 'package:milkproject/user/page/feedback.dart';
 import 'package:milkproject/user/page/userprofile.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 final currentUser = FirebaseAuth.instance.currentUser;
 
@@ -122,162 +123,240 @@ class MilkProductPage extends StatelessWidget {
           ),
         ],
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: firestore.collection('products').snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Carousel Slider
+            _buildCarouselSlider(),
+            SizedBox(height: 16),
 
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(
-              child: Text(
-                'No products available',
-                style: TextStyle(fontSize: 16.0, color: Colors.grey),
+            // Welcome Section
+            Text(
+              "👋 Welcome Back, User!",
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w600,
+                color: Colors.green[800],
               ),
-            );
-          }
+            ),
+            SizedBox(height: 16),
 
-          final products = snapshot.data!.docs.map((doc) {
-            return doc.data() as Map<String, dynamic>;
-          }).toList();
+            // Milk Products List
+            StreamBuilder<QuerySnapshot>(
+              stream: firestore.collection('products').snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
 
-          return ListView.builder(
-            padding: const EdgeInsets.all(16.0),
-            itemCount: products.length,
-            itemBuilder: (context, index) {
-              final product = products[index];
-              return Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
-                elevation: 4,
-                margin: const EdgeInsets.only(bottom: 16.0),
-                child: Padding(
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      'No products available',
+                      style: TextStyle(fontSize: 16.0, color: Colors.grey),
+                    ),
+                  );
+                }
+
+                final products = snapshot.data!.docs.map((doc) {
+                  return doc.data() as Map<String, dynamic>;
+                }).toList();
+
+                return ListView.builder(
+                  shrinkWrap: true,
                   padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              product['name'] ?? 'Unnamed Product',
-                              style: const TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          Text(
-                            '₹${product['price'] ?? 'N/A'}',
-                            style: const TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.green,
-                            ),
-                          ),
-                        ],
+                  itemCount: products.length,
+                  itemBuilder: (context, index) {
+                    final product = products[index];
+                    return Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
                       ),
-                      const SizedBox(height: 10.0),
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
-                        child: Image.network(
-                          product['image_url'] ?? '',
-                          height: 150,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Icon(
-                              Icons.broken_image,
-                              size: 100,
-                              color: Colors.grey,
-                            );
-                          },
-                        ),
-                      ),
-                      const SizedBox(height: 10.0),
-                      Text(
-                        product['description'] ?? 'No description available.',
-                        style: const TextStyle(
-                          fontSize: 14.0,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      const SizedBox(height: 10.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF3EA120),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
-                            onPressed: () async {
-                              try {
-                                await firestore.collection('cart').add({
-                                  'user_id': currentUser?.uid,
-                                  'name': product['name'],
-                                  'price': product['price'],
-                                  'image': product['image_url'],
-                                  'description': product['description'],
-                                });
-
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                        '${product['name']} added to cart!'),
+                      elevation: 4,
+                      margin: const EdgeInsets.only(bottom: 16.0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    product['name'] ?? 'Unnamed Product',
+                                    style: const TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                );
-                              } catch (error) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                        'Failed to add ${product['name']} to cart.'),
+                                ),
+                                Text(
+                                  '₹${product['price'] ?? 'N/A'}',
+                                  style: const TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.green,
                                   ),
-                                );
-                              }
-                            },
-                            child: const Text(
-                              'Add to Cart',
-                              style: TextStyle(color: Colors.white),
+                                ),
+                              ],
                             ),
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF3EA120),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
-                            onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(
-                                builder: (context) {
-                                  return BuyNowPage(
-                                    productName: product['name'],
+                            const SizedBox(height: 10.0),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: Image.network(
+                                product['image_url'] ?? '',
+                                height: 150,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Icon(
+                                    Icons.broken_image,
+                                    size: 100,
+                                    color: Colors.grey,
                                   );
                                 },
-                              ));
-                            },
-                            child: const Text(
-                              'Buy Now',
-                              style: TextStyle(color: Colors.white),
+                              ),
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 10.0),
+                            Text(
+                              product['description'] ??
+                                  'No description available.',
+                              style: const TextStyle(
+                                fontSize: 14.0,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            const SizedBox(height: 10.0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF3EA120),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    try {
+                                      await firestore.collection('cart').add({
+                                        'user_id': currentUser?.uid,
+                                        'name': product['name'],
+                                        'price': product['price'],
+                                        'image': product['image_url'],
+                                        'description': product['description'],
+                                      });
+
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                              '${product['name']} added to cart!'),
+                                        ),
+                                      );
+                                    } catch (error) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                              'Failed to add ${product['name']} to cart.'),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  child: const Text(
+                                    'Add to Cart',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF3EA120),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.push(context, MaterialPageRoute(
+                                      builder: (context) {
+                                        return BuyNowPage(
+                                          productName: product['name'],
+                                        );
+                                      },
+                                    ));
+                                  },
+                                  child: const Text(
+                                    'Buy Now',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
-        },
+                    );
+                  },
+                );
+              },
+            ),
+          ],
+        ),
       ),
+    );
+  }
+
+  // Carousel Slider Method
+  Widget _buildCarouselSlider() {
+    return StreamBuilder<DocumentSnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('announcements')
+          .doc('main')
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return const Center(child: Text('Error fetching announcements'));
+        }
+
+        if (!snapshot.hasData || snapshot.data?.data() == null) {
+          return const Center(child: Text('No announcements available'));
+        }
+
+        final data = snapshot.data!.data() as Map<String, dynamic>;
+        final List<String> imgList = (data['image_urls'] as List<dynamic>?)
+                ?.map((item) => item.toString())
+                .toList() ??
+            [];
+
+        if (imgList.isEmpty) {
+          return const Center(child: Text('No announcements available'));
+        }
+
+        return CarouselSlider(
+          options: CarouselOptions(
+            height: 200.0,
+            autoPlay: true,
+            enlargeCenterPage: true,
+            viewportFraction: 1.0,
+          ),
+          items: imgList.map((imgUrl) {
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Image.network(
+                imgUrl,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+            );
+          }).toList(),
+        );
+      },
     );
   }
 }

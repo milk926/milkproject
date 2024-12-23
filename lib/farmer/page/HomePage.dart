@@ -30,12 +30,6 @@ class FarmerHomePage extends StatefulWidget {
 }
 
 class _FarmerHomePageState extends State<FarmerHomePage> {
-  final List<String> carouselImages = [
-    "https://via.placeholder.com/600x300.png?text=Welcome+to+Milk+Zone",
-    "https://via.placeholder.com/600x300.png?text=Quality+Products",
-    "https://via.placeholder.com/600x300.png?text=Farm+Fresh+Feed",
-  ];
-
   int? totalQuantity;
   double? totalPayment;
 
@@ -71,6 +65,60 @@ class _FarmerHomePageState extends State<FarmerHomePage> {
         SnackBar(content: Text('Error fetching data: $e')),
       );
     }
+  }
+
+  Widget _buildCarouselSlider() {
+    return StreamBuilder<DocumentSnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('announcements')
+          .doc('main')
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return const Center(child: Text('Error fetching announcements'));
+        }
+
+        if (!snapshot.hasData || snapshot.data?.data() == null) {
+          return const Center(child: Text('No announcements available'));
+        }
+
+        final data = snapshot.data!.data() as Map<String, dynamic>;
+        final List<String> imgList = (data['image_urls'] as List<dynamic>?)
+                ?.map((item) => item.toString())
+                .toList() ??
+            [];
+
+        if (imgList.isEmpty) {
+          return const Center(child: Text('No announcements available'));
+        }
+
+        return CarouselSlider(
+          options: CarouselOptions(
+            height: 180.0,
+            autoPlay: true,
+            enlargeCenterPage: true,
+            aspectRatio: 16 / 9,
+            autoPlayInterval: const Duration(seconds: 5),
+          ),
+          items: imgList
+              .map((item) => Container(
+                    margin: const EdgeInsets.all(5.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      image: DecorationImage(
+                        image: NetworkImage(item),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ))
+              .toList(),
+        );
+      },
+    );
   }
 
   @override
@@ -124,39 +172,7 @@ class _FarmerHomePageState extends State<FarmerHomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Carousel Slider
-              CarouselSlider(
-                options: CarouselOptions(
-                  autoPlay: true,
-                  enlargeCenterPage: true,
-                  height: 180,
-                  viewportFraction: 0.9,
-                  autoPlayInterval: Duration(seconds: 3),
-                  autoPlayAnimationDuration: Duration(milliseconds: 800),
-                ),
-                items: carouselImages.map((url) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.4),
-                          blurRadius: 8,
-                          spreadRadius: 2,
-                          offset: Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.network(
-                        url,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
+              _buildCarouselSlider(),
               SizedBox(height: 16),
 
               // Welcome Section
@@ -289,8 +305,7 @@ class CattleFeedProductList extends StatelessWidget {
                                 foregroundColor: Colors.white,
                               ),
                               onPressed: () async {
-                                final user =
-                                    FirebaseAuth.instance.currentUser;
+                                final user = FirebaseAuth.instance.currentUser;
 
                                 if (user == null) {
                                   ScaffoldMessenger.of(context).showSnackBar(
@@ -322,37 +337,18 @@ class CattleFeedProductList extends StatelessWidget {
                                   );
                                 } catch (e) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            "Failed to add to cart. Please try again.")),
+                                    SnackBar(content: Text('Error: $e')),
                                   );
                                 }
                               },
                               icon: Icon(Icons.add_shopping_cart),
-                              label: Text("Add to Cart"),
-                            ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.orange[700],
-                                foregroundColor: Colors.white,
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => FarmerBuyNowPage(
-                                      productName: productMap['name'],
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: Text("Buy Now"),
+                              label: Text("Buy Now"),
                             ),
                           ],
                         )
                       ],
                     ),
-                  ),
+                  )
                 ],
               ),
             );
@@ -363,33 +359,41 @@ class CattleFeedProductList extends StatelessWidget {
   }
 }
 
-// Info Card Widget
+// InfoCard Widget
 class InfoCard extends StatelessWidget {
   final String title;
   final String value;
 
-  const InfoCard({
-    required this.title,
-    required this.value,
-  });
+  InfoCard({required this.title, required this.value});
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      elevation: 5,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               title,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.green[700],
+              ),
             ),
-            SizedBox(height: 8),
+            SizedBox(height: 6),
             Text(
               value,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.green[800],
+              ),
             ),
           ],
         ),
