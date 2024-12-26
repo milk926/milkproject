@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:milkproject/farmer/page/orders.dart';
+import 'package:milkproject/login_page.dart';
 import 'package:milkproject/user/page/addtocart.dart';
 import 'package:milkproject/user/page/buy_now.dart';
 import 'package:milkproject/user/page/feedback.dart';
@@ -99,7 +100,11 @@ class MilkProductPage extends StatelessWidget {
               leading: const Icon(Icons.logout),
               title: const Text('Log Out'),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (context) {
+                    return LoginPage();
+                  },
+                ));
               },
             ),
           ],

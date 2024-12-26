@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:milkproject/farmer/page/BuyNow.dart';
 import 'package:milkproject/farmer/page/orders.dart';
+import 'package:milkproject/login_page.dart';
 import 'package:milkproject/user/page/addtocart.dart';
 import 'package:milkproject/user/page/buy_now.dart';
 import 'profile.dart';
@@ -481,8 +482,11 @@ class FarmerMenuDrawer extends StatelessWidget {
           ListTile(
             title: Text('Logout'),
             onTap: () {
-              FirebaseAuth.instance.signOut();
-              Navigator.pop(context);
+              //  FirebaseAuth.instance.signOut();
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => LoginPage()),
+              );
             },
           ),
         ],

@@ -281,6 +281,7 @@ class MilkProjectHomePage extends StatelessWidget {
   Stream<double> _getTotalSalesStream() {
     return FirebaseFirestore.instance
         .collection('orders')
+        .where('status', isEqualTo: 'Delivered')
         .snapshots()
         .map((querySnapshot) {
       return querySnapshot.docs.fold<double>(
