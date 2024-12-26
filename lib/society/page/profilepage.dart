@@ -146,22 +146,24 @@ class _ProfilePageState extends State<ProfilePage> {
                   const SizedBox(height: 30),
 
                   // Logout Button
-                  ElevatedButton(
-                    onPressed: () async {
-                      // Perform logout
-                      await FirebaseAuth.instance.signOut();
-                      Navigator.pop(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                  SizedBox(width: 8.0,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        // Perform logout
+                        await FirebaseAuth.instance.signOut();
+                        Navigator.pop(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
-                    ),
-                    child: const Text(
-                      'Logout',
-                      style: TextStyle(fontSize: 18),
+                      child: const Text(
+                        'Logout',
+                        style: TextStyle(fontSize: 18),
+                      ),
                     ),
                   ),
                 ],

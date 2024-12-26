@@ -14,7 +14,6 @@ class _FarmerListPageState extends State<FarmerListPage> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-      
         appBar: AppBar(
           title: const Text('Farmers Management'),
           backgroundColor: Colors.green.shade700,
@@ -49,7 +48,8 @@ class FarmerListTab extends StatelessWidget {
     return StreamBuilder<QuerySnapshot>(
       stream: _firestore
           .collection('farmer')
-          .where('status', isEqualTo: status)
+          .where('isapproved', isEqualTo: false
+          )
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
