@@ -269,7 +269,7 @@ class CattleFeedProductList extends StatelessWidget {
                     child: Image.network(
                       productMap['image_url'],
                       fit: BoxFit.cover,
-                      width: double.infinity,
+                      
                     ),
                   ),
                   Padding(

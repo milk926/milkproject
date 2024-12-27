@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class CartPage extends StatefulWidget {
@@ -6,49 +8,79 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
-  // Sample cart data
-  List<Map<String, dynamic>> cartItems = [
-    {
-      "productName": "Cattle Feed Premium",
-      "description": "High-quality feed for cattle",
-      "price": 20.0,
-      "quantity": 2,
-      "image": "https://via.placeholder.com/150",
-    },
-    {
-      "productName": "Mineral Mixture",
-      "description": "Essential minerals for cattle",
-      "price": 15.0,
-      "quantity": 1,
-      "image": "https://via.placeholder.com/150",
-    },
-    {
-      "productName": "Silage Bundle",
-      "description": "Nutrient-rich silage feed",
-      "price": 25.0,
-      "quantity": 3,
-      "image": "https://via.placeholder.com/150",
-    },
-  ];
+  List<dynamic> cartItems = []; // List to store fetched cart items
+  double totalPrice = 0.0; // Total price variable
 
-  double get totalPrice {
-    return cartItems.fold(
-        0, (sum, item) => sum + (item['price'] * item['quantity']));
-  }
+  // Fetch the cart items from Firestore
+  Future<void> fetchCartItems() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      try {
+        // Query Firestore to get the cart items for the authenticated user
+        QuerySnapshot snapshot = await FirebaseFirestore.instance
+            .collection('cart')
+            .where('user_id', isEqualTo: user.uid)
+            .get();
 
-  void updateQuantity(int index, int delta) {
-    setState(() {
-      cartItems[index]['quantity'] += delta;
-      if (cartItems[index]['quantity'] < 1) {
-        cartItems[index]['quantity'] = 1;
+        setState(() {
+          cartItems = snapshot.docs.map((doc) => doc.data()).toList();
+          totalPrice = cartItems.fold(
+              0.0,
+              (sum, item) =>
+                  sum + (item['price'] * item['quantity']).toDouble());
+        });
+      } catch (e) {
+        print("Error fetching cart items: $e");
       }
-    });
+    }
   }
 
-  void removeItem(int index) {
+  // Update quantity of cart item
+  void updateQuantity(int index, int change) async {
+    setState(() {
+      cartItems[index]['quantity'] = cartItems[index]['quantity'] + change;
+      totalPrice = cartItems.fold(
+          0.0,
+          (sum, item) =>
+              sum + (item['price'] * item['quantity']).toDouble());
+    });
+
+    // Update the quantity in Firestore
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      String docId = cartItems[index]['id']; // Assume you store the document ID
+      await FirebaseFirestore.instance
+          .collection('cart')
+          .doc(docId)
+          .update({'quantity': cartItems[index]['quantity']});
+    }
+  }
+
+  // Remove an item from the cart
+  void removeItem(int index) async {
     setState(() {
       cartItems.removeAt(index);
+      totalPrice = cartItems.fold(
+          0.0,
+          (sum, item) =>
+              sum + (item['price'] * item['quantity']).toDouble());
     });
+
+    // Remove the item from Firestore
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      String docId = cartItems[index]['id']; // Assume you store the document ID
+      await FirebaseFirestore.instance
+          .collection('cart')
+          .doc(docId)
+          .delete();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchCartItems(); // Fetch cart items when the widget is initialized
   }
 
   @override
@@ -101,14 +133,12 @@ class _CartPageState extends State<CartPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // Product Image
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: Image.network(
-                                item['image'],
-                                width: double.infinity,
-                                height: 150,
-                                fit: BoxFit.cover,
-                              ),
+                            Imagse.file(
+                              item['image_url'],
+                              width: 100,
+                              height: 150,
+                              
+                              fit: BoxFit.cover,
                             ),
                             SizedBox(height: 10),
 

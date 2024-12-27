@@ -88,14 +88,20 @@ class AddToCartPage extends StatelessWidget {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Product Image
+                            // Product Image with fixed width and height
                             ClipRRect(
                               borderRadius: BorderRadius.circular(8),
-                              child: Image.network(
-                                product['image'] ?? '',
-                                width: 100,
-                                height: 100,
-                                fit: BoxFit.cover,
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: 100,
+                                  maxHeight: 100,
+                                ),
+                                child: Image.network(
+                                  product['image'] ?? '',
+                                  width: 100,
+                                  height: 100,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                             const SizedBox(width: 10),
@@ -146,7 +152,7 @@ class AddToCartPage extends StatelessWidget {
                   },
                 ),
               ),
-              // Checkout Button
+              // Checkout Button (Ensure it stays at the bottom)
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: ElevatedButton(
@@ -182,7 +188,6 @@ class AddToCartPage extends StatelessWidget {
   }
 }
 
-// The CheckoutScreen class remains the same
 class CheckoutScreen extends StatefulWidget {
   final double totalPrice;
   final List cartProducts;
@@ -211,37 +216,32 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   void dispose() {
-    _razorpay.clear(); // Clear resources when the screen is disposed
+    _razorpay.clear();
     super.dispose();
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    // Handle payment success
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Payment successful: ${response.paymentId}')),
     );
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
-    // Handle payment failure
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Payment failed: ${response.message}')),
     );
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
-    // Handle external wallet payment
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-          content: Text('External wallet selected: ${response.walletName}')),
+      SnackBar(content: Text('External wallet selected: ${response.walletName}')),
     );
   }
 
   void _startPayment() {
     var options = {
       'key': 'rzp_test_QLvdqmBfoYL2Eu', // Replace with your Razorpay Key
-      'amount':
-          (widget.totalPrice * 100).toInt(), // Razorpay accepts amount in paise
+      'amount': (widget.totalPrice * 100).toInt(),
       'name': 'My E-Commerce App',
       'description': 'Purchase from My E-Commerce App',
       'prefill': {
@@ -267,36 +267,35 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         title: const Text('Checkout'),
         backgroundColor: const Color.fromARGB(255, 8, 111, 255),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            const Text(
-              'Review your order:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: ListView.builder(
-                itemCount: widget.cartProducts.length,
-                itemBuilder: (context, index) {
-                  final product = widget.cartProducts[index];
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              const Text(
+                'Review your order:',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 20),
+              Column(
+                children: widget.cartProducts.map((product) {
                   return ListTile(
                     title: Text(product['name']),
                     subtitle: Text('₹${product['price']}'),
                   );
-                },
+                }).toList(),
               ),
-            ),
-            ElevatedButton(
-              onPressed: _startPayment,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 8, 111, 255),
-                padding: const EdgeInsets.symmetric(vertical: 16),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _startPayment,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 8, 111, 255),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
+                child: const Text('Proceed to Payment'),
               ),
-              child: const Text('Proceed to Payment'),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

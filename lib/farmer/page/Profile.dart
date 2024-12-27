@@ -170,11 +170,10 @@ class _FarmerProfilePageState extends State<FarmerProfilePage> {
                 ),
               ),
             ),
-            SizedBox(height: 30),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 180),
+              padding: const EdgeInsets.symmetric(horizontal: 40), // Adjusted padding
               child: SizedBox(
-                width: double.infinity,
+                width: double.infinity, // Ensure the button takes full width
                 child: ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red[600],
@@ -201,6 +200,7 @@ class _FarmerProfilePageState extends State<FarmerProfilePage> {
                 ),
               ),
             ),
+            SizedBox(height: 20), // To ensure spacing at the bottom
           ],
         ),
       ),
