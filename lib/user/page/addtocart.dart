@@ -123,6 +123,22 @@ class AddToCartPage extends StatelessWidget {
                                 ],
                               ),
                             ),
+                            // Delete Button
+                            IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () async {
+                                await firestore
+                                    .collection('cart')
+                                    .doc(product['id'])
+                                    .delete();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                        '${product['name']} removed from cart.'),
+                                  ),
+                                );
+                              },
+                            ),
                           ],
                         ),
                       ),
@@ -154,7 +170,7 @@ class AddToCartPage extends StatelessWidget {
                   ),
                   child: Text(
                     'Checkout Now (₹$totalPrice)',
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                   ),
                 ),
               ),
@@ -166,6 +182,7 @@ class AddToCartPage extends StatelessWidget {
   }
 }
 
+// The CheckoutScreen class remains the same
 class CheckoutScreen extends StatefulWidget {
   final double totalPrice;
   final List cartProducts;

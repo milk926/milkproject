@@ -479,7 +479,6 @@ class NotificationPage extends StatelessWidget {
           stream: firestore
               .collection('orders')
               .where('status', isEqualTo: 'Pending')
-              .orderBy('timestamp', descending: true)
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -487,6 +486,7 @@ class NotificationPage extends StatelessWidget {
             }
 
             if (snapshot.hasError) {
+              print(snapshot.error);
               return Center(child: Text('Error: ${snapshot.error}'));
             }
 
@@ -545,8 +545,10 @@ class NotificationPage extends StatelessWidget {
           children: [
             // Notification icon
             CircleAvatar(
-              backgroundColor: const Color.fromARGB(255, 8, 111, 255).withOpacity(0.2),
-              child: const Icon(Icons.notifications, color: Color.fromARGB(255, 8, 111, 255)),
+              backgroundColor:
+                  const Color.fromARGB(255, 8, 111, 255).withOpacity(0.2),
+              child: const Icon(Icons.notifications,
+                  color: Color.fromARGB(255, 8, 111, 255)),
             ),
             const SizedBox(width: 12),
             // Notification details
