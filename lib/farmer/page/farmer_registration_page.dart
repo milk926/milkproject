@@ -212,7 +212,7 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
       keyboardType: keyboardType,
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: Icon(icon, color: Colors.green),
+        prefixIcon: Icon(icon, color: Colors.blue),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
       ),
       validator: validator,
@@ -229,7 +229,7 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
       obscureText: !_isPasswordVisible,
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: const Icon(Icons.lock, color: Colors.green),
+        prefixIcon: const Icon(Icons.lock, color: Colors.blue),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         suffixIcon: IconButton(
           icon: Icon(

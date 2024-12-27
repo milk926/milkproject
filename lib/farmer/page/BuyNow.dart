@@ -163,7 +163,7 @@ class _FarmerBuyNowPageState extends State<FarmerBuyNowPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Checkout'),
-        backgroundColor: Colors.green[800],
+        backgroundColor: Colors.blue[800],
       ),
       body: Container(
         color: Colors.white, // Background color set to white
@@ -209,7 +209,7 @@ class _FarmerBuyNowPageState extends State<FarmerBuyNowPage> {
                       'Price: \$${productDetails!['price']}',
                       style: const TextStyle(
                         fontSize: 14,
-                        color: Colors.green,
+                        color: Colors.blue,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -263,7 +263,7 @@ class _FarmerBuyNowPageState extends State<FarmerBuyNowPage> {
                     selectedDate == null
                         ? 'Select Date'
                         : '${selectedDate!.toLocal()}'.split(' ')[0],
-                    style: TextStyle(fontSize: 16, color: Colors.green[800]),
+                    style: TextStyle(fontSize: 16, color: Colors.blue[800]),
                   ),
                 ),
               ),
@@ -292,7 +292,7 @@ class _FarmerBuyNowPageState extends State<FarmerBuyNowPage> {
                     isPlacingOrder ? 'Placing Order...' : 'Place Order',
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: Colors.blue,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 50, vertical: 15),
                     shape: RoundedRectangleBorder(
@@ -317,7 +317,7 @@ class _FarmerBuyNowPageState extends State<FarmerBuyNowPage> {
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(
-              color: Colors.green.withOpacity(0.5), width: 2), // Green border
+              color: Colors.blue.withOpacity(0.5), width: 2), // blue border
           borderRadius: BorderRadius.circular(12),
         ),
         child: Padding(
@@ -327,7 +327,7 @@ class _FarmerBuyNowPageState extends State<FarmerBuyNowPage> {
             children: [
               Row(
                 children: [
-                  Icon(icon, color: Colors.green[800]),
+                  Icon(icon, color: Colors.blue[800]),
                   const SizedBox(width: 8),
                   Text(
                     title,
@@ -350,7 +350,7 @@ class _FarmerBuyNowPageState extends State<FarmerBuyNowPage> {
       children: [
         CircleAvatar(
           radius: 12,
-          backgroundColor: isCompleted ? Colors.green : Colors.grey,
+          backgroundColor: isCompleted ? Colors.blue : Colors.grey,
           child: Icon(
             isCompleted ? Icons.check : Icons.circle,
             size: 16,
@@ -362,7 +362,7 @@ class _FarmerBuyNowPageState extends State<FarmerBuyNowPage> {
           title,
           style: TextStyle(
             fontSize: 12,
-            color: isCompleted ? Colors.green : Colors.grey,
+            color: isCompleted ? Colors.blue : Colors.grey,
           ),
         ),
       ],

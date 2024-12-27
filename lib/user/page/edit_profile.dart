@@ -88,7 +88,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Edit Profile"),
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.blue,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -156,7 +156,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green,
+                            backgroundColor: Colors.blue,
                             padding: const EdgeInsets.symmetric(
                                 vertical: 15, horizontal: 50),
                             shape: RoundedRectangleBorder(
@@ -217,5 +217,5 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
       ],
     );
-      }
+  }
 }

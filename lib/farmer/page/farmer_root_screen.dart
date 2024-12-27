@@ -38,7 +38,7 @@ class _FarmerBottomNavScreenState extends State<FarmerBottomNavScreen> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        selectedItemColor: Colors.green, // Selected item color (green)
+        selectedItemColor: Colors.blue, // Selected item color (blue)
         unselectedItemColor: Colors.black, // Unselected items color (black)
         items: [
           const BottomNavigationBarItem(

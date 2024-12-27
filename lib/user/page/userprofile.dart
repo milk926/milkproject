@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:milkproject/firebase_options.dart';
+import 'package:milkproject/login_page.dart';
 import 'package:milkproject/user/page/edit_profile.dart';
 
 void main() async {
@@ -27,7 +28,7 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("User Profile"),
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.blue,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -62,6 +63,7 @@ class ProfileScreen extends StatelessWidget {
             return const Center(child: Text('User data not found.'));
           } else {
             final profileData = snapshot.data!.data() as Map<String, dynamic>;
+            final FirebaseAuth _auth = FirebaseAuth.instance;
 
             return Padding(
               padding: const EdgeInsets.all(16.0),
@@ -71,11 +73,11 @@ class ProfileScreen extends StatelessWidget {
                     // Profile Icon
                     CircleAvatar(
                       radius: 50,
-                      backgroundColor: Colors.green.withOpacity(0.2),
+                      backgroundColor: Colors.blue.withOpacity(0.2),
                       child: const Icon(
                         Icons.person,
                         size: 50,
-                        color: Colors.green,
+                        color: Colors.blue,
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -99,15 +101,13 @@ class ProfileScreen extends StatelessWidget {
                     // Logout Button
                     ElevatedButton(
                       onPressed: () async {
-                        await FirebaseAuth.instance.signOut();
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Logged out! Redirecting...')),
-                          );
-                          Navigator.pop(
-                              context); // Redirect to login or previous page
-                        }
+                        await _auth.signOut();
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LoginPage(),
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
@@ -141,7 +141,7 @@ class ProfileScreen extends StatelessWidget {
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: Colors.green.withOpacity(0.5), width: 2),
+        side: BorderSide(color: Colors.blue.withOpacity(0.5), width: 2),
       ),
       elevation: 2,
       child: Padding(
@@ -153,7 +153,7 @@ class ProfileScreen extends StatelessWidget {
               children: [
                 Icon(
                   _getIconForLabel(label),
-                  color: Colors.green,
+                  color: Colors.blue,
                   size: 30,
                 ),
                 const SizedBox(width: 16),

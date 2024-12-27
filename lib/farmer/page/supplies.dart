@@ -46,7 +46,7 @@ class SuppliesHistoryPage extends StatelessWidget {
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.green[800]!, Colors.green[400]!],
+              colors: [Colors.blue[800]!, Colors.blue[400]!],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -79,7 +79,7 @@ class SuppliesHistoryPage extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Colors.green[800],
+                            color: Colors.blue[800],
                           ),
                         ),
                         Chip(
@@ -92,7 +92,7 @@ class SuppliesHistoryPage extends StatelessWidget {
                             ),
                           ),
                           backgroundColor: supply['status'] == "Paid"
-                              ? Colors.green
+                              ? Colors.blue
                               : Colors.orangeAccent,
                         ),
                       ],
@@ -132,7 +132,7 @@ class SuppliesHistoryPage extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
-                            color: Colors.green[800],
+                            color: Colors.blue[800],
                           ),
                         ),
                       ],

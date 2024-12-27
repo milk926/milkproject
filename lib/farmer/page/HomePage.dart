@@ -3,11 +3,11 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:milkproject/farmer/page/BuyNow.dart';
+import 'package:milkproject/farmer/page/Profile.dart';
 import 'package:milkproject/farmer/page/orders.dart';
 import 'package:milkproject/login_page.dart';
 import 'package:milkproject/user/page/addtocart.dart';
 import 'package:milkproject/user/page/buy_now.dart';
-
 
 class FarmerHome extends StatelessWidget {
   @override
@@ -16,7 +16,7 @@ class FarmerHome extends StatelessWidget {
       title: 'Milk Zone',
       color: Colors.white,
       theme: ThemeData(
-        primarySwatch: Colors.green,
+        primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Colors.white,
         fontFamily: 'Roboto',
       ),
@@ -130,7 +130,7 @@ class _FarmerHomePageState extends State<FarmerHomePage> {
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.green[800]!, Colors.green[400]!],
+              colors: [Colors.blue[800]!, Colors.blue[400]!],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -157,10 +157,10 @@ class _FarmerHomePageState extends State<FarmerHomePage> {
           IconButton(
             icon: Icon(Icons.person, size: 28),
             onPressed: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => FarmerProfilePage()),
-              // );
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => FarmerProfilePage()),
+              );
             },
           ),
         ],
@@ -183,7 +183,7 @@ class _FarmerHomePageState extends State<FarmerHomePage> {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w600,
-                  color: Colors.green[800],
+                  color: Colors.blue[800],
                 ),
               ),
               SizedBox(height: 16),
@@ -219,7 +219,7 @@ class _FarmerHomePageState extends State<FarmerHomePage> {
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Colors.green[800],
+                  color: Colors.blue[800],
                 ),
               ),
               SizedBox(height: 12),
@@ -293,7 +293,7 @@ class CattleFeedProductList extends StatelessWidget {
                           "Price: ₹${productMap['price']}",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Colors.green[700],
+                            color: Colors.blue[700],
                             fontSize: 16,
                           ),
                         ),
@@ -303,7 +303,7 @@ class CattleFeedProductList extends StatelessWidget {
                           children: [
                             ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green[800],
+                                backgroundColor: Colors.blue[800],
                                 foregroundColor: Colors.white,
                               ),
                               onPressed: () async {
@@ -348,7 +348,7 @@ class CattleFeedProductList extends StatelessWidget {
                             ),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green,
+                                backgroundColor: Colors.blue,
                                 foregroundColor: Colors.white,
                               ),
                               onPressed: () {
@@ -404,7 +404,7 @@ class InfoCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.green[700],
+                color: Colors.blue[700],
               ),
             ),
             SizedBox(height: 6),
@@ -413,7 +413,7 @@ class InfoCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Colors.green[800],
+                color: Colors.blue[800],
               ),
             ),
           ],
@@ -433,7 +433,7 @@ class FarmerMenuDrawer extends StatelessWidget {
         children: [
           DrawerHeader(
             decoration: BoxDecoration(
-              color: Colors.green[800],
+              color: Colors.blue[800],
             ),
             child: Text(
               'Milk Zone',

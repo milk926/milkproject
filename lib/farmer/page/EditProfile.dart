@@ -91,7 +91,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.green[800]!, Colors.green[400]!],
+              colors: [Colors.blue[800]!, Colors.blue[400]!],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -109,7 +109,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 Center(
                   child: CircleAvatar(
                     radius: 60,
-                    backgroundColor: Colors.green[200],
+                    backgroundColor: Colors.blue[200],
                     child: Icon(
                       Icons.person,
                       size: 70,
@@ -178,7 +178,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   child: ElevatedButton(
                     onPressed: _saveProfile,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green[800],
+                      backgroundColor: Colors.blue[800],
                       padding: EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(28),
@@ -211,7 +211,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
-        borderSide: BorderSide(color: Colors.green),
+        borderSide: BorderSide(color: Colors.blue),
       ),
     );
   }
@@ -220,7 +220,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return TextStyle(
       fontSize: 16,
       fontWeight: FontWeight.bold,
-      color: Colors.green[800],
+      color: Colors.blue[800],
     );
   }
 }

@@ -249,7 +249,7 @@ class _SocietyRegistrationScreenState extends State<SocietyRegistrationScreen> {
                       width: double.infinity,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF3EA120),
+                          backgroundColor: const Color.fromARGB(255, 8, 111, 255),
                           padding: const EdgeInsets.symmetric(
                               vertical: 15.0, horizontal: 60.0),
                           shape: RoundedRectangleBorder(

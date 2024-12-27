@@ -60,7 +60,7 @@ class _CartPageState extends State<CartPage> {
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.green[800]!, Colors.green[400]!],
+              colors: [Colors.blue[800]!, Colors.blue[400]!],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -118,7 +118,7 @@ class _CartPageState extends State<CartPage> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.green[800],
+                                color: Colors.blue[800],
                               ),
                             ),
 
@@ -141,7 +141,7 @@ class _CartPageState extends State<CartPage> {
                                   style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.green[700],
+                                    color: Colors.blue[700],
                                   ),
                                 ),
                                 Row(
@@ -160,7 +160,7 @@ class _CartPageState extends State<CartPage> {
                                     ),
                                     IconButton(
                                       icon: Icon(Icons.add_circle,
-                                          color: Colors.green),
+                                          color: Colors.blue),
                                       onPressed: () => updateQuantity(index, 1),
                                     ),
                                   ],
@@ -212,7 +212,7 @@ class _CartPageState extends State<CartPage> {
                             style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.green[800]),
+                                color: Colors.blue[800]),
                           ),
                         ],
                       ),
@@ -224,7 +224,7 @@ class _CartPageState extends State<CartPage> {
                           // Handle checkout logic here
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green[700],
+                          backgroundColor: Colors.blue[700],
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),

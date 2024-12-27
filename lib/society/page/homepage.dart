@@ -17,7 +17,7 @@ class MilkProjectHomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Milk Project Dashboard'),
-        backgroundColor: const Color(0xFF3EA120),
+        backgroundColor: const Color.fromARGB(255, 0, 149, 255),
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications),
@@ -70,7 +70,7 @@ class MilkProjectHomePage extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           const DrawerHeader(
-            decoration: BoxDecoration(color: Color(0xFF3EA120)),
+            decoration: BoxDecoration(color: Color.fromARGB(255, 8, 111, 255)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -234,7 +234,7 @@ class MilkProjectHomePage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       _buildStatCard('Total Sales', '...', Icons.attach_money,
-                          Colors.green),
+                          Colors.blue),
                       _buildStatCard('Pending Orders', '...',
                           Icons.shopping_cart, Colors.blue),
                       _buildStatCard(
@@ -258,7 +258,7 @@ class MilkProjectHomePage extends StatelessWidget {
                           'Total Sales',
                           '₹${totalSales.toStringAsFixed(2)}',
                           Icons.attach_money,
-                          Colors.green),
+                          Colors.blue),
                       _buildStatCard('Pending Orders', '$pendingOrders',
                           Icons.shopping_cart, Colors.blue),
                       _buildStatCard(
@@ -433,7 +433,7 @@ class MilkProjectHomePage extends StatelessWidget {
         ),
       ],
       currentIndex: 0,
-      selectedItemColor: const Color(0xFF3EA120),
+      selectedItemColor: const Color.fromARGB(255, 32, 122, 161),
       onTap: (index) {
         // Handle navigation based on index
         switch (index) {
@@ -463,7 +463,7 @@ class NotificationPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF3EA120),
+        backgroundColor: const Color.fromARGB(255, 8, 111, 255),
         title: const Text(
           'Notifications',
           style: TextStyle(
@@ -545,8 +545,8 @@ class NotificationPage extends StatelessWidget {
           children: [
             // Notification icon
             CircleAvatar(
-              backgroundColor: const Color(0xFF3EA120).withOpacity(0.2),
-              child: const Icon(Icons.notifications, color: Color(0xFF3EA120)),
+              backgroundColor: const Color.fromARGB(255, 8, 111, 255).withOpacity(0.2),
+              child: const Icon(Icons.notifications, color: Color.fromARGB(255, 8, 111, 255)),
             ),
             const SizedBox(width: 12),
             // Notification details

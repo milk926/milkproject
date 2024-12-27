@@ -120,7 +120,7 @@ class ChooseScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.green.withOpacity(0.2),
+              color: Colors.blue.withOpacity(0.2),
               blurRadius: 15,
               spreadRadius: 5,
             ),
@@ -136,12 +136,12 @@ class ChooseScreen extends StatelessWidget {
                 children: [
                   // Icon
                   CircleAvatar(
-                    backgroundColor: Colors.green.withOpacity(0.1),
+                    backgroundColor: Colors.blue.withOpacity(0.1),
                     radius: 30,
                     child: Icon(
                       icon,
                       size: 40,
-                      color: Colors.green,
+                      color: Colors.blue,
                     ),
                   ),
                   const SizedBox(width: 20),

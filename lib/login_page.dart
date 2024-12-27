@@ -30,7 +30,8 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController passwordController = TextEditingController();
 
   bool loading = false;
-  bool _isPasswordVisible = false; // State variable to toggle password visibility
+  bool _isPasswordVisible =
+      false; // State variable to toggle password visibility
 
   // Function to fetch user role from Firestore
   void LoginHandler() async {
@@ -109,7 +110,8 @@ class _LoginPageState extends State<LoginPage> {
                 // Password Text Field with Eye Icon
                 TextFormField(
                   controller: passwordController,
-                  obscureText: !_isPasswordVisible, // Toggles password visibility
+                  obscureText:
+                      !_isPasswordVisible, // Toggles password visibility
                   decoration: InputDecoration(
                     labelText: 'Password',
                     prefixIcon: const Icon(Icons.lock),
@@ -150,7 +152,7 @@ class _LoginPageState extends State<LoginPage> {
                       : ElevatedButton(
                           onPressed: LoginHandler,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green,
+                            backgroundColor: Colors.blue,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),

@@ -38,9 +38,8 @@ class _FarmerProfilePageState extends State<FarmerProfilePage> {
             name = userDoc['name'] ?? "N/A";
             email = userDoc['email'] ?? "N/A";
             phoneNumber = userDoc['phone'] ?? "N/A";
-            numberOfCows = userDoc['cow'] != null
-                ? userDoc['cow'].toString()
-                : "N/A";
+            numberOfCows =
+                userDoc['cow'] != null ? userDoc['cow'].toString() : "N/A";
           });
         } else {
           setState(() {
@@ -98,7 +97,7 @@ class _FarmerProfilePageState extends State<FarmerProfilePage> {
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.green[800]!, Colors.green[400]!],
+              colors: [Colors.blue[800]!, Colors.blue[400]!],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -113,7 +112,7 @@ class _FarmerProfilePageState extends State<FarmerProfilePage> {
             Center(
               child: CircleAvatar(
                 radius: 60,
-                backgroundColor: Colors.green[200],
+                backgroundColor: Colors.blue[200],
                 child: Icon(
                   Icons.person,
                   size: 70,
@@ -127,7 +126,7 @@ class _FarmerProfilePageState extends State<FarmerProfilePage> {
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Colors.green[800],
+                color: Colors.blue[800],
               ),
             ),
             SizedBox(height: 20),
@@ -227,7 +226,7 @@ class ProfileDetailRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(icon, color: Colors.green[700], size: 28),
+          Icon(icon, color: Colors.blue[700], size: 28),
           SizedBox(width: 12),
           Expanded(
             child: Text(

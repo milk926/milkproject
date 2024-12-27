@@ -104,11 +104,10 @@ class UserSignupPageState extends State<UserSignupPage> {
         phone: phone.text,
         email: email.text,
       );
-      
     }
     setState(() {
-        loading = false;
-      });
+      loading = false;
+    });
   }
 
   @override
@@ -135,7 +134,7 @@ class UserSignupPageState extends State<UserSignupPage> {
                   decoration: const InputDecoration(
                     labelText: 'Username',
                     border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.person, color: Colors.green),
+                    prefixIcon: Icon(Icons.person, color: Colors.blue),
                   ),
                   validator: validateUsername,
                 ),
@@ -146,7 +145,7 @@ class UserSignupPageState extends State<UserSignupPage> {
                   decoration: const InputDecoration(
                     labelText: 'Email',
                     border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.email, color: Colors.green),
+                    prefixIcon: Icon(Icons.email, color: Colors.blue),
                   ),
                   validator: validateEmail,
                 ),
@@ -158,11 +157,11 @@ class UserSignupPageState extends State<UserSignupPage> {
                   decoration: InputDecoration(
                     labelText: 'Password',
                     border: const OutlineInputBorder(),
-                    prefixIcon: const Icon(Icons.lock, color: Colors.green),
+                    prefixIcon: const Icon(Icons.lock, color: Colors.blue),
                     suffixIcon: IconButton(
                       icon: Icon(
                         showPassword ? Icons.visibility : Icons.visibility_off,
-                        color: Colors.green,
+                        color: Colors.blue,
                       ),
                       onPressed: () {
                         setState(() {
@@ -180,8 +179,7 @@ class UserSignupPageState extends State<UserSignupPage> {
                   decoration: const InputDecoration(
                     labelText: 'Aadhar Number',
                     border: OutlineInputBorder(),
-                    prefixIcon:
-                        Icon(Icons.card_membership, color: Colors.green),
+                    prefixIcon: Icon(Icons.card_membership, color: Colors.blue),
                   ),
                   keyboardType: TextInputType.number,
                   validator: validateAadhar,
@@ -194,7 +192,7 @@ class UserSignupPageState extends State<UserSignupPage> {
                   decoration: const InputDecoration(
                     labelText: 'Ration Number',
                     border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.card_travel, color: Colors.green),
+                    prefixIcon: Icon(Icons.card_travel, color: Colors.blue),
                   ),
                 ),
                 const SizedBox(height: 16.0),
@@ -205,7 +203,7 @@ class UserSignupPageState extends State<UserSignupPage> {
                     labelText: 'Bank Account Number',
                     border: OutlineInputBorder(),
                     prefixIcon:
-                        Icon(Icons.account_balance_wallet, color: Colors.green),
+                        Icon(Icons.account_balance_wallet, color: Colors.blue),
                   ),
                   keyboardType: TextInputType.number,
                   validator: validateBankAccount,
@@ -217,7 +215,7 @@ class UserSignupPageState extends State<UserSignupPage> {
                   decoration: const InputDecoration(
                     labelText: 'Mobile Number',
                     border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.phone, color: Colors.green),
+                    prefixIcon: Icon(Icons.phone, color: Colors.blue),
                   ),
                   keyboardType: TextInputType.phone,
                   validator: validatePhone,

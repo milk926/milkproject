@@ -7,7 +7,9 @@ class BuyNowPage extends StatefulWidget {
 
   const BuyNowPage({
     super.key,
-    required this.productName, required productPrice, required productImageUrl,
+    required this.productName,
+    required productPrice,
+    required productImageUrl,
   });
 
   @override
@@ -160,7 +162,7 @@ class _BuyNowPageState extends State<BuyNowPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Checkout'),
-        backgroundColor: Colors.green[800],
+        backgroundColor: Colors.blue[800],
       ),
       body: Container(
         color: Colors.white, // Background color set to white
@@ -206,7 +208,7 @@ class _BuyNowPageState extends State<BuyNowPage> {
                       'Price: ₹${productDetails!['price']}',
                       style: const TextStyle(
                         fontSize: 14,
-                        color: Colors.green,
+                        color: Colors.blue,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -260,7 +262,7 @@ class _BuyNowPageState extends State<BuyNowPage> {
                     selectedDate == null
                         ? 'Select Date'
                         : '${selectedDate!.toLocal()}'.split(' ')[0],
-                    style: TextStyle(fontSize: 16, color: Colors.green[800]),
+                    style: TextStyle(fontSize: 16, color: Colors.blue[800]),
                   ),
                 ),
               ),
@@ -289,7 +291,7 @@ class _BuyNowPageState extends State<BuyNowPage> {
                     isPlacingOrder ? 'Placing Order...' : 'Place Order',
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: Colors.blue,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 50, vertical: 15),
                     shape: RoundedRectangleBorder(
@@ -314,7 +316,7 @@ class _BuyNowPageState extends State<BuyNowPage> {
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(
-              color: Colors.green.withOpacity(0.5), width: 2), // Green border
+              color: Colors.blue.withOpacity(0.5), width: 2), // blue border
           borderRadius: BorderRadius.circular(12),
         ),
         child: Padding(
@@ -324,7 +326,7 @@ class _BuyNowPageState extends State<BuyNowPage> {
             children: [
               Row(
                 children: [
-                  Icon(icon, color: Colors.green[800]),
+                  Icon(icon, color: Colors.blue[800]),
                   const SizedBox(width: 8),
                   Text(
                     title,
@@ -347,7 +349,7 @@ class _BuyNowPageState extends State<BuyNowPage> {
       children: [
         CircleAvatar(
           radius: 12,
-          backgroundColor: isCompleted ? Colors.green : Colors.grey,
+          backgroundColor: isCompleted ? Colors.blue : Colors.grey,
           child: Icon(
             isCompleted ? Icons.check : Icons.circle,
             size: 16,
@@ -359,7 +361,7 @@ class _BuyNowPageState extends State<BuyNowPage> {
           title,
           style: TextStyle(
             fontSize: 12,
-            color: isCompleted ? Colors.green : Colors.grey,
+            color: isCompleted ? Colors.blue : Colors.grey,
           ),
         ),
       ],

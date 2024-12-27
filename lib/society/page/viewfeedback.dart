@@ -36,7 +36,7 @@ class _FeedbackViewPageState extends State<FeedbackViewPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('User Feedback'),
-        backgroundColor: Colors.green.shade700,
+        backgroundColor: Colors.blue.shade700,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -84,7 +84,7 @@ class _FeedbackViewPageState extends State<FeedbackViewPage> {
                   ),
                   child: ListTile(
                     leading: CircleAvatar(
-                      backgroundColor: Colors.green.shade700,
+                      backgroundColor: Colors.blue.shade700,
                       backgroundImage: data['profileImage'] != null
                           ? NetworkImage(data['profileImage'])
                           : null,

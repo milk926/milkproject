@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:milkproject/login_page.dart';
+import 'package:milkproject/splash_screen.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -11,6 +13,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   late Future<Map<String, dynamic>> _profileData;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -48,13 +51,8 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.blue,
         title: const Text(
           'Society Profile',
           style: TextStyle(color: Colors.white),
@@ -92,7 +90,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   const Center(
                     child: CircleAvatar(
                       radius: 50,
-                      backgroundColor: Colors.green,
+                      backgroundColor: Colors.blue,
                       child: Icon(
                         Icons.person,
                         size: 50,
@@ -146,15 +144,20 @@ class _ProfilePageState extends State<ProfilePage> {
                   const SizedBox(height: 30),
 
                   // Logout Button
-                  SizedBox(width: 8.0,
+                  SizedBox(
+                    width: 100,
                     child: ElevatedButton(
                       onPressed: () async {
-                        // Perform logout
-                        await FirebaseAuth.instance.signOut();
-                        Navigator.pop(context);
+                        await _auth.signOut();
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LoginPage(),
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
+                        backgroundColor: Colors.blue,
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -184,7 +187,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: Colors.green.withOpacity(0.5), width: 2),
+        side: BorderSide(color: Colors.blue.withOpacity(0.5), width: 2),
       ),
       elevation: 2,
       child: Padding(
@@ -194,7 +197,7 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             Row(
               children: [
-                Icon(icon, color: Colors.green, size: 30),
+                Icon(icon, color: Colors.blue, size: 30),
                 const SizedBox(width: 16),
                 Text(
                   label,

@@ -66,7 +66,7 @@ class _UserAccountPageState extends State<UserAccountPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('User Management'),
-        backgroundColor: Colors.green.shade700,
+        backgroundColor: Colors.blue.shade700,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -123,7 +123,7 @@ class _UserAccountPageState extends State<UserAccountPage> {
                             ),
                             child: ListTile(
                               leading: CircleAvatar(
-                                backgroundColor: Colors.green.shade700,
+                                backgroundColor: Colors.blue.shade700,
                                 child: Text(
                                   userData['name'] != null &&
                                           userData['name']!.isNotEmpty

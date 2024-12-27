@@ -17,7 +17,7 @@ class AddToCartPage extends StatelessWidget {
         appBar: AppBar(
           title: const Text('My Cart'),
           centerTitle: true,
-          backgroundColor: const Color(0xFF3EA120),
+          backgroundColor: const Color.fromARGB(255, 8, 111, 255),
         ),
         body: const Center(
           child: Text(
@@ -32,7 +32,7 @@ class AddToCartPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('My Cart'),
         centerTitle: true,
-        backgroundColor: const Color(0xFF3EA120),
+        backgroundColor: const Color.fromARGB(255, 8, 111, 255),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: firestore
@@ -117,7 +117,7 @@ class AddToCartPage extends StatelessWidget {
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
-                                      color: Colors.green,
+                                      color: Colors.blue,
                                     ),
                                   ),
                                 ],
@@ -146,13 +146,16 @@ class AddToCartPage extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF3EA120),
+                    backgroundColor: const Color.fromARGB(255, 8, 111, 255),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: Text('Checkout Now (₹$totalPrice)' ,style: TextStyle(color: Colors.white),),
+                  child: Text(
+                    'Checkout Now (₹$totalPrice)',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
             ],
@@ -212,14 +215,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   void _handleExternalWallet(ExternalWalletResponse response) {
     // Handle external wallet payment
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('External wallet selected: ${response.walletName}')),
+      SnackBar(
+          content: Text('External wallet selected: ${response.walletName}')),
     );
   }
 
   void _startPayment() {
     var options = {
       'key': 'rzp_test_QLvdqmBfoYL2Eu', // Replace with your Razorpay Key
-      'amount': (widget.totalPrice * 100).toInt(), // Razorpay accepts amount in paise
+      'amount':
+          (widget.totalPrice * 100).toInt(), // Razorpay accepts amount in paise
       'name': 'My E-Commerce App',
       'description': 'Purchase from My E-Commerce App',
       'prefill': {
@@ -243,7 +248,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Checkout'),
-        backgroundColor: const Color(0xFF3EA120),
+        backgroundColor: const Color.fromARGB(255, 8, 111, 255),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -269,7 +274,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             ElevatedButton(
               onPressed: _startPayment,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF3EA120),
+                backgroundColor: const Color.fromARGB(255, 8, 111, 255),
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
               child: const Text('Proceed to Payment'),

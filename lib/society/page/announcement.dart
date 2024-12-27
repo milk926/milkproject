@@ -155,7 +155,7 @@ class _PostAnnouncementPageState extends State<PostAnnouncementPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Post Announcement'),
-        backgroundColor: Colors.green.shade700,
+        backgroundColor: Colors.blue.shade700,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -248,7 +248,7 @@ class _PostAnnouncementPageState extends State<PostAnnouncementPage> {
                     ? const CircularProgressIndicator(color: Colors.white)
                     : const Text('Post Announcement'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green.shade700,
+                  backgroundColor: Colors.blue.shade700,
                 ),
               ),
             ),

@@ -20,7 +20,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Send Feedback'),
-        backgroundColor: const Color(0xFF3EA120),
+        backgroundColor: const Color.fromARGB(255, 8, 111, 255),
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -63,7 +63,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
                   itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
                   itemBuilder: (context, _) => const Icon(
                     Icons.star,
-                    color: Color(0xFF3EA120),
+                    color: Color.fromARGB(255, 8, 111, 255),
                   ),
                   onRatingUpdate: (rating) {
                     setState(() {
@@ -101,7 +101,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
                     _submitFeedback(context);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF3EA120),
+                    backgroundColor: const Color.fromARGB(255, 8, 111, 255),
                     padding: const EdgeInsets.symmetric(vertical: 15),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),

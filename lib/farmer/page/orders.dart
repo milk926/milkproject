@@ -18,7 +18,7 @@ class MyOrdersPage extends StatelessWidget {
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.green[800]!, Colors.green[400]!],
+              colors: [Colors.blue[800]!, Colors.blue[400]!],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -77,7 +77,7 @@ class MyOrdersPage extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.green[800],
+                                color: Colors.blue[800],
                               ),
                             ),
 
@@ -168,7 +168,7 @@ class MyOrdersPage extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.green[800],
+                                color: Colors.blue[800],
                               ),
                             ),
                           ],
@@ -211,7 +211,7 @@ class MyOrdersPage extends StatelessWidget {
   Color getStatusColor(String status) {
     switch (status) {
       case "Delivered":
-        return Colors.green;
+        return Colors.blue;
       case "Pending":
         return Colors.orangeAccent;
       case "In Transit":

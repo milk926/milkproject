@@ -27,11 +27,11 @@ class MilkProductPage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.store, size: 50, color: Colors.green),
+                  Icon(Icons.store, size: 50, color: Colors.blue),
                   SizedBox(height: 10),
                   Text(
                     'Milk Zone',
-                    style: TextStyle(color: Colors.green, fontSize: 20),
+                    style: TextStyle(color: Colors.blue, fontSize: 20),
                   ),
                 ],
               ),
@@ -115,7 +115,7 @@ class MilkProductPage extends StatelessWidget {
           'Milk Zone',
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
-        backgroundColor: const Color(0xFF3EA120),
+        backgroundColor: const Color.fromARGB(255, 8, 111, 255),
         centerTitle: true,
         actions: [
           IconButton(
@@ -133,18 +133,18 @@ class MilkProductPage extends StatelessWidget {
           // Carousel Slider
           _buildCarouselSlider(),
           SizedBox(height: 16),
-      
+
           // Welcome Section
           Text(
             "👋 Welcome Back, User!",
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w600,
-              color: Colors.green[800],
+              color: Colors.blue[800],
             ),
           ),
           SizedBox(height: 16),
-      
+
           // Milk Products List
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
@@ -155,7 +155,7 @@ class MilkProductPage extends StatelessWidget {
                     child: CircularProgressIndicator(),
                   );
                 }
-                  
+
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                   return const Center(
                     child: Text(
@@ -164,11 +164,11 @@ class MilkProductPage extends StatelessWidget {
                     ),
                   );
                 }
-                  
+
                 final products = snapshot.data!.docs.map((doc) {
                   return doc.data() as Map<String, dynamic>;
                 }).toList();
-                  
+
                 return ListView.builder(
                   shrinkWrap: true,
                   padding: const EdgeInsets.all(16.0),
@@ -202,7 +202,7 @@ class MilkProductPage extends StatelessWidget {
                                   style: const TextStyle(
                                     fontSize: 16.0,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.green,
+                                    color: Colors.blue,
                                   ),
                                 ),
                               ],
@@ -239,7 +239,7 @@ class MilkProductPage extends StatelessWidget {
                               children: [
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF3EA120),
+                                    backgroundColor: const Color.fromARGB(255, 8, 111, 255),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8.0),
                                     ),
@@ -255,7 +255,7 @@ class MilkProductPage extends StatelessWidget {
                                               .where('name',
                                                   isEqualTo: product['name'])
                                               .get();
-                  
+
                                       if (query.docs.isNotEmpty) {
                                         // Product already exists in the cart, update its quantity or any other field
                                         final cartItemDoc = query.docs.first;
@@ -266,7 +266,7 @@ class MilkProductPage extends StatelessWidget {
                                           'quantity': FieldValue.increment(
                                               1), // Example: Increment the quantity
                                         });
-                  
+
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
                                           SnackBar(
@@ -285,7 +285,7 @@ class MilkProductPage extends StatelessWidget {
                                           'quantity':
                                               1, // Start with a quantity of 1
                                         });
-                  
+
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
                                           SnackBar(
@@ -311,7 +311,7 @@ class MilkProductPage extends StatelessWidget {
                                 ),
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF3EA120),
+                                    backgroundColor: const Color.fromARGB(255, 8, 111, 255),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8.0),
                                     ),

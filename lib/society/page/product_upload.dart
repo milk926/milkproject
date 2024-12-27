@@ -146,7 +146,7 @@ class _UserProductUploadState extends State<UserProductUpload> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Manage Products'),
-        backgroundColor: Colors.green.shade700,
+        backgroundColor: Colors.blue.shade700,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -172,7 +172,7 @@ class _UserProductUploadState extends State<UserProductUpload> {
                           style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: Colors.green.shade700),
+                              color: Colors.blue.shade700),
                         ),
                         SizedBox(height: 20),
                         TextFormField(
@@ -217,7 +217,7 @@ class _UserProductUploadState extends State<UserProductUpload> {
                         ElevatedButton(
                           onPressed: _pickProductImage,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green.shade700,
+                            backgroundColor: Colors.blue.shade700,
                           ),
                           child: Text('Upload Product Image'),
                         ),
@@ -230,7 +230,7 @@ class _UserProductUploadState extends State<UserProductUpload> {
                               : ElevatedButton(
                                   onPressed: _uploadProduct,
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.green.shade700,
+                                    backgroundColor: Colors.blue.shade700,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
@@ -251,7 +251,7 @@ class _UserProductUploadState extends State<UserProductUpload> {
                 style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.green.shade700),
+                    color: Colors.blue.shade700),
               ),
               SizedBox(height: 10),
               StreamBuilder<QuerySnapshot>(
@@ -447,7 +447,7 @@ class _CattleFeedProductUploadState extends State<CattleFeedProductUpload> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Manage Cattle Feed Products'),
-        backgroundColor: Colors.green.shade700,
+        backgroundColor: Colors.blue.shade700,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -473,7 +473,7 @@ class _CattleFeedProductUploadState extends State<CattleFeedProductUpload> {
                           style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: Colors.green.shade700),
+                              color: Colors.blue.shade700),
                         ),
                         SizedBox(height: 20),
                         TextFormField(
@@ -518,7 +518,7 @@ class _CattleFeedProductUploadState extends State<CattleFeedProductUpload> {
                         ElevatedButton(
                           onPressed: _pickProductImage,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green.shade700,
+                            backgroundColor: Colors.blue.shade700,
                           ),
                           child: Text('Upload Product Image'),
                         ),
@@ -531,7 +531,7 @@ class _CattleFeedProductUploadState extends State<CattleFeedProductUpload> {
                               : ElevatedButton(
                                   onPressed: _uploadProduct,
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.green.shade700,
+                                    backgroundColor: Colors.blue.shade700,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
@@ -552,7 +552,7 @@ class _CattleFeedProductUploadState extends State<CattleFeedProductUpload> {
                 style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.green.shade700),
+                    color: Colors.blue.shade700),
               ),
               SizedBox(height: 10),
               StreamBuilder<QuerySnapshot>(

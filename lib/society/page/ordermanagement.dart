@@ -74,7 +74,7 @@ class _OrderManagementState extends State<OrderManagement> {
       case 'Shipped':
         return Colors.blue;
       case 'Delivered':
-        return Colors.green;
+        return Colors.blue;
       default:
         return Colors.grey;
     }
@@ -85,7 +85,7 @@ class _OrderManagementState extends State<OrderManagement> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Order Management'),
-        backgroundColor: Colors.green.shade700,
+        backgroundColor: Colors.blue.shade700,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
