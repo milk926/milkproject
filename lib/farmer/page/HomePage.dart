@@ -7,7 +7,7 @@ import 'package:milkproject/farmer/page/orders.dart';
 import 'package:milkproject/login_page.dart';
 import 'package:milkproject/user/page/addtocart.dart';
 import 'package:milkproject/user/page/buy_now.dart';
-import 'profile.dart';
+
 
 class FarmerHome extends StatelessWidget {
   @override
@@ -157,10 +157,10 @@ class _FarmerHomePageState extends State<FarmerHomePage> {
           IconButton(
             icon: Icon(Icons.person, size: 28),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => FarmerProfilePage()),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => FarmerProfilePage()),
+              // );
             },
           ),
         ],
@@ -465,7 +465,7 @@ class FarmerMenuDrawer extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => AddToCartPage(cartProducts: []),
+                  builder: (context) => AddToCartPage(),
                 ),
               );
             },
@@ -473,10 +473,10 @@ class FarmerMenuDrawer extends StatelessWidget {
           ListTile(
             title: Text('Profile'),
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => FarmerProfilePage()),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => FarmerProfilePage()),
+              // );
             },
           ),
           ListTile(

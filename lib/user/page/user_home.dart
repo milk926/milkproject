@@ -59,7 +59,7 @@ class MilkProductPage extends StatelessWidget {
               title: const Text('Cart'),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return const AddToCartPage(cartProducts: []); // Existing cart
+                  return const AddToCartPage(); // Existing cart
                 }));
               },
             ),
@@ -128,26 +128,26 @@ class MilkProductPage extends StatelessWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Carousel Slider
-            _buildCarouselSlider(),
-            SizedBox(height: 16),
-
-            // Welcome Section
-            Text(
-              "👋 Welcome Back, User!",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w600,
-                color: Colors.green[800],
-              ),
+      body: Column(
+        children: [
+          // Carousel Slider
+          _buildCarouselSlider(),
+          SizedBox(height: 16),
+      
+          // Welcome Section
+          Text(
+            "👋 Welcome Back, User!",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+              color: Colors.green[800],
             ),
-            SizedBox(height: 16),
-
-            // Milk Products List
-            StreamBuilder<QuerySnapshot>(
+          ),
+          SizedBox(height: 16),
+      
+          // Milk Products List
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
               stream: firestore.collection('products').snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -155,7 +155,7 @@ class MilkProductPage extends StatelessWidget {
                     child: CircularProgressIndicator(),
                   );
                 }
-
+                  
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                   return const Center(
                     child: Text(
@@ -164,11 +164,11 @@ class MilkProductPage extends StatelessWidget {
                     ),
                   );
                 }
-
+                  
                 final products = snapshot.data!.docs.map((doc) {
                   return doc.data() as Map<String, dynamic>;
                 }).toList();
-
+                  
                 return ListView.builder(
                   shrinkWrap: true,
                   padding: const EdgeInsets.all(16.0),
@@ -246,27 +246,60 @@ class MilkProductPage extends StatelessWidget {
                                   ),
                                   onPressed: () async {
                                     try {
-                                      await firestore.collection('cart').add({
-                                        'user_id': currentUser?.uid,
-                                        'name': product['name'],
-                                        'price': product['price'],
-                                        'image': product['image_url'],
-                                        'description': product['description'],
-                                      });
-
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                              '${product['name']} added to cart!'),
-                                        ),
-                                      );
+                                      // Query the cart collection to check if the product already exists for the current user
+                                      final QuerySnapshot query =
+                                          await firestore
+                                              .collection('cart')
+                                              .where('user_id',
+                                                  isEqualTo: currentUser?.uid)
+                                              .where('name',
+                                                  isEqualTo: product['name'])
+                                              .get();
+                  
+                                      if (query.docs.isNotEmpty) {
+                                        // Product already exists in the cart, update its quantity or any other field
+                                        final cartItemDoc = query.docs.first;
+                                        await firestore
+                                            .collection('cart')
+                                            .doc(cartItemDoc.id)
+                                            .update({
+                                          'quantity': FieldValue.increment(
+                                              1), // Example: Increment the quantity
+                                        });
+                  
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                                '${product['name']} quantity updated in the cart!'),
+                                          ),
+                                        );
+                                      } else {
+                                        // Product does not exist in the cart, add it as a new item
+                                        await firestore.collection('cart').add({
+                                          'user_id': currentUser?.uid,
+                                          'name': product['name'],
+                                          'price': product['price'],
+                                          'image': product['image_url'],
+                                          'description': product['description'],
+                                          'quantity':
+                                              1, // Start with a quantity of 1
+                                        });
+                  
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                                '${product['name']} added to cart!'),
+                                          ),
+                                        );
+                                      }
                                     } catch (error) {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
                                         SnackBar(
                                           content: Text(
-                                              'Failed to add ${product['name']} to cart.'),
+                                              'Failed to process ${product['name']}. Please try again.'),
                                         ),
                                       );
                                     }
@@ -309,8 +342,8 @@ class MilkProductPage extends StatelessWidget {
                 );
               },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

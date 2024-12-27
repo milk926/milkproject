@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:milkproject/farmer/page/HomePage.dart';
 import 'package:milkproject/society/page/homepage.dart';
@@ -26,14 +27,21 @@ class LoginServiceFire {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Login Successful')),
         );
+
         final role = await firestoreDatabse
             .collection('role_tb')
             .where('uid', isEqualTo: userCredential.user?.uid)
             .get();
 
         final roledata = role.docs.first.data();
+        final userRole = roledata['role'];
 
-        switch (roledata['role']) {
+        // Save role to SharedPreferences
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('user_role', userRole);
+
+        // Navigate based on role
+        switch (userRole) {
           case 'user':
             Navigator.push(
               context,
@@ -51,11 +59,12 @@ class LoginServiceFire {
             );
             break;
           case 'farmer':
-            Navigator.push(context, MaterialPageRoute(
-              builder: (context) {
-                return FarmerHome();
-              },
-            ));
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => FarmerHome(),
+              ),
+            );
             break;
           default:
             ScaffoldMessenger.of(context).showSnackBar(

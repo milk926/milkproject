@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:milkproject/farmer/page/farmer_registration_page.dart';
 import 'package:milkproject/firebase_options.dart';
 import 'package:milkproject/login_page.dart';
+import 'package:milkproject/splash_screen.dart';
 // Assuming ProfileScreen is in this file
 
 // Main function
@@ -17,7 +18,7 @@ Future<void> main() async {
   );
 
   runApp(
-    const MaterialApp(debugShowCheckedModeBanner: false, home: LoginPage()
+     MaterialApp(debugShowCheckedModeBanner: false, home: SplashScreen()
         // Pass the test user to the ProfileScreen
         ),
   );

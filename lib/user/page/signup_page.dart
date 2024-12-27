@@ -104,10 +104,11 @@ class UserSignupPageState extends State<UserSignupPage> {
         phone: phone.text,
         email: email.text,
       );
-      setState(() {
+      
+    }
+    setState(() {
         loading = false;
       });
-    }
   }
 
   @override
