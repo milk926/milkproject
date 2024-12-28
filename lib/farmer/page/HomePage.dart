@@ -269,7 +269,6 @@ class CattleFeedProductList extends StatelessWidget {
                     child: Image.network(
                       productMap['image_url'],
                       fit: BoxFit.cover,
-                      
                     ),
                   ),
                   Padding(
@@ -322,7 +321,7 @@ class CattleFeedProductList extends StatelessWidget {
                                   'name': productMap['name'],
                                   'description': productMap['description'],
                                   'price': productMap['price'],
-                                  'image_url': productMap['image_url'],
+                                  'image': productMap['image_url'],
                                   'quantity': 1,
                                   'user_id': user.uid,
                                 };

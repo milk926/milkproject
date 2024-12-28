@@ -239,7 +239,8 @@ class MilkProductPage extends StatelessWidget {
                               children: [
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color.fromARGB(255, 8, 111, 255),
+                                    backgroundColor:
+                                        const Color.fromARGB(255, 8, 111, 255),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8.0),
                                     ),
@@ -311,7 +312,8 @@ class MilkProductPage extends StatelessWidget {
                                 ),
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color.fromARGB(255, 8, 111, 255),
+                                    backgroundColor:
+                                        const Color.fromARGB(255, 8, 111, 255),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8.0),
                                     ),
