@@ -3,21 +3,41 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:milkproject/farmer/page/BuyNow.dart';
-import 'package:milkproject/farmer/page/Profile.dart';
-import 'package:milkproject/farmer/page/cart.dart';
 import 'package:milkproject/farmer/page/orders.dart';
+import 'package:milkproject/user/page/addtocart.dart';
+import 'profile.dart';
 
-import '../../login_page.dart';
-
-class FarmerHome extends StatefulWidget {
+class FarmerHome extends StatelessWidget {
   @override
-  _FarmerHomeState createState() => _FarmerHomeState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Milk Zone',
+      color: Colors.white,
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+        scaffoldBackgroundColor: Colors.white,
+        fontFamily: 'Roboto',
+      ),
+      home: FarmerHomePage(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
 }
 
-class _FarmerHomeState extends State<FarmerHome> {
+class FarmerHomePage extends StatefulWidget {
+  @override
+  _FarmerHomePageState createState() => _FarmerHomePageState();
+}
+
+class _FarmerHomePageState extends State<FarmerHomePage> {
+  final List<String> carouselImages = [
+    "https://via.placeholder.com/600x300.png?text=Welcome+to+Milk+Zone",
+    "https://via.placeholder.com/600x300.png?text=Quality+Products",
+    "https://via.placeholder.com/600x300.png?text=Farm+Fresh+Feed",
+  ];
+
   int? totalQuantity;
   double? totalPayment;
-  String searchQuery = '';
 
   @override
   void initState() {
@@ -53,183 +73,151 @@ class _FarmerHomeState extends State<FarmerHome> {
     }
   }
 
-  Widget _buildSearchBar() {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      padding: EdgeInsets.symmetric(horizontal: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: Colors.black),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: "Search products...",
-                fillColor: const Color.fromARGB(148, 255, 255, 255),
-                border: InputBorder.none,
-              ),
-              onChanged: (value) {
-                setState(() {
-                  searchQuery = value;
-                });
-              },
-            ),
-          ),
-          IconButton(
-            icon: Icon(Icons.search, color: Colors.black),
-            onPressed: () {
-              // Trigger a search function if required
-              setState(() {});
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCarouselSlider() {
-    return StreamBuilder<DocumentSnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('announcements')
-          .doc('main')
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return const Center(child: Text('Error fetching announcements'));
-        }
-
-        if (!snapshot.hasData || snapshot.data?.data() == null) {
-          return const Center(child: Text('No announcements available'));
-        }
-
-        final data = snapshot.data!.data() as Map<String, dynamic>;
-        final List<String> imgList = (data['image_urls'] as List<dynamic>?)
-                ?.map((item) => item.toString())
-                .toList() ??
-            [];
-
-        if (imgList.isEmpty) {
-          return const Center(child: Text('No announcements available'));
-        }
-
-        return CarouselSlider(
-          options: CarouselOptions(
-            height: 180.0,
-            autoPlay: true,
-            enlargeCenterPage: true,
-            aspectRatio: 16 / 9,
-            autoPlayInterval: const Duration(seconds: 5),
-          ),
-          items: imgList
-              .map((item) => Container(
-                    margin: const EdgeInsets.all(5.0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      image: DecorationImage(
-                        image: NetworkImage(item),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ))
-              .toList(),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.green[800]!, Colors.green[400]!],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
         title: Text(
           "Milk Zone",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.2,
+          ),
         ),
-        backgroundColor: Colors.blue[800],
+        centerTitle: true,
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: Icon(Icons.menu, size: 28),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          ),
+        ),
         actions: [
           IconButton(
             icon: Icon(Icons.person, size: 28),
             onPressed: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FarmerProfilePage(),
-                  ));
+                context,
+                MaterialPageRoute(builder: (context) => FarmerProfilePage()),
+              );
             },
           ),
         ],
+        elevation: 5,
       ),
+      drawer: FarmerMenuDrawer(),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildSearchBar(),
-            _buildCarouselSlider(),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Carousel Slider
+              CarouselSlider(
+                options: CarouselOptions(
+                  autoPlay: true,
+                  enlargeCenterPage: true,
+                  height: 180,
+                  viewportFraction: 0.9,
+                  autoPlayInterval: Duration(seconds: 3),
+                  autoPlayAnimationDuration: Duration(milliseconds: 800),
+                ),
+                items: carouselImages.map((url) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.4),
+                          blurRadius: 8,
+                          spreadRadius: 2,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.network(
+                        url,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+              SizedBox(height: 16),
+
+              // Welcome Section
+              Text(
+                "👋 Welcome Back, Farmer!",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.green[800],
+                ),
+              ),
+              SizedBox(height: 16),
+
+              // Info Cards (Dynamic Data)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "👋 Welcome Back, Farmer!",
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.blue[800],
+                  Expanded(
+                    child: InfoCard(
+                      title: "Today's Supply",
+                      value: totalQuantity != null
+                          ? "$totalQuantity Liters"
+                          : "Loading...",
                     ),
                   ),
-                  SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: InfoCard(
-                          title: "Today's Supply",
-                          value: totalQuantity != null
-                              ? "$totalQuantity Liters"
-                              : "Loading...",
-                        ),
-                      ),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: InfoCard(
-                          title: "Payment Received",
-                          value: totalPayment != null
-                              ? "₹${totalPayment?.toStringAsFixed(2)}"
-                              : "Loading...",
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    "🐄 Cattle Feed Products",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue[800],
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: InfoCard(
+                      title: "Payment Received",
+                      value: totalPayment != null
+                          ? "₹${totalPayment?.toStringAsFixed(2)}"
+                          : "Loading...",
                     ),
                   ),
-                  SizedBox(height: 12),
-                  CattleFeedProductList(searchQuery: searchQuery),
                 ],
               ),
-            ),
-          ],
+              SizedBox(height: 20),
+
+              // Cattle Feed Products
+              Text(
+                "🐄 Cattle Feed Products",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green[800],
+                ),
+              ),
+              SizedBox(height: 12),
+
+              // Fetch and display products from Firestore
+              CattleFeedProductList(),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
+// Cattle Feed Product List Widget
 class CattleFeedProductList extends StatelessWidget {
-  final String searchQuery;
-
-  CattleFeedProductList({required this.searchQuery});
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -244,15 +232,7 @@ class CattleFeedProductList extends StatelessWidget {
           return Center(child: Text("Error: ${snapshot.error}"));
         }
 
-        final products = snapshot.data!.docs.where((product) {
-          final productData = product.data() as Map<String, dynamic>;
-          final name = productData['name']?.toString().toLowerCase() ?? '';
-          return name.contains(searchQuery.toLowerCase());
-        }).toList();
-
-        if (products.isEmpty) {
-          return Center(child: Text("No products found."));
-        }
+        final products = snapshot.data!.docs;
 
         return Column(
           children: products.map((product) {
@@ -271,6 +251,7 @@ class CattleFeedProductList extends StatelessWidget {
                     child: Image.network(
                       productMap['image_url'],
                       fit: BoxFit.cover,
+                      width: double.infinity,
                     ),
                   ),
                   Padding(
@@ -294,7 +275,7 @@ class CattleFeedProductList extends StatelessWidget {
                           "Price: ₹${productMap['price']}",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Colors.blue[700],
+                            color: Colors.green[700],
                             fontSize: 16,
                           ),
                         ),
@@ -304,7 +285,7 @@ class CattleFeedProductList extends StatelessWidget {
                           children: [
                             ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue[800],
+                                backgroundColor: Colors.green[800],
                                 foregroundColor: Colors.white,
                               ),
                               onPressed: () async {
@@ -323,7 +304,7 @@ class CattleFeedProductList extends StatelessWidget {
                                   'name': productMap['name'],
                                   'description': productMap['description'],
                                   'price': productMap['price'],
-                                  'image': productMap['image_url'],
+                                  'image_url': productMap['image_url'],
                                   'quantity': 1,
                                   'user_id': user.uid,
                                 };
@@ -342,16 +323,16 @@ class CattleFeedProductList extends StatelessWidget {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                         content: Text(
-                                            "Error adding product to cart: $e")),
+                                            "Failed to add to cart. Please try again.")),
                                   );
                                 }
                               },
-                              icon: Icon(Icons.shopping_cart_outlined),
+                              icon: Icon(Icons.add_shopping_cart),
                               label: Text("Add to Cart"),
                             ),
-                            ElevatedButton.icon(
+                            ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green,
+                                backgroundColor: Colors.orange[700],
                                 foregroundColor: Colors.white,
                               ),
                               onPressed: () {
@@ -366,11 +347,10 @@ class CattleFeedProductList extends StatelessWidget {
                                   ),
                                 );
                               },
-                              icon: Icon(Icons.shopping_bag_outlined),
-                              label: Text("Buy Now"),
+                              child: Text("Buy Now"),
                             ),
                           ],
-                        ),
+                        )
                       ],
                     ),
                   ),
@@ -384,41 +364,33 @@ class CattleFeedProductList extends StatelessWidget {
   }
 }
 
-// InfoCard Widget
+// Info Card Widget
 class InfoCard extends StatelessWidget {
   final String title;
   final String value;
 
-  InfoCard({required this.title, required this.value});
+  const InfoCard({
+    required this.title,
+    required this.value,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      elevation: 5,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      elevation: 4,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               title,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue[700],
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 6),
+            SizedBox(height: 8),
             Text(
               value,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue[800],
-              ),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
           ],
         ),
@@ -437,7 +409,7 @@ class FarmerMenuDrawer extends StatelessWidget {
         children: [
           DrawerHeader(
             decoration: BoxDecoration(
-              color: Colors.blue[800],
+              color: Colors.green[800],
             ),
             child: Text(
               'Milk Zone',
@@ -477,20 +449,17 @@ class FarmerMenuDrawer extends StatelessWidget {
           ListTile(
             title: Text('Profile'),
             onTap: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => FarmerProfilePage()),
-              // );
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => FarmerProfilePage()),
+              );
             },
           ),
           ListTile(
             title: Text('Logout'),
             onTap: () {
-              //  FirebaseAuth.instance.signOut();
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => LoginPage()),
-              );
+              FirebaseAuth.instance.signOut();
+              Navigator.pop(context);
             },
           ),
         ],
