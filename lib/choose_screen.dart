@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:milkproject/farmer/page/farmer_registration_page.dart';
+import 'package:milkproject/society/page/society_registration.dart';
 import 'package:milkproject/user/page/signup_page.dart';
 
 class ChooseScreen extends StatelessWidget {
@@ -95,6 +96,33 @@ class ChooseScreen extends StatelessWidget {
                       ),
                     );
                   },
+                ),
+                const Spacer(),
+                // Admin Button
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Opacity(
+                    opacity: 0.7, // Reduced opacity
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const SocietyRegistrationScreen(),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        'Admin',
+                        style: TextStyle(
+                          fontSize: 8,
+                          color: Color.fromARGB(144, 6, 60, 5),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),

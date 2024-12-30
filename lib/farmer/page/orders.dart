@@ -176,7 +176,7 @@ class MyOrdersPage extends StatelessWidget {
 
                         SizedBox(height: 6),
 
-                        // Total Price
+                        // Status
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -195,6 +195,20 @@ class MyOrdersPage extends StatelessWidget {
                             ),
                           ],
                         ),
+                        SizedBox(height: 10),
+
+                        // Progress Bar
+                        Text(
+                          "Progress:",
+                          style: TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w500),
+                        ),
+                        SizedBox(height: 6),
+                        LinearProgressIndicator(
+                          value: getStatusProgress(order['status']),
+                          backgroundColor: Colors.grey[300],
+                          color: getStatusColor(order['status']),
+                        ),
                       ],
                     ),
                   ),
@@ -211,13 +225,27 @@ class MyOrdersPage extends StatelessWidget {
   Color getStatusColor(String status) {
     switch (status) {
       case "Delivered":
-        return Colors.blue;
+        return Colors.green;
       case "Pending":
         return Colors.orangeAccent;
-      case "In Transit":
+      case "Shipped":
         return Colors.blueAccent;
       default:
         return Colors.grey;
+    }
+  }
+
+  // Helper function to calculate progress percentage based on status
+  double getStatusProgress(String status) {
+    switch (status) {
+      case "Pending":
+        return 0.15;
+      case "Shipped":
+        return 0.60;
+      case "Delivered":
+        return 1.0;
+      default:
+        return 0.0;
     }
   }
 

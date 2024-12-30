@@ -11,13 +11,25 @@ import 'package:carousel_slider/carousel_slider.dart';
 
 final currentUser = FirebaseAuth.instance.currentUser;
 
-class MilkProductPage extends StatelessWidget {
+class MilkProductPage extends StatefulWidget {
   const MilkProductPage({super.key, required List cartProducts});
 
   @override
-  Widget build(BuildContext context) {
-    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  _MilkProductPageState createState() => _MilkProductPageState();
+}
 
+class _MilkProductPageState extends State<MilkProductPage> {
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  String searchQuery = '';
+
+  void searchProducts(String query) {
+    setState(() {
+      searchQuery = query;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       drawer: Drawer(
         child: Column(
@@ -67,13 +79,11 @@ class MilkProductPage extends StatelessWidget {
               leading: const Icon(Icons.shopping_cart),
               title: const Text('Feedback'),
               onTap: () async {
-                // Retrieve the current user's username
                 String? userName;
 
                 try {
                   final currentUser = FirebaseAuth.instance.currentUser;
                   if (currentUser != null) {
-                    // Assuming the user's name is stored in the Firestore users collection
                     final userDoc = await FirebaseFirestore.instance
                         .collection('user')
                         .doc(currentUser.uid)
@@ -89,7 +99,6 @@ class MilkProductPage extends StatelessWidget {
                   userName = "Guest"; // Fallback if there's an error
                 }
 
-                // Navigate to the FeedbackPage with the username
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return FeedbackPage(userName: userName ?? "Guest");
                 }));
@@ -130,8 +139,32 @@ class MilkProductPage extends StatelessWidget {
       ),
       body: Column(
         children: [
-          // Carousel Slider
+          // Search Bar
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              onChanged: searchProducts,
+              decoration: InputDecoration(
+                hintText: 'Search for products...',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  borderSide: const BorderSide(color: Colors.blue),
+                ),
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.search),
+                  onPressed: () {
+                    // Trigger search function on button press
+                    searchProducts(searchQuery);
+                  },
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 16),
+
+          // Carousel Slider - Added below search bar
           _buildCarouselSlider(),
+
           SizedBox(height: 16),
 
           // Welcome Section
@@ -165,9 +198,24 @@ class MilkProductPage extends StatelessWidget {
                   );
                 }
 
-                final products = snapshot.data!.docs.map((doc) {
-                  return doc.data() as Map<String, dynamic>;
+                final products = snapshot.data!.docs
+                    .map((doc) => doc.data() as Map<String, dynamic>)
+                    .where((product) {
+                  // Filter products based on search query
+                  return product['name']
+                      .toString()
+                      .toLowerCase()
+                      .contains(searchQuery.toLowerCase());
                 }).toList();
+
+                if (products.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      'No products found for the search',
+                      style: TextStyle(fontSize: 16.0, color: Colors.grey),
+                    ),
+                  );
+                }
 
                 return ListView.builder(
                   shrinkWrap: true,
@@ -247,7 +295,6 @@ class MilkProductPage extends StatelessWidget {
                                   ),
                                   onPressed: () async {
                                     try {
-                                      // Query the cart collection to check if the product already exists for the current user
                                       final QuerySnapshot query =
                                           await firestore
                                               .collection('cart')
@@ -258,14 +305,12 @@ class MilkProductPage extends StatelessWidget {
                                               .get();
 
                                       if (query.docs.isNotEmpty) {
-                                        // Product already exists in the cart, update its quantity or any other field
                                         final cartItemDoc = query.docs.first;
                                         await firestore
                                             .collection('cart')
                                             .doc(cartItemDoc.id)
                                             .update({
-                                          'quantity': FieldValue.increment(
-                                              1), // Example: Increment the quantity
+                                          'quantity': FieldValue.increment(1),
                                         });
 
                                         ScaffoldMessenger.of(context)
@@ -276,39 +321,27 @@ class MilkProductPage extends StatelessWidget {
                                           ),
                                         );
                                       } else {
-                                        // Product does not exist in the cart, add it as a new item
                                         await firestore.collection('cart').add({
                                           'user_id': currentUser?.uid,
                                           'name': product['name'],
                                           'price': product['price'],
-                                          'image': product['image_url'],
-                                          'description': product['description'],
-                                          'quantity':
-                                              1, // Start with a quantity of 1
+                                          'quantity': 1,
+                                          'image_url': product['image_url'],
                                         });
 
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
                                           SnackBar(
                                             content: Text(
-                                                '${product['name']} added to cart!'),
+                                                '${product['name']} added to the cart!'),
                                           ),
                                         );
                                       }
-                                    } catch (error) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                              'Failed to process ${product['name']}. Please try again.'),
-                                        ),
-                                      );
+                                    } catch (e) {
+                                      print('Error adding product to cart: $e');
                                     }
                                   },
-                                  child: const Text(
-                                    'Add to Cart',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
+                                  child: const Text('Add to Cart'),
                                 ),
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
@@ -319,20 +352,18 @@ class MilkProductPage extends StatelessWidget {
                                     ),
                                   ),
                                   onPressed: () {
-                                    Navigator.push(context, MaterialPageRoute(
-                                      builder: (context) {
-                                        return BuyNowPage(
-                                          productName: product['name'],
-                                          productPrice: product['price'],
-                                          productImageUrl: product['image_url'],
-                                        );
-                                      },
-                                    ));
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => BuyNowPage(
+                                                productName: product['name'],
+                                                productPrice: product['price'],
+                                                productImageUrl:
+                                                    product['image_url'],
+                                              )),
+                                    );
                                   },
-                                  child: const Text(
-                                    'Buy Now',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
+                                  child: const Text('Buy Now'),
                                 ),
                               ],
                             ),
@@ -350,7 +381,7 @@ class MilkProductPage extends StatelessWidget {
     );
   }
 
-  // Carousel Slider Method
+
   Widget _buildCarouselSlider() {
     return StreamBuilder<DocumentSnapshot>(
       stream: FirebaseFirestore.instance
@@ -358,10 +389,6 @@ class MilkProductPage extends StatelessWidget {
           .doc('main')
           .snapshots(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
         if (snapshot.hasError) {
           return const Center(child: Text('Error fetching announcements'));
         }
@@ -382,21 +409,24 @@ class MilkProductPage extends StatelessWidget {
 
         return CarouselSlider(
           options: CarouselOptions(
-            height: 200.0,
+            height: 180.0,
             autoPlay: true,
             enlargeCenterPage: true,
-            viewportFraction: 1.0,
+            aspectRatio: 16 / 9,
+            autoPlayInterval: const Duration(seconds: 5),
           ),
-          items: imgList.map((imgUrl) {
-            return ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
-              child: Image.network(
-                imgUrl,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
-            );
-          }).toList(),
+          items: imgList
+              .map((item) => Container(
+                    margin: const EdgeInsets.all(5.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      image: DecorationImage(
+                        image: NetworkImage(item),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ))
+              .toList(),
         );
       },
     );

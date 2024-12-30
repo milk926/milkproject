@@ -4,36 +4,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:milkproject/farmer/page/BuyNow.dart';
 import 'package:milkproject/farmer/page/Profile.dart';
+import 'package:milkproject/farmer/page/cart.dart';
 import 'package:milkproject/farmer/page/orders.dart';
-import 'package:milkproject/login_page.dart';
-import 'package:milkproject/user/page/addtocart.dart';
-import 'package:milkproject/user/page/buy_now.dart';
 
-class FarmerHome extends StatelessWidget {
+import '../../login_page.dart';
+
+class FarmerHome extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Milk Zone',
-      color: Colors.white,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: Colors.white,
-        fontFamily: 'Roboto',
-      ),
-      home: FarmerHomePage(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
+  _FarmerHomeState createState() => _FarmerHomeState();
 }
 
-class FarmerHomePage extends StatefulWidget {
-  @override
-  _FarmerHomePageState createState() => _FarmerHomePageState();
-}
-
-class _FarmerHomePageState extends State<FarmerHomePage> {
+class _FarmerHomeState extends State<FarmerHome> {
   int? totalQuantity;
   double? totalPayment;
+  String searchQuery = '';
 
   @override
   void initState() {
@@ -69,6 +53,43 @@ class _FarmerHomePageState extends State<FarmerHomePage> {
     }
   }
 
+  Widget _buildSearchBar() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(color: Colors.black),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: "Search products...",
+                fillColor: const Color.fromARGB(148, 255, 255, 255),
+                border: InputBorder.none,
+              ),
+              onChanged: (value) {
+                setState(() {
+                  searchQuery = value;
+                });
+              },
+            ),
+          ),
+          IconButton(
+            icon: Icon(Icons.search, color: Colors.black),
+            onPressed: () {
+              // Trigger a search function if required
+              setState(() {});
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildCarouselSlider() {
     return StreamBuilder<DocumentSnapshot>(
       stream: FirebaseFirestore.instance
@@ -76,10 +97,6 @@ class _FarmerHomePageState extends State<FarmerHomePage> {
           .doc('main')
           .snapshots(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
         if (snapshot.hasError) {
           return const Center(child: Text('Error fetching announcements'));
         }
@@ -127,115 +144,92 @@ class _FarmerHomePageState extends State<FarmerHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.blue[800]!, Colors.blue[400]!],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
         title: Text(
           "Milk Zone",
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1.2,
-          ),
+          style: TextStyle(color: Colors.white),
         ),
-        centerTitle: true,
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: Icon(Icons.menu, size: 28),
-            onPressed: () {
-              Scaffold.of(context).openDrawer();
-            },
-          ),
-        ),
+        backgroundColor: Colors.blue[800],
         actions: [
           IconButton(
             icon: Icon(Icons.person, size: 28),
             onPressed: () {
               Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => FarmerProfilePage()),
-              );
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FarmerProfilePage(),
+                  ));
             },
           ),
         ],
-        elevation: 5,
       ),
-      drawer: FarmerMenuDrawer(),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Carousel Slider
-              _buildCarouselSlider(),
-              SizedBox(height: 16),
-
-              // Welcome Section
-              Text(
-                "👋 Welcome Back, Farmer!",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.blue[800],
-                ),
-              ),
-              SizedBox(height: 16),
-
-              // Info Cards (Dynamic Data)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildSearchBar(),
+            _buildCarouselSlider(),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: InfoCard(
-                      title: "Today's Supply",
-                      value: totalQuantity != null
-                          ? "$totalQuantity Liters"
-                          : "Loading...",
+                  Text(
+                    "👋 Welcome Back, Farmer!",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.blue[800],
                     ),
                   ),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: InfoCard(
-                      title: "Payment Received",
-                      value: totalPayment != null
-                          ? "₹${totalPayment?.toStringAsFixed(2)}"
-                          : "Loading...",
+                  SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: InfoCard(
+                          title: "Today's Supply",
+                          value: totalQuantity != null
+                              ? "$totalQuantity Liters"
+                              : "Loading...",
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: InfoCard(
+                          title: "Payment Received",
+                          value: totalPayment != null
+                              ? "₹${totalPayment?.toStringAsFixed(2)}"
+                              : "Loading...",
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    "🐄 Cattle Feed Products",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue[800],
                     ),
                   ),
+                  SizedBox(height: 12),
+                  CattleFeedProductList(searchQuery: searchQuery),
                 ],
               ),
-              SizedBox(height: 20),
-
-              // Cattle Feed Products
-              Text(
-                "🐄 Cattle Feed Products",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue[800],
-                ),
-              ),
-              SizedBox(height: 12),
-
-              // Fetch and display products from Firestore
-              CattleFeedProductList(),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-// Cattle Feed Product List Widget
 class CattleFeedProductList extends StatelessWidget {
+  final String searchQuery;
+
+  CattleFeedProductList({required this.searchQuery});
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -250,7 +244,15 @@ class CattleFeedProductList extends StatelessWidget {
           return Center(child: Text("Error: ${snapshot.error}"));
         }
 
-        final products = snapshot.data!.docs;
+        final products = snapshot.data!.docs.where((product) {
+          final productData = product.data() as Map<String, dynamic>;
+          final name = productData['name']?.toString().toLowerCase() ?? '';
+          return name.contains(searchQuery.toLowerCase());
+        }).toList();
+
+        if (products.isEmpty) {
+          return Center(child: Text("No products found."));
+        }
 
         return Column(
           children: products.map((product) {
@@ -338,16 +340,18 @@ class CattleFeedProductList extends StatelessWidget {
                                   );
                                 } catch (e) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text('Error: $e')),
+                                    SnackBar(
+                                        content: Text(
+                                            "Error adding product to cart: $e")),
                                   );
                                 }
                               },
-                              icon: Icon(Icons.add_shopping_cart),
+                              icon: Icon(Icons.shopping_cart_outlined),
                               label: Text("Add to Cart"),
                             ),
-                            ElevatedButton(
+                            ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue,
+                                backgroundColor: Colors.green,
                                 foregroundColor: Colors.white,
                               ),
                               onPressed: () {
@@ -362,13 +366,14 @@ class CattleFeedProductList extends StatelessWidget {
                                   ),
                                 );
                               },
-                              child: Text("Buy Now"),
+                              icon: Icon(Icons.shopping_bag_outlined),
+                              label: Text("Buy Now"),
                             ),
                           ],
-                        )
+                        ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             );
