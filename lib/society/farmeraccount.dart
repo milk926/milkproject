@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
 
 class FarmerListPage extends StatefulWidget {
   @override
@@ -12,224 +11,314 @@ class _FarmerListPageState extends State<FarmerListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Farmers Management'),
-          backgroundColor: Colors.blue.shade700,
-          bottom: const TabBar(
-            indicatorColor: Colors.white,
-            tabs: [
-              Tab(text: 'Pending'),
-              Tab(text: 'Approved'),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          children: [
-            FarmerListTab(status: 'Pending'),
-            FarmerListTab(status: 'Approved'),
-          ],
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Farmers Management'),
+        backgroundColor: Colors.green.shade700,
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: _firestore.collection('farmer').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return const Center(
+              child: Text(
+                'Failed to load farmers. Please try again later.',
+                style: TextStyle(color: Colors.red),
+              ),
+            );
+          }
+
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return const Center(
+              child: Text(
+                'No farmers found.',
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+            );
+          }
+
+          final farmers = snapshot.data!.docs;
+
+          return ListView.builder(
+            itemCount: farmers.length,
+            itemBuilder: (context, index) {
+              final farmerDoc = farmers[index];
+              final farmerId = farmerDoc.id;
+              final farmerData = farmerDoc.data() as Map<String, dynamic>;
+
+              return Card(
+                elevation: 3,
+                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.green.shade700,
+                    child: Text(
+                      farmerData['name'] != null &&
+                              farmerData['name']!.isNotEmpty
+                          ? farmerData['name']![0].toUpperCase()
+                          : '?',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  title: Text(
+                    farmerData['name'] ?? 'N/A',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Email: ${farmerData['email'] ?? 'N/A'}'),
+                      Text('Phone: ${farmerData['phone'] ?? 'N/A'}'),
+                      Text('No. of cows : ${farmerData['cow'] ?? 'N/A'}'),
+                    ],
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => UpdateFarmerPage(
+                          farmerId: farmerId,
+                          farmerData: farmerData,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }
 }
 
-class FarmerListTab extends StatelessWidget {
-  final String status;
+class UpdateFarmerPage extends StatefulWidget {
+  final String farmerId;
+  final Map<String, dynamic> farmerData;
 
-  FarmerListTab({required this.status});
-
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  const UpdateFarmerPage({
+    required this.farmerId,
+    required this.farmerData,
+    Key? key,
+  }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final isPending = status == 'Pending';
+  _UpdateFarmerPageState createState() => _UpdateFarmerPageState();
+}
 
-    return StreamBuilder<QuerySnapshot>(
-      stream: _firestore
-          .collection('farmer')
-          .where('isapproved', isEqualTo: !isPending)
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
+class _UpdateFarmerPageState extends State<UpdateFarmerPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _todayQuantityController = TextEditingController();
+  final _todayPaymentController = TextEditingController();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-        if (snapshot.hasError) {
-          return const Center(
-            child: Text(
-              'Failed to load farmers. Please try again later.',
-              style: TextStyle(color: Colors.red),
-            ),
-          );
-        }
+  int? _totalQuantity;
+  double? _totalPayment;
 
-        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return Center(
-            child: Text(
-              'No $status farmers found.',
-              style: const TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-          );
-        }
-
-        final farmers = snapshot.data!.docs;
-
-        return ListView.builder(
-          itemCount: farmers.length,
-          itemBuilder: (context, index) {
-            final farmerDoc = farmers[index];
-            final farmerId = farmerDoc.id;
-            final farmerData = farmerDoc.data() as Map<String, dynamic>;
-
-            return Card(
-              elevation: 3,
-              margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: Colors.blue.shade700,
-                        child: Text(
-                          farmerData['name'] != null &&
-                                  farmerData['name']!.isNotEmpty
-                              ? farmerData['name']![0].toUpperCase()
-                              : '?',
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      title: Text(
-                        farmerData['name'] ?? 'N/A',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Email: ${farmerData['email'] ?? 'N/A'}'),
-                          Text('Phone: ${farmerData['phone'] ?? 'N/A'}'),
-                          Text('No. of cows: ${farmerData['cow'] ?? 'N/A'}'),
-                        ],
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        if (isPending)
-                          ElevatedButton(
-                            onPressed: () =>
-                                _updateFarmerStatus(farmerId, true, context),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green,
-                            ),
-                            child: const Text('Approve'),
-                          ),
-                        if (isPending)
-                          ElevatedButton(
-                            onPressed: () =>
-                                _updateFarmerStatus(farmerId, false, context),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red,
-                            ),
-                            child: const Text('Reject'),
-                          ),
-                        TextButton(
-                          onPressed: () {
-                            _viewDocument(context, farmerData);
-                          },
-                          child: const Text(
-                            'View Document',
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
+  @override
+  void initState() {
+    super.initState();
+    _fetchFarmerData();
   }
 
-  void _updateFarmerStatus(
-      String farmerId, bool approve, BuildContext context) async {
+  Future<void> _fetchFarmerData() async {
     try {
-      await _firestore.collection('farmer').doc(farmerId).update({
-        'isapproved': approve,
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-              approve ? 'Farmer approved successfully.' : 'Farmer rejected.'),
-        ),
-      );
+      final doc =
+          await _firestore.collection('farmerSales').doc(widget.farmerId).get();
+
+      if (doc.exists) {
+        setState(() {
+          _totalQuantity = doc.data()?['totalQuantity'] ?? 0;
+          _totalPayment = doc.data()?['totalPayment']?.toDouble() ?? 0.0;
+        });
+      } else {
+        // Initialize values if no document exists
+        setState(() {
+          _totalQuantity = 0;
+          _totalPayment = 0.0;
+        });
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to update farmer status: $e')),
+        SnackBar(content: Text('Error fetching farmer data: $e')),
       );
     }
   }
 
-  void _viewDocument(BuildContext context, Map<String, dynamic> farmerData) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => DocumentViewerPage(farmerData: farmerData),
-      ),
-    );
+  Future<void> _updateFarmerSales() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    try {
+      final todayQuantity = int.parse(_todayQuantityController.text);
+      final todayPayment = double.parse(_todayPaymentController.text);
+
+      // Use Firestore transaction to safely increment values
+      await _firestore.runTransaction((transaction) async {
+        final docRef =
+            _firestore.collection('farmerSales').doc(widget.farmerId);
+
+        final snapshot = await transaction.get(docRef);
+        if (!snapshot.exists) {
+          transaction.set(docRef, {
+            'userId': widget.farmerId,
+            'totalQuantity': todayQuantity,
+            'totalPayment': todayPayment,
+            'updatedAt': FieldValue.serverTimestamp(),
+          });
+        } else {
+          final currentQuantity = snapshot.data()?['totalQuantity'] ?? 0;
+          final currentPayment =
+              snapshot.data()?['totalPayment']?.toDouble() ?? 0.0;
+
+          transaction.update(docRef, {
+            'totalQuantity': currentQuantity + todayQuantity,
+            'totalPayment': currentPayment + todayPayment,
+            'updatedAt': FieldValue.serverTimestamp(),
+          });
+        }
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Farmer sales updated successfully!')),
+      );
+
+      // Clear the input fields
+      _todayQuantityController.clear();
+      _todayPaymentController.clear();
+
+      // Refresh the displayed data
+      _fetchFarmerData();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to update sales: $e')),
+      );
+    }
   }
-}
 
-class DocumentViewerPage extends StatelessWidget {
-  final Map<String, dynamic> farmerData;
-
-  const DocumentViewerPage({required this.farmerData, Key? key})
-      : super(key: key);
+  @override
+  void dispose() {
+    _todayQuantityController.dispose();
+    _todayPaymentController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final documentUrl = farmerData['document_url'];
-
     return Scaffold(
       appBar: AppBar(
-        title: Text('Document: ${farmerData['name'] ?? 'N/A'}'),
-        backgroundColor: Colors.blue.shade700,
+        title: Text('Update Farmer: ${widget.farmerData['name'] ?? 'N/A'}'),
+        backgroundColor: Colors.green.shade700,
       ),
-      body: documentUrl == null || documentUrl.isEmpty
-          ? const Center(
-              child: Text(
-                'No document available.',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-            )
-          : Center(
-              child: Image.network(
-                documentUrl,
-                fit: BoxFit.contain,
-                loadingBuilder: (context, child, progress) {
-                  if (progress == null) return child;
-                  return const Center(child: CircularProgressIndicator());
-                },
-                errorBuilder: (context, error, stackTrace) {
-                  return const Center(
-                    child: Text(
-                      'Failed to load document.',
-                      style: TextStyle(color: Colors.red),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Section 1: Input fields and update button
+            Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Enter Today’s Details',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _todayQuantityController,
+                    decoration: const InputDecoration(
+                      labelText: 'Today’s Quantity (in liters)',
+                      border: OutlineInputBorder(),
                     ),
-                  );
-                },
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter today’s quantity';
+                      }
+                      if (int.tryParse(value) == null) {
+                        return 'Please enter a valid number';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _todayPaymentController,
+                    decoration: const InputDecoration(
+                      labelText: 'Today’s Payment (in ₹)',
+                      border: OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter today’s payment';
+                      }
+                      if (double.tryParse(value) == null) {
+                        return 'Please enter a valid amount';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _updateFarmerSales,
+                      child: const Text('Update Sales'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green.shade700,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
+            const SizedBox(height: 32),
+
+            // Section 2: Display total quantity and total payment
+            Card(
+              elevation: 3,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Current Sales Data',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Total Quantity: ${_totalQuantity ?? 'Loading...'} liters',
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Total Payment: ₹${_totalPayment?.toStringAsFixed(2) ?? 'Loading...'}',
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
