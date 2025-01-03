@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:milkproject/farmer/page/orders.dart';
 import 'package:milkproject/login_page.dart';
 import 'package:milkproject/user/page/addtocart.dart';
+import 'package:milkproject/user/page/aichat.dart';
 import 'package:milkproject/user/page/buy_now.dart';
 import 'package:milkproject/user/page/feedback.dart';
 import 'package:milkproject/user/page/userprofile.dart';
@@ -72,6 +73,15 @@ class _MilkProductPageState extends State<MilkProductPage> {
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return const AddToCartPage(); // Existing cart
+                }));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.shopping_cart),
+              title: const Text('Chat with AI'),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return AiChatPage(); // Existing cart
                 }));
               },
             ),
@@ -380,7 +390,6 @@ class _MilkProductPageState extends State<MilkProductPage> {
       ),
     );
   }
-
 
   Widget _buildCarouselSlider() {
     return StreamBuilder<DocumentSnapshot>(
