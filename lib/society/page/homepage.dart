@@ -5,6 +5,7 @@ import 'package:milkproject/society/farmeraccount.dart';
 import 'package:milkproject/society/page/announcement.dart';
 import 'package:milkproject/society/page/ordermanagement.dart';
 import 'package:milkproject/society/page/product_upload.dart';
+import 'package:milkproject/society/page/marketplace.dart';
 import 'package:milkproject/society/page/profilepage.dart';
 import 'package:milkproject/society/page/userAccount.dart';
 import 'package:milkproject/society/page/viewfeedback.dart';
@@ -151,6 +152,14 @@ class MilkProjectHomePage extends StatelessWidget {
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (_) => NotificationPage()));
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.shopping_basket_rounded),
+            title: const Text('MarketPlace'),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => AdminMarketplace()));
             },
           ),
         ],

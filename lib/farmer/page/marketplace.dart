@@ -270,7 +270,8 @@ class MarketplaceProductsPage extends StatelessWidget {
     return StreamBuilder<QuerySnapshot>(
       stream: _firestore
           .collection('Market')
-          .orderBy('timestamp', descending: true)
+          // .orderBy('timestamp', descending: true)
+          .where('userId', isNotEqualTo: FirebaseAuth.instance.currentUser?.uid)
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -299,6 +300,7 @@ class MarketplaceProductsPage extends StatelessWidget {
             final productName = productData['productName'] ?? 'Unnamed Product';
             final productDescription =
                 productData['productDescription'] ?? 'No description available';
+            final sellerId = productData['userId'];
 
             return Card(
               elevation: 8,
@@ -373,9 +375,45 @@ class MarketplaceProductsPage extends StatelessWidget {
                       child: SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () {
-                            // Handle buy product action here
-                            print('Buy product clicked for: $productName');
+                          onPressed: () async {
+                            final user = FirebaseAuth.instance.currentUser;
+                            if (user == null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content:
+                                      Text('Please log in to buy products.'),
+                                ),
+                              );
+                              return;
+                            }
+
+                            final buyerId = user.uid;
+                            final productDetails = {
+                              'buyerId': buyerId,
+                              'sellerId': sellerId,
+                              'productName': productName,
+                              'productDescription': productDescription,
+                              'imageUrl': imageUrl,
+                              'timestamp': FieldValue.serverTimestamp(),
+                            };
+
+                            try {
+                              await _firestore
+                                  .collection('FarmerMarket')
+                                  .add(productDetails);
+
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Buy Request has been sent!'),
+                                ),
+                              );
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Failed to send request'),
+                                ),
+                              );
+                            }
                           },
                           child: const Text('Buy Product'),
                           style: ElevatedButton.styleFrom(
@@ -411,7 +449,7 @@ class MyPostingsPage extends StatelessWidget {
     return StreamBuilder<QuerySnapshot>(
       stream: _firestore
           .collection('Market')
-          .orderBy('timestamp', descending: true)
+          // .orderBy('timestamp', descending: true)
           .where('userId', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
           .snapshots(),
       builder: (context, snapshot) {

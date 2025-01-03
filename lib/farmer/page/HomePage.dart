@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:milkproject/farmer/page/BuyNow.dart';
+import 'package:milkproject/farmer/page/farmerNotification.dart';
 import 'package:milkproject/farmer/page/marketplace.dart';
 import 'package:milkproject/farmer/page/orders.dart';
 import 'package:milkproject/user/page/addtocart.dart';
@@ -523,10 +524,13 @@ class FarmerMenuDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            title: Text('Logout'),
+            title: Text('Notifications'),
             onTap: () {
-              FirebaseAuth.instance.signOut();
-              Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FarmerNotificationPage(),
+                  ));
             },
           ),
         ],
