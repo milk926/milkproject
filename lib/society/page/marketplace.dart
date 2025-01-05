@@ -1,10 +1,6 @@
-import 'dart:convert';
-import 'dart:io';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:http/http.dart' as http;
+
+import 'package:flutter/material.dart';
 
 class AdminMarketplace extends StatelessWidget {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -13,154 +9,118 @@ class AdminMarketplace extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Marketplace'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        backgroundColor: Colors.blueAccent,
+        title: Text("Admin Marketplace"),
+        backgroundColor: Colors.green,
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: _firestore.collection('Market').snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: _marketplaceSection(),
+    );
+  }
 
-          if (snapshot.hasError) {
-            return const Center(
-              child: Text('Failed to load products. Please try again later.'),
-            );
-          }
+  Widget _marketplaceSection() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _firestore.collection('marketplace').snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(child: CircularProgressIndicator());
+        }
 
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(child: Text('No products available.'));
-          }
+        final products = snapshot.data!.docs;
 
-          final products = snapshot.data!.docs;
+        if (products.isEmpty) {
+          return Center(
+            child: Text(
+              "No products available!",
+              style: TextStyle(fontSize: 18, color: Colors.grey),
+            ),
+          );
+        }
 
-          return ListView.builder(
-            itemCount: products.length,
-            itemBuilder: (context, index) {
-              final productDoc = products[index];
-              final productData = productDoc.data() as Map<String, dynamic>;
+        return ListView.builder(
+          itemCount: products.length,
+          itemBuilder: (context, index) {
+            final product = products[index];
 
-              final imageUrl = productData['imageUrl'];
-              final productName =
-                  productData['productName'] ?? 'Unnamed Product';
-              final productDescription = productData['productDescription'] ??
-                  'No description available';
-
-              return Card(
-                elevation: 8,
-                margin:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Colors.white, Colors.grey.shade200],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(15),
+            return Card(
+              margin: EdgeInsets.all(8),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+              elevation: 4,
+              child: ListTile(
+                leading: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.network(
+                    product['imageUrl'],
+                    width: 60,
+                    height: 60,
+                    fit: BoxFit.cover,
                   ),
-                  child: Stack(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Image section
-                          ClipRRect(
-                            borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(15),
-                            ),
-                            child: imageUrl != null && imageUrl.isNotEmpty
-                                ? Image.network(
-                                    imageUrl,
-                                    fit: BoxFit.cover,
-                                    height: 200,
-                                    width: double.infinity,
-                                  )
-                                : Container(
-                                    height: 200,
-                                    width: double.infinity,
-                                    color: Colors.grey.shade300,
-                                    child: const Icon(Icons.image, size: 50),
-                                  ),
-                          ),
-
-                          // Product details section
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  productName,
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black87,
-                                  ),
-                                  textAlign: TextAlign.left,
+                ),
+                title: Text(
+                  product['title'], // Product title
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text(
+                  "Price: ₹${product['price']} \nStatus: ${product['isAvailable'] ? 'Available' : 'Not Available'}",
+                  style: TextStyle(color: Colors.green),
+                ),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.delete, color: Colors.red),
+                      onPressed: () async {
+                        bool? confirmDelete = await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("Delete Product"),
+                              content: Text(
+                                  "Are you sure you want to delete this product?"),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop(false);
+                                  },
+                                  child: Text("Cancel"),
                                 ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  productDescription,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey.shade700,
-                                    height: 1.5,
-                                  ),
-                                  textAlign: TextAlign.left,
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop(true);
+                                  },
+                                  child: Text("Delete"),
                                 ),
                               ],
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      // Delete button
-                      Positioned(
-                        right: -5,
-                        top: -5,
-                        child: IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.red),
-                          onPressed: () async {
-                            try {
-                              await _firestore
-                                  .collection('Market')
-                                  .doc(productDoc.id)
-                                  .delete();
-
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Product deleted successfully'),
-                                ),
-                              );
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('Failed to delete product: $e'),
-                                ),
-                              );
-                            }
+                            );
                           },
-                        ),
-                      ),
-                    ],
-                  ),
+                        );
+
+                        if (confirmDelete ?? false) {
+                          try {
+                            await _firestore
+                                .collection('marketplace')
+                                .doc(product.id)
+                                .delete();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content:
+                                      Text("Product deleted successfully")),
+                            );
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text("Failed to delete product")),
+                            );
+                          }
+                        }
+                      },
+                    ),
+                  ],
                 ),
-              );
-            },
-          );
-        },
-      ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

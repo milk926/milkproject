@@ -108,8 +108,7 @@ class ChooseScreen extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                const SocietyRegistrationScreen(),
+                            builder: (context) => const SocietyLockPage(),
                           ),
                         );
                       },

@@ -4,6 +4,169 @@ import 'package:flutter/material.dart';
 import 'package:milkproject/society/page/homepage.dart';
 import 'package:milkproject/sevices/society_auth.dart'; // Import HomePage
 
+import 'package:flutter/material.dart';
+
+class SocietyLockPage extends StatefulWidget {
+  const SocietyLockPage({super.key});
+
+  @override
+  _SocietyLockPageState createState() => _SocietyLockPageState();
+}
+
+class _SocietyLockPageState extends State<SocietyLockPage> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController pinController = TextEditingController();
+
+  bool loading = false;
+
+  void authenticateHandler() async {
+    setState(() {
+      loading = true;
+    });
+
+    final pin = pinController.text.trim();
+
+    // Example: Validate the PIN and perform authentication (replace with your authentication logic)
+    if (pin == "1234") {
+      // Example PIN (you can replace this with your own validation)
+      // Navigate to the next screen if authentication is successful.
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => const SocietyRegistrationScreen()),
+      );
+    } else {
+      setState(() {
+        loading = false;
+      });
+      // Show an error message if the PIN is incorrect
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Incorrect PIN. Please try again.")),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          // Gradient Background
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xFF0F2027),
+                  Color(0xFF203A43),
+                  Color(0xFF2C5364),
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
+          ),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Spacer(),
+                    // Logo (you can use your logo)
+                    Container(
+                      height: 100,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 10,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
+                      ),
+                      child: Image.asset('asset/logo.png'),
+                    ),
+                    const SizedBox(height: 20),
+                    // "Authenticate Society" title
+                    const Text(
+                      'Authenticate Society',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    // PIN Field
+                    TextFormField(
+                      controller: pinController,
+                      obscureText: true,
+                      style: const TextStyle(color: Colors.white),
+                      keyboardType: TextInputType.number,
+                      maxLength: 4, // PIN of length 4
+                      decoration: InputDecoration(
+                        labelText: 'Enter PIN',
+                        labelStyle: const TextStyle(color: Colors.white70),
+                        prefixIcon: const Icon(Icons.lock, color: Colors.white),
+                        filled: true,
+                        fillColor: Colors.white.withOpacity(0.1),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your PIN';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 30),
+                    // Authenticate Button
+                    SizedBox(
+                      width: double.infinity,
+                      child: loading
+                          ? const Center(child: CircularProgressIndicator())
+                          : ElevatedButton(
+                              onPressed: authenticateHandler,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 15),
+                              ),
+                              child: const Text(
+                                'AUTHENTICATE',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                    ),
+                    const SizedBox(height: 15),
+                    // Optionally, you could add a "forgot pin" section if needed
+                    const Spacer(),
+                    const SizedBox(height: 20), // Bottom spacing for alignment
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class SocietyRegistrationScreen extends StatefulWidget {
   const SocietyRegistrationScreen({super.key});
 
@@ -249,7 +412,8 @@ class _SocietyRegistrationScreenState extends State<SocietyRegistrationScreen> {
                       width: double.infinity,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(255, 8, 111, 255),
+                          backgroundColor:
+                              const Color.fromARGB(255, 8, 111, 255),
                           padding: const EdgeInsets.symmetric(
                               vertical: 15.0, horizontal: 60.0),
                           shape: RoundedRectangleBorder(

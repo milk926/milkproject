@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:milkproject/choose_screen.dart';
+import 'package:milkproject/forgotPassword.dart';
 import 'package:milkproject/sevices/services/login_service_fire.dart';
 import 'package:milkproject/society/page/society_registration.dart';
 
@@ -76,7 +77,6 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Spacer(),
                     // Logo
                     Container(
                       height: 100,
@@ -91,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ],
                       ),
-                      child: Image.asset('asset/logo.png'),
+                      // child: Image.asset('asset/logo.png'),
                     ),
                     const SizedBox(height: 20),
                     // "Login to Your Account"
@@ -200,25 +200,48 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 15),
                     // Sign Up Section
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const ChooseScreen()),
-                        );
-                      },
-                      child: const Text(
-                        'Don\'t have an account? Sign Up',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.lightBlueAccent,
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const ChooseScreen()),
+                            );
+                          },
+                          child: const Text(
+                            'Don\'t have an account? Sign Up',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.lightBlueAccent,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    const Spacer(),
+                        const SizedBox(width: 170),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ForgotPasswordPage()),
+                            );
+                          },
+                          child: const Text(
+                            'Forgot Password',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.lightBlueAccent,
+                            ),
+                          ),
+                        ),
+                        const Spacer(),
 
-                    const SizedBox(height: 20), // Bottom spacing for alignment
+                        const SizedBox(
+                            height: 20), // Bottom spacing for alignment
+                      ],
+                    ),
                   ],
                 ),
               ),
