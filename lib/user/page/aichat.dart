@@ -22,7 +22,7 @@ class AiChatPageState extends State<AiChatPage> {
   }
 
   final instructions = '''
-"instruction"={"system_prompt"  : "Your name is Fix AI. your aim is to assist the user for the user_input . this is the system instruction and i provide app details in app_details. you can understand the app details from there. you must give reply to the user_input." , "app_details": ""}''';
+"instruction"={"system_prompt"  : "Your name is Fix AI. your aim is to assist the user for the user_input . this is the system instruction and i provide app details in app_details. you can understand the app details from there. you must give reply to the user_input." , "app_details": "if an non understandable question is get, your answer should be 'i dont know'"}''';
 
   void _sendMessage(String userMessage) async {
     if (userMessage.trim().isEmpty) return;
