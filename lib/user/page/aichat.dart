@@ -22,13 +22,23 @@ class AiChatPageState extends State<AiChatPage> {
   }
 
   final instructions = '''
-"instruction"={"system_prompt"  : "Your name is Fix AI. your aim is to assist the user for the user_input . this is the system instruction and i provide app details in app_details. you can understand the app details from there. you must give reply to the user_input." , "app_details": "To reach the Anjarakkandi Milk Society & Bank in Muzhappala, Kerala (670613), you can use Chakkarakkal town as a starting point. From Chakkarakkal, head towards Muzhappala Road, which is the main route that connects these areas. Along this road, you will pass notable landmarks such as the Federal Bank and BM Hospital, which can help guide your way.
+"instruction"={"system_prompt"  : "Your name is Fix AI. your aim is to assist the user for the user_input . this is the system instruction and i provide app details in app_details. you can understand the app details from there. you must give reply to the user_input." , 
+
+"app_details": "To reach the Anjarakkandi Milk Society & Bank in Muzhappala, Kerala (670613), you can use Chakkarakkal town as a starting point. From Chakkarakkal, head towards Muzhappala Road, which is the main route that connects these areas. Along this road, you will pass notable landmarks such as the Federal Bank and BM Hospital, which can help guide your way.
 
 Start by heading east and follow the directions toward Moonuperiya Chakkarakkal Road. After passing by landmarks like SANA Industries, continue for 170 meters, then turn right at Hafnas-Adhil Road, heading toward Moonuperiya Chakkarakkal Road. As you move forward, pass Mango Doors on the left.
 
 At a key junction, turn left onto Thaze Chovva Mattannur Road and then make a slight right at Style Sarees & Readymades. Follow Koodali-Chakkarakkal Road, which will eventually lead you to Muzhappala Road. As you travel along this route, you will come across important landmarks like BM Hospital and the Federal Bank, which are easily recognizable.
 
-Continue on this road for a few kilometers, and your destination, Anjarakkandi Milk Society & Bank, will be on the right, just after passing another small landmark."}''';
+Continue on this road for a few kilometers, and your destination, Anjarakkandi Milk Society & Bank, will be on the right, just after passing another small landmark.",
+
+"product_details":"if someone ask you the details of milk society products,you will give answer like this products include butter,ghee,paneer,yogurt.fresh cow milk,flavoured milk and buffalo milk",
+
+"payment_options":"if some one asks you about payment details,you will answer like this you can done payment through online razorpay and through cash on delivery"
+
+"registration_process":"if some one asks you about registration process,you will give answer like this you will fill the details name of the user,email,password,aadhar number,rationcard number,bank account number,and mobile number.if you are already registered you can login with email and password.thank you!",
+
+"order_status":"if some one asks about their order status,you give answer like this you can get it from the my orders option in the top navigation bar on the user's home page.Thank you! "}''';
 
   void _sendMessage(String userMessage) async {
     if (userMessage.trim().isEmpty) return;
