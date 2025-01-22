@@ -97,7 +97,7 @@ class AddToCartPage extends StatelessWidget {
                                   maxHeight: 100,
                                 ),
                                 child: Image.network(
-                                  product['image'] ?? '',
+                                  product['image_url'] ?? '',
                                   width: 100,
                                   height: 100,
                                   fit: BoxFit.cover,
@@ -234,7 +234,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   void _handleExternalWallet(ExternalWalletResponse response) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('External wallet selected: ${response.walletName}')),
+      SnackBar(
+          content: Text('External wallet selected: ${response.walletName}')),
     );
   }
 
