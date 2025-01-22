@@ -22,9 +22,6 @@ class AiChatPageState extends State<AiChatPage> {
   }
 
   final instructions = '''
-<<<<<<< HEAD
-"instruction"={"system_prompt"  : "Your name is Fix AI. your aim is to assist the user for the user_input . this is the system instruction and i provide app details in app_details. you can understand the app details from there. you must give reply to the user_input." , "app_details": "if an non understandable question is get, your answer should be 'i dont know'"}''';
-=======
 "instruction"={"system_prompt"  : "Your name is Fix AI. your aim is to assist the user for the user_input . this is the system instruction and i provide app details in app_details. you can understand the app details from there. you must give reply to the user_input." , "app_details": "To reach the Anjarakkandi Milk Society & Bank in Muzhappala, Kerala (670613), you can use Chakkarakkal town as a starting point. From Chakkarakkal, head towards Muzhappala Road, which is the main route that connects these areas. Along this road, you will pass notable landmarks such as the Federal Bank and BM Hospital, which can help guide your way.
 
 Start by heading east and follow the directions toward Moonuperiya Chakkarakkal Road. After passing by landmarks like SANA Industries, continue for 170 meters, then turn right at Hafnas-Adhil Road, heading toward Moonuperiya Chakkarakkal Road. As you move forward, pass Mango Doors on the left.
@@ -32,7 +29,6 @@ Start by heading east and follow the directions toward Moonuperiya Chakkarakkal 
 At a key junction, turn left onto Thaze Chovva Mattannur Road and then make a slight right at Style Sarees & Readymades. Follow Koodali-Chakkarakkal Road, which will eventually lead you to Muzhappala Road. As you travel along this route, you will come across important landmarks like BM Hospital and the Federal Bank, which are easily recognizable.
 
 Continue on this road for a few kilometers, and your destination, Anjarakkandi Milk Society & Bank, will be on the right, just after passing another small landmark."}''';
->>>>>>> d486a1aca8ed2bcb7d90623bdcc62b2de1e94880
 
   void _sendMessage(String userMessage) async {
     if (userMessage.trim().isEmpty) return;
