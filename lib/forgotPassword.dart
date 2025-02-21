@@ -68,10 +68,18 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       body: Stack(
         children: [
           // Background Image
-          Positioned.fill(
-            child: Image.asset(
-              'asset/img4.webp', // Replace with your image path
-              fit: BoxFit.cover,
+          // Background Color
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xFF0F2027),
+                  Color(0xFF203A43),
+                  Color(0xFF2C5364),
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
             ),
           ),
           // Foreground Content
@@ -84,14 +92,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     // Circular Logo
-                    ClipOval(
-                      child: Image.asset(
-                        'asset/download.png', // Replace with your logo path
-                        width: 120,
-                        height: 120,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
                     const SizedBox(height: 24),
 
                     // Email Text Field

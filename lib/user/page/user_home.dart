@@ -43,7 +43,7 @@ class _MilkProductPageState extends State<MilkProductPage> {
                   Icon(Icons.store, size: 50, color: Colors.blue),
                   SizedBox(height: 10),
                   Text(
-                    'Milk Zone',
+                    'Purely Dairy Society',
                     style: TextStyle(color: Colors.blue, fontSize: 20),
                   ),
                 ],
@@ -107,6 +107,7 @@ class _MilkProductPageState extends State<MilkProductPage> {
                   }
                 } catch (e) {
                   userName = "Guest"; // Fallback if there's an error
+                  
                 }
 
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -131,7 +132,7 @@ class _MilkProductPageState extends State<MilkProductPage> {
       ),
       appBar: AppBar(
         title: const Text(
-          'Milk Zone',
+          'Purely Dairy Society',
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
         backgroundColor: const Color.fromARGB(255, 8, 111, 255),

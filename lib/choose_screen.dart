@@ -13,7 +13,7 @@ class ChooseScreen extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: true, // Extend the body behind the AppBar
       appBar: AppBar(
-        backgroundColor: Colors.white.withOpacity(0.5), // Low-opacity AppBar
+        backgroundColor: Colors.blue.withOpacity(0.5), // Low-opacity AppBar
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -26,8 +26,8 @@ class ChooseScreen extends StatelessWidget {
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color.fromARGB(255, 228, 255, 194),
-              Color.fromARGB(255, 132, 224, 89)
+              Color.fromARGB(255, 33, 150, 243),
+              Color.fromARGB(255, 33, 150, 243)
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -40,18 +40,8 @@ class ChooseScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Logo and "Milk Zone" Text
-                Column(
-                  children: [
-                    Image.asset(
-                      'asset/logo.png', // Replace with your image path
-                      width: 120,
-                      height: 120,
-                      fit: BoxFit.contain,
-                    ),
-                    const SizedBox(height: 10),
-                  ],
-                ),
+                // Logo and "Purely Dairy Society" Text
+
                 const SizedBox(height: 20),
                 // Title
                 const Text(

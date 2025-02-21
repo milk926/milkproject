@@ -113,7 +113,13 @@ class UserSignupPageState extends State<UserSignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Signup Page')),
+      backgroundColor: Colors.blue.withOpacity(0.5),
+      appBar: AppBar(
+        title: const Text(
+          'Signup Page',
+        ),
+        backgroundColor: Color.fromRGBO(148, 207, 255, 1),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -122,11 +128,6 @@ class UserSignupPageState extends State<UserSignupPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Image.asset(
-                  'asset/logo.png',
-                  width: 270,
-                  height: 250,
-                ),
                 const SizedBox(height: 16.0),
                 // Username field
                 TextFormField(

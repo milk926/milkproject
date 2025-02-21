@@ -17,7 +17,7 @@ class MilkProjectHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Milk Project Dashboard'),
+        title: const Text('Purely Dairy Society'),
         backgroundColor: const Color.fromARGB(255, 0, 149, 255),
         actions: [
           IconButton(

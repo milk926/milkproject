@@ -107,7 +107,7 @@ class _FarmerRegistrationScreenState extends State<FarmerRegistrationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color.fromRGBO(148, 207, 255, 1),
       body: Center(
         child: SingleChildScrollView(
           child: Padding(

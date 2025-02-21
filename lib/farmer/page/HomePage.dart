@@ -13,7 +13,7 @@ class FarmerHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Milk Zone',
+      title: 'Purely Dairy Society',
       color: Colors.white,
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -92,7 +92,7 @@ class _FarmerHomePageState extends State<FarmerHomePage> {
           ),
         ),
         title: Text(
-          "Milk Zone",
+          "Purely Dairy Society",
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,
@@ -468,10 +468,10 @@ class FarmerMenuDrawer extends StatelessWidget {
         children: [
           DrawerHeader(
             decoration: BoxDecoration(
-              color: Colors.green[800],
+              color: Colors.blue[800],
             ),
             child: Text(
-              'Milk Zone',
+              'Purely Dairy Society',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 24,
