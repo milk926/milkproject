@@ -58,6 +58,7 @@ class MilkProjectHomePage extends StatelessWidget {
               _buildFeatureSections(context),
             ],
           ),
+          
         ),
       ),
       bottomNavigationBar: _buildBottomNavigationBar(context),
