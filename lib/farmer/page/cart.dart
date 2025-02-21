@@ -97,7 +97,7 @@ class AddToCartPage extends StatelessWidget {
                                   maxHeight: 100,
                                 ),
                                 child: Image.network(
-                                  product['image'] ?? '',
+                                  product['image_url'] ?? '',
                                   width: 100,
                                   height: 100,
                                   fit: BoxFit.cover,
