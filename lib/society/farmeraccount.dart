@@ -14,7 +14,7 @@ class _FarmerListPageState extends State<FarmerListPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Farmers Management'),
-        backgroundColor: Colors.green.shade700,
+        backgroundColor: Color.fromARGB(255, 33, 150, 243),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _firestore.collection('farmer').snapshots(),
@@ -58,7 +58,7 @@ class _FarmerListPageState extends State<FarmerListPage> {
                 ),
                 child: ListTile(
                   leading: CircleAvatar(
-                    backgroundColor: Colors.green.shade700,
+                    backgroundColor: Color.fromARGB(255, 33, 150, 243),
                     child: Text(
                       farmerData['name'] != null &&
                               farmerData['name']!.isNotEmpty
@@ -215,7 +215,7 @@ class _UpdateFarmerPageState extends State<UpdateFarmerPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Update Farmer: ${widget.farmerData['name'] ?? 'N/A'}'),
-        backgroundColor: Colors.green.shade700,
+        backgroundColor: Color.fromARGB(255, 33, 150, 243),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -275,7 +275,7 @@ class _UpdateFarmerPageState extends State<UpdateFarmerPage> {
                       onPressed: _updateFarmerSales,
                       child: const Text('Update Sales'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green.shade700,
+                        backgroundColor: Color.fromARGB(255, 33, 150, 243),
                       ),
                     ),
                   ),

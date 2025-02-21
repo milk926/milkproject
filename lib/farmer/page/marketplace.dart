@@ -33,15 +33,15 @@ class _MarketplacePageState extends State<MarketplacePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Milk Society Marketplace"),
+        title: Text("Purely Dairy Society Marketplace"),
         centerTitle: true,
-        backgroundColor: Colors.green,
+        backgroundColor: Color.fromARGB(255, 33, 150, 243),
       ),
       body: _sections[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
-        selectedItemColor: Colors.green,
+        selectedItemColor: Color.fromARGB(255, 33, 150, 243),
         unselectedItemColor: Colors.grey,
         items: [
           BottomNavigationBarItem(
