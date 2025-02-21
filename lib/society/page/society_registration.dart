@@ -88,7 +88,6 @@ class _SocietyLockPageState extends State<SocietyLockPage> {
                           ),
                         ],
                       ),
-                      child: Image.asset('asset/logo.png'),
                     ),
                     const SizedBox(height: 20),
                     // "Authenticate Society" title

@@ -11,7 +11,7 @@ class FarmerNotificationPage extends StatelessWidget {
       appBar: AppBar(
         title: Text("Farmer Notifications"),
         centerTitle: true,
-        backgroundColor: Colors.green,
+        backgroundColor: Color.fromARGB(255, 33, 150, 243),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _firestore
@@ -45,7 +45,7 @@ class FarmerNotificationPage extends StatelessWidget {
                 elevation: 4,
                 child: ListTile(
                   leading: CircleAvatar(
-                    backgroundColor: Colors.green,
+                    backgroundColor: Color.fromARGB(255, 33, 150, 243),
                     child: Icon(Icons.notifications, color: Colors.white),
                   ),
                   title: Text(
@@ -64,7 +64,7 @@ class FarmerNotificationPage extends StatelessWidget {
                           color: notification['status'] == 'pending'
                               ? Colors.orange
                               : notification['status'] == 'accepted'
-                                  ? Colors.green
+                                  ? Color.fromARGB(255, 33, 150, 243)
                                   : Colors.red,
                           fontWeight: FontWeight.bold,
                         ),
