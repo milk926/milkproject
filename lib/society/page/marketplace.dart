@@ -10,7 +10,7 @@ class AdminMarketplace extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Admin Marketplace"),
-        backgroundColor: Colors.green,
+        backgroundColor: Color.fromARGB(255, 33, 150, 243),
       ),
       body: _marketplaceSection(),
     );
@@ -61,7 +61,7 @@ class AdminMarketplace extends StatelessWidget {
                 ),
                 subtitle: Text(
                   "Price: ₹${product['price']} \nStatus: ${product['isAvailable'] ? 'Available' : 'Not Available'}",
-                  style: TextStyle(color: Colors.green),
+                  style: TextStyle(color: Color.fromARGB(255, 33, 150, 243)),
                 ),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
